@@ -90,3 +90,7 @@ Diego authorized a private GitHub repository, commit and push. Created https://g
 Diego authorized testing against the linked sender number itself. The real signed-in public UI requested a phone verification code with explicit consent; production cron accepted the outbox item and the VPS gateway recorded sent with a provider message ID. Recipient code entry remains user-controlled and is pending at this snapshot. Sending to the sender's own number appears in the user's self-chat; sent alone is not a delivery/read confirmation.
 
 The private GitHub repository contains the application snapshot. Subsequent evidence-only notes are synchronized separately. Never include live pairing codes, phone verification codes or credentials in Git.
+
+### Separate-recipient WhatsApp delivery verified
+
+Diego selected a different personal recipient. The public application queued its verification request, production cron submitted it, and the gateway recorded a WhatsApp delivery acknowledgment (delivered). The actual phone number and code are omitted here. D1/UI reconciliation occurs on the next minute cycle. Recipient opt-in still requires the user's code entry; no verification was bypassed.

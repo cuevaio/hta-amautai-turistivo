@@ -235,3 +235,5 @@ The first production dispatch exposed the same Workers redirect-mode incompatibi
 WhatsApp sender pairing succeeded with the recognized Chrome identity. The authenticated gateway reports connected after a container restart, verifying persistent session recovery. Actual recipient delivery is verified separately from sender connectivity.
 
 Latest validation before GitHub backup: 60 backend tests, 3 frontend transport tests, 4 gateway tests and 9 architecture tests passed, along with lint, types and build. Both notification channels are deployed; WhatsApp sender connectivity survives a container restart. Recipient verification and delivery outcomes are recorded in PROJECT_STATUS.md.
+
+A real verification message sent through the public application to a separate recipient received a WhatsApp delivery acknowledgment. Recipient opt-in still requires entering that code in the application.

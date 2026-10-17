@@ -116,3 +116,7 @@ Removed the duplicate notification OTP and activation step at Diego's request. T
 Published Worker 34ccf34a-4f96-44ba-9a6c-3685ebeaece2; migration 0004 applied locally and remotely. Full gate passed: 64 backend, 3 web, 4 gateway and 9 architecture tests, lint/types/build.
 
 Automated interaction with the actual signed-in public UI saved the authorized recipient using digits plus country code (without a leading +). The UI reported immediate activation and exposed zero WhatsApp OTP fields. Enviar prueba created a real outbox item; production cron forwarded it and the Baileys gateway returned a delivery acknowledgment (delivered). Sender session/credentials were preserved. No recipient number, OTP or credential is included in these notes.
+
+### Email without duplicate verification publicly verified
+
+Published Worker 34ccf34a-4f96-44ba-9a6c-3685ebeaece2 recognizes the existing verified WorkOS session. The actual signed-in public UI shows email notifications active with no notification OTP or activation form. Clicking Enviar email de prueba queued one test; production accepted it on the first attempt (provider submission c). Connected Outlook confirms receipt from notificaciones@amautai.urday.dev at 16:16:19 Lima on October 17, 2026, with subject Mensaje de prueba de Amautai. A folder-scoped mailbox read confirms Outlook classified this test as junk; delivery is verified, inbox placement is not. No mailbox rule or safe-sender change was made.

@@ -94,3 +94,9 @@ The private GitHub repository contains the application snapshot. Subsequent evid
 ### Separate-recipient WhatsApp delivery verified
 
 Diego selected a different personal recipient. The public application queued its verification request, production cron submitted it, and the gateway recorded a WhatsApp delivery acknowledgment (delivered). The actual phone number and code are omitted here. D1/UI reconciliation occurs on the next minute cycle. Recipient opt-in still requires the user's code entry; no verification was bypassed.
+
+### WhatsApp end-to-end test completed
+
+Diego entered the received code in the public application. The verified recipient shows active notifications. The public Enviar prueba action queued a new test notification; production cron dispatched it to Baileys, and the gateway recorded delivered with a WhatsApp message ID. This verifies the real application -> D1 outbox -> scheduled Worker -> VPS gateway -> distinct WhatsApp recipient flow. No code, recipient number or credentials are included in this note. The sender session was separately verified to reconnect after a container restart.
+
+All WhatsApp implementation, deployment and delivery verification work is complete. Educational task integration remains future work because that product module does not yet exist. The code and final evidence notes are backed up in the private GitHub repository.

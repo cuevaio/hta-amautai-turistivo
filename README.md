@@ -236,4 +236,4 @@ WhatsApp sender pairing succeeded with the recognized Chrome identity. The authe
 
 Latest validation before GitHub backup: 60 backend tests, 3 frontend transport tests, 4 gateway tests and 9 architecture tests passed, along with lint, types and build. Both notification channels are deployed; WhatsApp sender connectivity survives a container restart. Recipient verification and delivery outcomes are recorded in PROJECT_STATUS.md.
 
-A real verification message sent through the public application to a separate recipient received a WhatsApp delivery acknowledgment. Recipient opt-in still requires entering that code in the application.
+A real verification message sent through the public application to a separate recipient received a WhatsApp delivery acknowledgment. Diego completed recipient verification in the public application. A subsequent test notification requested through that UI was dispatched by production cron and received a WhatsApp delivery acknowledgment.

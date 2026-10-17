@@ -81,6 +81,12 @@ Diego authorized a private GitHub repository, commit and push. Created https://g
 - Full gate passed: 60 backend tests, 3 frontend transport tests, 4 gateway tests and 9 architecture tests, plus lint/typecheck/build.
 - Published Worker d0d73c98-098c-47a2-8a30-3abab825b925. Existing WorkOS/WhatsApp secrets remain present.
 - A real signed-in request queued a verification email to Diego; production cron recorded accepted (provider submission b), Stalwart reports final/SMTP 250, and the connected Outlook mailbox confirms receipt from notificaciones@amautai.urday.dev at 15:56 Lima time.
-- Diego's personal notification opt-in is awaiting his code entry; the code was not exposed or bypassed. Sender activation and real receipt are already verified. Authentication headers are being checked separately.
+- Diego's personal notification opt-in is awaiting his code entry; the code was not exposed or bypassed. Sender activation and real receipt are already verified. Outlook message-source headers independently confirm SPF=pass, DKIM=pass and DMARC=pass for amautai.urday.dev.
 - A local Node CLI probe reached authenticated discovery but timed out connecting to the JMAP API; it submitted no test email. The production Worker path is independently verified.
 - GitHub private origin is now configured by the coordinated WhatsApp chat with Diego's explicit backup authorization. That chat owns the final commit/push; no parallel commit is performed here.
+
+### Public WhatsApp verification request
+
+Diego authorized testing against the linked sender number itself. The real signed-in public UI requested a phone verification code with explicit consent; production cron accepted the outbox item and the VPS gateway recorded sent with a provider message ID. Recipient code entry remains user-controlled and is pending at this snapshot. Sending to the sender's own number appears in the user's self-chat; sent alone is not a delivery/read confirmation.
+
+The private GitHub repository contains the application snapshot. Subsequent evidence-only notes are synchronized separately. Never include live pairing codes, phone verification codes or credentials in Git.

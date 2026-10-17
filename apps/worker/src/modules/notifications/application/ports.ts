@@ -7,12 +7,7 @@ import type {
 export interface NotificationRepository {
   contact(actor: Actor): Promise<Contact | null>
   list(actor: Actor): Promise<Notification[]>
-  challenge(
-    actor: Actor,
-    data: { id: string; phone: string; hash: string; body: string; now: number }
-  ): Promise<void>
-  confirm(actor: Actor, hash: string, now: number): Promise<boolean>
-  challengeId(actor: Actor): Promise<string | null>
+  register(actor: Actor, phone: string, now: number): Promise<void>
   preferences(actor: Actor, enabled: boolean, timezone: string): Promise<void>
   enqueue(item: Notification): Promise<Notification>
   cancel(actor: Actor, id: string): Promise<boolean>

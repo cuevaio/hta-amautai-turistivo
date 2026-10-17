@@ -1,9 +1,7 @@
 import type { Hono } from "hono"
 import { z } from "zod"
 import {
-  notificationVerifyInput,
   notificationScheduleInput,
-  emailConsentInput,
   emailPreferencesInput,
   emailTestInput,
 } from "@amautai/contracts"
@@ -19,8 +17,10 @@ export function registerEmailRoutes(
     tenantId: c.get("tenant").id,
     userId: c.get("identity").user.id,
   })
-  const email = (c: AppContext) =>
-    z.email().max(254).parse(c.get("identity").user.email)
+  const account = (c: AppContext) => ({
+    email: z.email().max(254).parse(c.get("identity").user.email),
+    emailVerified: c.get("identity").user.emailVerified === true,
+  })
   async function action(c: AppContext, run: () => Promise<unknown>) {
     try {
       return c.json(await run())
@@ -32,7 +32,9 @@ export function registerEmailRoutes(
             ? 429
             : e.code === "email_not_configured"
               ? 503
-              : e.code === "email_request_conflict"
+              : e.code === "email_verification_required"
+                ? 403
+                : e.code === "email_request_conflict"
                 ? 409
                 : 400
         )
@@ -43,26 +45,16 @@ export function registerEmailRoutes(
   }
   const input = (c: AppContext) => c.req.json().catch(() => null)
   app.get("/api/notifications/email", (c) =>
-    action(c, () => service(c).overview(actor(c), email(c)))
+    action(c, () => service(c).overview(actor(c), account(c)))
   )
-  app.post("/api/notifications/email/verify/request", (c) =>
-    action(c, async () => {
-      emailConsentInput.parse(await input(c))
-      await service(c).requestCode(actor(c), email(c))
-      return { queued: true }
-    })
-  )
-  app.post("/api/notifications/email/verify", (c) =>
-    action(c, async () => {
-      const data = notificationVerifyInput.parse(await input(c))
-      await service(c).verify(actor(c), email(c), data.code)
-      return { verified: true }
-    })
-  )
+  // Old clients cannot start a second verification flow.
+  for (const path of ["/api/notifications/email/verify/request","/api/notifications/email/verify"]) {
+    app.post(path,c=>c.json({error:"email_verification_in_login"},410))
+  }
   app.put("/api/notifications/email/preferences", (c) =>
     action(c, async () => {
       const data = emailPreferencesInput.parse(await input(c))
-      await service(c).preferences(actor(c), email(c), data.enabled)
+      await service(c).preferences(actor(c), account(c), data.enabled)
       return { saved: true }
     })
   )
@@ -70,7 +62,7 @@ export function registerEmailRoutes(
     action(c, async () => {
       const n = await service(c).schedule(
         actor(c),
-        email(c),
+        account(c),
         notificationScheduleInput.parse(await input(c))
       )
       return { id: n.id, status: n.status }
@@ -81,7 +73,7 @@ export function registerEmailRoutes(
       const data = emailTestInput.parse(await input(c))
       const n = await service(c).schedule(
         actor(c),
-        email(c),
+        account(c),
         { ...data, title: "Mensaje de prueba", scheduledAt: Date.now() },
         true
       )

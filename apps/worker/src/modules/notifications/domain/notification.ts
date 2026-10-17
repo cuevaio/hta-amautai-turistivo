@@ -13,6 +13,7 @@ export type Status =
 export type Contact = {
   phone: string | null
   verified_at: number | null
+  consent_at: number | null
   enabled: number
   timezone: string
   challenge_expires: number | null
@@ -37,14 +38,13 @@ export class NotificationError extends Error {
   constructor(code: string) {
     super(code)
     this.code = code
-    this.code = code
   }
 }
 export function requireContact(
   contact: Contact | null
 ): asserts contact is Contact & { phone: string } {
-  if (!contact?.phone || !contact.verified_at || !contact.enabled)
-    throw new NotificationError("whatsapp_not_verified")
+  if (!contact?.phone || !contact.consent_at || !contact.enabled)
+    throw new NotificationError("whatsapp_not_registered")
 }
 export function validSchedule(at: number, now: number) {
   if (!Number.isSafeInteger(at) || at < now - 60000 || at > now + 30 * 86400000)

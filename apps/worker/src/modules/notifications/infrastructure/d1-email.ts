@@ -10,7 +10,7 @@ export function d1Email(db: D1Database): EmailRepository {
     contact: (a) =>
       db
         .prepare(
-          "SELECT email,enabled,verified_at,challenge_id FROM email_contacts WHERE tenant_id=? AND user_id=?"
+          "SELECT email,enabled,verified_at,opted_out FROM email_contacts WHERE tenant_id=? AND user_id=?"
         )
         .bind(a.tenantId, a.userId)
         .first<EmailContact>(),
@@ -26,78 +26,19 @@ export function d1Email(db: D1Database): EmailRepository {
           .all<EmailNotification>()
       ).results
     },
-    async challenge(n, hash) {
-      const result = await db.batch([
-        db
-          .prepare(
-            "INSERT INTO email_contacts(tenant_id,user_id,email,consent_at,requested_at) VALUES(?,?,?,?,0) ON CONFLICT(tenant_id,user_id) DO NOTHING"
-          )
-          .bind(n.tenantId, n.userId, n.email, n.created_at),
-        db
-          .prepare(
-            "UPDATE email_contacts SET email=?,enabled=0,verified_at=NULL,consent_at=?,requested_at=?,challenge_id=?,challenge_hash=?,challenge_expires=?,challenge_attempts=0 WHERE tenant_id=? AND user_id=? AND requested_at<=? AND (SELECT COUNT(*) FROM email_notifications WHERE tenant_id=? AND user_id=? AND kind='verification' AND created_at>?)<5 AND (SELECT COUNT(*) FROM email_notifications WHERE email=? AND kind='verification' AND created_at>?)<5"
-          )
-          .bind(
-            n.email,
-            n.created_at,
-            n.created_at,
-            n.id,
-            hash,
-            n.expires_at,
-            n.tenantId,
-            n.userId,
-            n.created_at - 60000,
-            n.tenantId,
-            n.userId,
-            n.created_at - 86400000,
-            n.email,
-            n.created_at - 86400000
-          ),
-        db
-          .prepare(
-            "UPDATE email_notifications SET status='cancelled',body='' WHERE tenant_id=? AND user_id=? AND status IN ('pending','dispatching') AND EXISTS(SELECT 1 FROM email_contacts WHERE tenant_id=? AND user_id=? AND challenge_id=?)"
-          )
-          .bind(n.tenantId, n.userId, n.tenantId, n.userId, n.id),
-        db
-          .prepare(
-            "INSERT INTO email_notifications(id,tenant_id,user_id,email,kind,title,body,scheduled_at,expires_at,created_at,next_attempt,request_key) SELECT ?,?,?,?,?,?,?,?,?,?,?,? WHERE EXISTS(SELECT 1 FROM email_contacts WHERE tenant_id=? AND user_id=? AND challenge_id=?)"
-          )
-          .bind(
-            n.id,
-            n.tenantId,
-            n.userId,
-            n.email,
-            n.kind,
-            n.title,
-            n.body,
-            n.scheduled_at,
-            n.expires_at,
-            n.created_at,
-            n.scheduled_at,
-            n.request_key,
-            n.tenantId,
-            n.userId,
-            n.id
-          ),
+    async syncAccount(a,email,now) {
+      await db.batch([
+        db.prepare("UPDATE email_notifications SET status='cancelled',body='' WHERE tenant_id=? AND user_id=? AND status IN ('pending','dispatching') AND (kind='verification' OR email<>?)").bind(a.tenantId,a.userId,email),
+        db.prepare("INSERT INTO email_contacts(tenant_id,user_id,email,enabled,verified_at,consent_at,requested_at) VALUES(?,?,?,1,?,0,0) ON CONFLICT(tenant_id,user_id) DO UPDATE SET email=excluded.email,verified_at=CASE WHEN email_contacts.email=excluded.email AND email_contacts.verified_at IS NOT NULL THEN email_contacts.verified_at ELSE excluded.verified_at END,enabled=CASE WHEN email_contacts.opted_out=1 THEN 0 ELSE 1 END,challenge_id=NULL,challenge_hash=NULL,challenge_expires=NULL").bind(a.tenantId,a.userId,email,now),
       ])
-      if (!result[1]!.meta.changes) throw new EmailError("email_rate_limited")
-    },
-    async confirm(a, email, hash, now) {
-      const row = await db
-        .prepare(
-          "UPDATE email_contacts SET challenge_attempts=challenge_attempts+1,verified_at=CASE WHEN challenge_hash=? THEN ? ELSE verified_at END,enabled=CASE WHEN challenge_hash=? THEN 1 ELSE enabled END,challenge_expires=CASE WHEN challenge_hash=? THEN NULL ELSE challenge_expires END,challenge_hash=CASE WHEN challenge_hash=? THEN NULL ELSE challenge_hash END WHERE tenant_id=? AND user_id=? AND email=? AND challenge_expires>? AND challenge_attempts<5 AND challenge_hash IS NOT NULL RETURNING verified_at"
-        )
-        .bind(hash, now, hash, hash, hash, a.tenantId, a.userId, email, now)
-        .first<{ verified_at: number | null }>()
-      return row?.verified_at === now
     },
     async preferences(a, email, enabled) {
       await db.batch([
         db
           .prepare(
-            "UPDATE email_contacts SET enabled=? WHERE tenant_id=? AND user_id=? AND (?=0 OR (email=? AND verified_at IS NOT NULL))"
+            "UPDATE email_contacts SET enabled=?,opted_out=? WHERE tenant_id=? AND user_id=? AND (?=0 OR (email=? AND verified_at IS NOT NULL))"
           )
-          .bind(enabled ? 1 : 0, a.tenantId, a.userId, enabled ? 1 : 0, email),
+          .bind(enabled ? 1 : 0, enabled ? 0 : 1, a.tenantId, a.userId, enabled ? 1 : 0, email),
         db
           .prepare(
             "UPDATE email_notifications SET status='cancelled',body='' WHERE tenant_id=? AND user_id=? AND status IN ('pending','dispatching') AND ?=0"
@@ -195,9 +136,9 @@ export function d1Email(db: D1Database): EmailRepository {
         n.expires_at > now &&
         !!(await db
           .prepare(
-            "SELECT n.id FROM email_notifications n JOIN email_contacts c ON c.tenant_id=n.tenant_id AND c.user_id=n.user_id WHERE n.id=? AND n.tenant_id=? AND n.user_id=? AND n.status='dispatching' AND c.email=n.email AND ((n.kind='verification' AND c.challenge_id=n.id AND c.challenge_hash IS NOT NULL AND c.challenge_expires>?) OR (n.kind!='verification' AND c.enabled=1 AND c.verified_at IS NOT NULL))"
+            "SELECT n.id FROM email_notifications n JOIN email_contacts c ON c.tenant_id=n.tenant_id AND c.user_id=n.user_id WHERE n.id=? AND n.tenant_id=? AND n.user_id=? AND n.status='dispatching' AND c.email=n.email AND n.kind!='verification' AND c.enabled=1 AND c.opted_out=0 AND c.verified_at IS NOT NULL"
           )
-          .bind(n.id, n.tenantId, n.userId, now)
+          .bind(n.id, n.tenantId, n.userId)
           .first())
       )
     },

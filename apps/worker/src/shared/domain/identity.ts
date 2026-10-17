@@ -1,6 +1,7 @@
 export type SafeUser = {
   id: string
   email: string
+  emailVerified: boolean
   firstName: string | null
   lastName: string | null
   profilePictureUrl: string | null

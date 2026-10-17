@@ -2,7 +2,6 @@ import type { Hono } from "hono"
 import { z } from "zod"
 import {
   notificationPhoneInput,
-  notificationVerifyInput,
   notificationPreferencesInput,
   notificationScheduleInput,
 } from "@amautai/contracts"
@@ -53,17 +52,8 @@ export function registerNotificationRoutes(
   app.post("/api/notifications/phone", (c) =>
     action(c, async () => {
       const data = notificationPhoneInput.parse(await input(c))
-      await service(c).requestCode(actor(c), data.phone)
-      return { queued: true }
-    })
-  )
-  app.post("/api/notifications/verify", (c) =>
-    action(c, async () => {
-      await service(c).verify(
-        actor(c),
-        notificationVerifyInput.parse(await input(c)).code
-      )
-      return { verified: true }
+      await service(c).register(actor(c), data.phone)
+      return { registered: true, enabled: true }
     })
   )
   app.put("/api/notifications/preferences", (c) =>

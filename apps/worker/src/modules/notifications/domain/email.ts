@@ -7,11 +7,12 @@ export type EmailStatus =
   | "uncertain"
   | "cancelled"
   | "expired"
+export type EmailAccount = { email: string; emailVerified: boolean }
 export type EmailContact = {
   email: string
   enabled: number
   verified_at: number | null
-  challenge_id: string | null
+  opted_out: number
 }
 export type EmailNotification = Actor & {
   id: string
@@ -39,6 +40,6 @@ export function requireEmail(
   contact: EmailContact | null,
   email: string
 ): asserts contact is EmailContact {
-  if (!contact?.enabled || !contact.verified_at || contact.email !== email)
-    throw new EmailError("email_not_verified")
+  if (!contact?.verified_at || contact.email !== email) throw new EmailError("email_verification_required")
+  if (!contact.enabled || contact.opted_out) throw new EmailError("email_disabled")
 }

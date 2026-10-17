@@ -9,8 +9,6 @@ export const notificationsApi = {
       method: "POST",
       body: JSON.stringify({ phone, consent: true }),
     }),
-  verify: (code: string) =>
-    api(root + "/verify", { method: "POST", body: JSON.stringify({ code }) }),
   preferences: (enabled: boolean, timezone: string) =>
     api(root + "/preferences", {
       method: "PUT",

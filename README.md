@@ -168,26 +168,27 @@ Read [PROJECT_STATUS.md](PROJECT_STATUS.md) for the latest handoff, verified beh
 
 ## WhatsApp notifications
 
-The notification module adds /dashboard/notifications, verified E.164 phone numbers, explicit consent, opt-out, personal scheduled reminders, test messages and a 50-item status history. Educational assignments are not implemented yet; reminders currently belong to the signed-in adult and do not claim task integration.
+The notification module adds /dashboard/notifications, direct E.164 phone registration, explicit consent, opt-out, personal scheduled reminders, test messages and a 50-item status history. Educational assignments are not implemented yet; reminders currently belong to the signed-in adult and do not claim task integration.
 
 - Worker: modules/notifications follows the existing domain/application/infrastructure/HTTP boundaries. D1 migration 0002_notifications.sql adds contact verification and a durable outbox.
 - A scheduled handler runs every minute, leases due rows, checks current consent, retries gateway failures with stable IDs, and polls delivery states. Accepted, sent and delivered are distinct; uncertain sends are not automatically replayed.
 - apps/whatsapp-gateway runs separately on the VPS with encrypted SQLite auth, one sender session and an SSH-only admin page. See its README for deployment, pairing, retention and tests.
 - WHATSAPP_GATEWAY_URL is server configuration. WHATSAPP_GATEWAY_TOKEN is a Worker secret; no gateway credential enters browser code.
-- Verification codes expire in ten minutes, allow five attempts, and are rate limited to five requests per user/phone per day with a one-minute cooldown. Personal reminders/test messages are limited to 20 per user/day, scheduled at most 30 days ahead and expire one hour after the chosen time.
+- Saving a phone with consent immediately activates WhatsApp notifications. No recipient verification code or QR is required. Only the shared sender session is linked once by an administrator. Registration accepts international numbers with or without a leading + and normalizes spaces/hyphens.
+- Personal reminders/test messages are limited to 20 per account and recipient phone per day, scheduled at most 30 days ahead and expire one hour after the chosen time. Sender outages do not block registration; the outbox retains pending notifications.
 - Changing the phone or disabling notifications cancels pending messages. Already accepted/in-flight messages cannot be recalled.
 - UI dates identify the browser input timezone and history display timezone; persistence uses UTC epoch milliseconds.
 - Full validation: pnpm run check, including the gateway tests. A passing mock does not establish real WhatsApp delivery.
 
-The WhatsApp deployment uses D1 migrations 0002 and 0003 (email remains unconfigured), the Amautai Worker and the Docker service at /opt/amautai-whatsapp. The gateway is installed and its authenticated HTTPS connection endpoint was verified. Pairing requires the sender's phone. The deployment includes the previously local architecture refactor. Baileys is unofficial and sessions may be disconnected or restricted.
+The WhatsApp deployment uses D1 migrations 0002 and 0003 (the email channel is configured separately), the Amautai Worker and the Docker service at /opt/amautai-whatsapp. The gateway is installed and its authenticated HTTPS connection endpoint was verified. Pairing requires the sender's phone. The deployment includes the previously local architecture refactor. Baileys is unofficial and sessions may be disconnected or restricted.
 
 ## Email notifications
 
-Email is an independent notification channel beside WhatsApp on Dashboard → Notifications. The recipient is always the authenticated account email; callers cannot supply arbitrary recipients. Enabling requires explicit consent and a six-digit verification code (10-minute expiry, five attempts). Preferences, history, cancellation, and daily limits are scoped to both tenant and user. Requests support stable idempotency keys. The UI preserves drafts after failures.
+Email is an independent notification channel beside WhatsApp on Dashboard → Notifications. The recipient is always the authenticated account email; callers cannot supply arbitrary recipients. Email verification belongs to the WorkOS sign-in flow. The server carries WorkOS emailVerified into its trusted identity; a verified account can send a test or schedule reminders immediately, without a second code or activation step. Users can opt out and explicitly re-enable notifications. Preferences, history, cancellation, and daily limits are scoped to both tenant and user. Requests support stable idempotency keys. The UI preserves drafts after failures.
 
 The existing minute cron dispatches each configured channel independently. Email uses HTTPS JMAP with the existing Stalwart server; no SMTP password reaches the browser and no additional VPS service is needed. Submission acceptance is not proof of inbox delivery. Network failures before submission retry at most five times; timeouts during submission and expired dispatch leases become uncertain and are never automatically resent. Disabling a channel cancels queued messages. A message already accepted by the server cannot be recalled.
 
-Apply `apps/worker/migrations/0003_email_notifications.sql` locally before using the email routes, and remotely before enabling email in a deployment. Email dispatch skips its database entirely when configuration is missing, so a disabled channel does not block the existing WhatsApp scheduler.
+Apply migrations 0003 and 0004 locally and remotely before publishing this version. Migration 0004 preserves legacy verified opt-outs, retires pending notification OTPs, and records explicit opt-out independently of account verification. Email dispatch skips its database entirely when configuration is missing, so a disabled channel does not block the existing WhatsApp scheduler.
 
 Server-side configuration (use Wrangler secrets or ignored local `.dev.vars`, never frontend variables):
 
@@ -198,7 +199,7 @@ Server-side configuration (use Wrangler secrets or ignored local `.dev.vars`, ne
 
 The sender account must have JMAP mail/submission access, a matching Identity, and a drafts mailbox. The adapter discovers the account and mailbox, validates that the API stays on the configured HTTPS origin, and submits plain-text templates. There is no delivery/bounce tracking yet. Automatic educational task events remain future work.
 
-API under `/api/notifications/email`: GET overview; POST schedule; POST `/verify/request` with `{consent:true}`; POST `/verify` with `{code}`; PUT `/preferences` with `{enabled}`; POST `/test` with `{requestKey}`; DELETE `/:id`. Mutations retain same-origin and `X-Amautai-Request: 1` protections. Scheduling uses `{title,scheduledAt,requestKey}`.
+API under `/api/notifications/email`: GET overview; POST schedule; PUT `/preferences` with `{enabled}`; POST `/test` with `{requestKey}`; DELETE `/:id`. Mutations retain same-origin and `X-Amautai-Request: 1` protections. Scheduling uses `{title,scheduledAt,requestKey}`.
 
 ### VPS and sender-domain inspection — October 17, 2026
 
@@ -226,7 +227,7 @@ Pairing uses the recognized Chrome client identity. Cached pairing codes are reu
 
 The dedicated notificaciones@amautai.urday.dev account is provisioned in Stalwart and authenticates with JMAP mail/submission access. MX, SPF, RSA DKIM (selector v1-rsa-20261017), and DMARC records are published and resolve publicly. The public DKIM value matches Stalwart. The sender password is stored in protected configuration outside this repository and in Worker secrets; existing WorkOS and WhatsApp secrets are preserved.
 
-Email is enabled in production (Worker d0d73c98-098c-47a2-8a30-3abab825b925). A verification requested through the real signed-in public UI was dispatched by the production cron and received in Diego's Outlook mailbox on October 17, 2026 at 15:56 Lima time. D1 recorded accepted and Stalwart recorded a final submission with SMTP 250; Outlook receipt was independently read through the connected mailbox. The notification's application status remains accepted because it does not yet reconcile delivery receipts. Outlook message-source headers independently confirm SPF=pass, DKIM=pass (d=amautai.urday.dev, selector v1-rsa-20261017), and DMARC=pass. Each user must still verify their own address before enabling reminders.
+Email is enabled in production (Worker d0d73c98-098c-47a2-8a30-3abab825b925). A verification requested through the real signed-in public UI was dispatched by the production cron and received in Diego's Outlook mailbox on October 17, 2026 at 15:56 Lima time. D1 recorded accepted and Stalwart recorded a final submission with SMTP 250; Outlook receipt was independently read through the connected mailbox. The notification's application status remains accepted because it does not yet reconcile delivery receipts. Outlook message-source headers independently confirm SPF=pass, DKIM=pass (d=amautai.urday.dev, selector v1-rsa-20261017), and DMARC=pass. Notification-specific codes have been removed; verified WorkOS account emails are ready to use by default.
 
 Gateway HTTP requests reject redirects with manual redirect handling and log only sanitized failure categories. The browser session and Worker-to-VPS connection are verified independently.
 
@@ -236,4 +237,12 @@ WhatsApp sender pairing succeeded with the recognized Chrome identity. The authe
 
 Latest validation before GitHub backup: 60 backend tests, 3 frontend transport tests, 4 gateway tests and 9 architecture tests passed, along with lint, types and build. Both notification channels are deployed; WhatsApp sender connectivity survives a container restart. Recipient verification and delivery outcomes are recorded in PROJECT_STATUS.md.
 
-A real verification message sent through the public application to a separate recipient received a WhatsApp delivery acknowledgment. Diego completed recipient verification in the public application. A subsequent test notification requested through that UI was dispatched by production cron and received a WhatsApp delivery acknowledgment.
+Initial validation before direct registration: a real verification message sent through the public application to a separate recipient received a WhatsApp delivery acknowledgment. Diego completed recipient verification in the public application. A subsequent test notification requested through that UI was dispatched by production cron and received a WhatsApp delivery acknowledgment.
+
+Direct WhatsApp registration replaces the former recipient OTP flow at POST /api/notifications/phone. The old WhatsApp /verify endpoint is removed. Existing historical verification fields are preserved without treating new registrations as ownership-verified. Tests cover immediate activation, phone normalization, opt-out, stale-recipient cancellation, user isolation, idempotency, and daily limits.
+
+### Email friction reduction — October 17, 2026
+
+Notification-specific verification endpoints now return 410 and point to sign-in verification; no new notification OTP is generated. Email destinations and verification state come exclusively from the authenticated server identity. Opt-outs persist across requests and verified address changes; a changed address cancels queued messages to the old address. No marketing subscription or additional consent event is fabricated. Existing login/signup/OAuth verification flows are preserved.
+
+The direct-registration version was published as Worker 34ccf34a-4f96-44ba-9a6c-3685ebeaece2 after migration 0004 and the full gate (64 backend, 3 web, 4 gateway, 9 architecture tests; lint/types/build). Automated browser interaction saved the previously authorized recipient using country-code digits without a leading +, confirmed immediate activation with no OTP controls, and requested a test notification. The production gateway recorded delivered.

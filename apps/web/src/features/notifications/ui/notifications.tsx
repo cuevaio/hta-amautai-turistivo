@@ -1,4 +1,5 @@
 import { EmailNotifications } from "./email-notifications"
+import { notificationPhoneInput } from "@amautai/contracts"
 import { useRef, useState } from "react"
 import { BellIcon, RefreshCwIcon } from "lucide-react"
 import { useNotifications } from "../model/use-notifications"
@@ -9,11 +10,8 @@ import {
   FieldGroup,
   FieldLabel,
   FieldDescription,
+  FieldError,
 } from "@workspace/ui/components/field"
-import {
-  NativeSelect,
-  NativeSelectOption,
-} from "@workspace/ui/components/native-select"
 import {
   Empty,
   EmptyHeader,
@@ -36,20 +34,9 @@ const statusLabels: Record<string, string> = {
   cancelled: "Cancelado",
   uncertain: "Envío por confirmar",
 }
-const connectionLabels: Record<string, string> = {
-  connected: "WhatsApp conectado",
-  needs_pairing: "Falta vincular el número emisor",
-  starting: "Iniciando conexión",
-  connecting: "Conectando WhatsApp",
-  disconnected: "WhatsApp desconectado",
-  logged_out: "El emisor necesita vincularse nuevamente",
-  unavailable: "Servicio de WhatsApp no disponible",
-}
 export function Notifications() {
   const n = useNotifications()
-  const [phone, setPhone] = useState("+51"),
-    [consent, setConsent] = useState(""),
-    [code, setCode] = useState("")
+  const [phoneError, setPhoneError] = useState("")
   const [title, setTitle] = useState(""),
     [date, setDate] = useState("")
   const [validation, setValidation] = useState("")
@@ -69,7 +56,7 @@ export function Notifications() {
       </section>
     )
   const contact = n.data?.contact
-  const ready = !!contact?.verified && contact.enabled
+  const ready = !!contact?.registered && contact.enabled
   const timezone = contact?.timezone || localZone
   const format = (value: number) =>
     new Intl.DateTimeFormat("es-PE", {
@@ -77,16 +64,18 @@ export function Notifications() {
       timeStyle: "short",
       timeZone: timezone,
     }).format(value)
-  async function requestCode(e: React.SubmitEvent<HTMLFormElement>) {
+  async function register(e: React.SubmitEvent<HTMLFormElement>) {
     e.preventDefault()
-    setValidation("")
-    if (!/^\+[1-9]\d{7,14}$/.test(phone) || consent !== "yes") {
-      setValidation(
-        "Escribe el número con + y código de país, y acepta recibir los avisos."
-      )
+    setPhoneError("")
+    const input = notificationPhoneInput.safeParse({
+      phone: new FormData(e.currentTarget).get("phone"),
+      consent: true,
+    })
+    if (!input.success) {
+      setPhoneError("Incluye el código de país. Por ejemplo: +51987654321.")
       return
     }
-    await n.requestCode(phone)
+    await n.register(input.data.phone)
   }
   async function schedule(e: React.SubmitEvent<HTMLFormElement>) {
     e.preventDefault()
@@ -131,9 +120,10 @@ export function Notifications() {
           <RefreshCwIcon />
         </Button>
       </div>
-      {n.data && (
+      {n.data && n.data.connection !== "connected" && (
         <p role="status" className="text-sm text-muted-foreground">
-          {connectionLabels[n.data.connection] || "Servicio no disponible"}.
+          El envío de WhatsApp está temporalmente en pausa. Puedes guardar tu
+          número y programar avisos.
         </p>
       )}
       {(n.error || validation) && (
@@ -157,10 +147,10 @@ export function Notifications() {
             {contact?.phone && (
               <p className="text-sm">
                 {contact.phone} ·{" "}
-                {contact.verified ? "Verificado" : "Pendiente de verificación"}
+                {contact.registered ? "Registrado" : "Sin activar"}
               </p>
             )}
-            {contact?.verified && (
+            {contact?.registered && (
               <div className="flex flex-wrap items-center gap-3">
                 <Badge variant={contact.enabled ? "default" : "secondary"}>
                   {contact.enabled ? "Avisos activos" : "Avisos desactivados"}
@@ -174,93 +164,36 @@ export function Notifications() {
                 </Button>
               </div>
             )}
-            <form onSubmit={requestCode}>
+            <form onSubmit={register}>
               <FieldGroup>
-                <Field>
+                <Field data-invalid={!!phoneError}>
                   <FieldLabel htmlFor="whatsapp-phone">
-                    {contact?.verified
-                      ? "Cambiar número"
-                      : "Número con código de país"}
+                    WhatsApp con código de país
                   </FieldLabel>
                   <Input
                     id="whatsapp-phone"
+                    key={contact?.phone || "new"}
+                    name="phone"
                     type="tel"
                     autoComplete="tel"
                     placeholder="+51987654321"
                     required
-                    maxLength={16}
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
+                    maxLength={32}
+                    defaultValue={contact?.phone || ""}
+                    aria-invalid={!!phoneError}
                     disabled={n.busy}
                   />
                   <FieldDescription>
-                    Al solicitar un código se pausarán los avisos y se
-                    cancelarán los pendientes. Máximo 5 códigos al día.
+                    Al guardar aceptas recibir avisos de Amautai en este número.
+                    Puedes desactivarlos cuando quieras.
                   </FieldDescription>
+                  {phoneError && <FieldError>{phoneError}</FieldError>}
                 </Field>
-                <Field>
-                  <FieldLabel htmlFor="whatsapp-consent">
-                    Consentimiento
-                  </FieldLabel>
-                  <NativeSelect
-                    id="whatsapp-consent"
-                    required
-                    value={consent}
-                    onChange={(e) => setConsent(e.target.value)}
-                    disabled={n.busy}
-                  >
-                    <NativeSelectOption value="">
-                      Selecciona una opción
-                    </NativeSelectOption>
-                    <NativeSelectOption value="yes">
-                      Acepto recibir el código y recordatorios en este número
-                    </NativeSelectOption>
-                  </NativeSelect>
-                </Field>
-                <Button
-                  type="submit"
-                  disabled={n.busy || n.data.connection !== "connected"}
-                >
-                  Solicitar código
+                <Button type="submit" disabled={n.busy}>
+                  Guardar y activar WhatsApp
                 </Button>
               </FieldGroup>
             </form>
-            {!!contact?.verificationExpiresAt &&
-              (
-                <form
-                  onSubmit={async (e) => {
-                    e.preventDefault()
-                    setValidation("")
-                    if (await n.verify(code)) setCode("")
-                  }}
-                >
-                  <FieldGroup>
-                    <Field>
-                      <FieldLabel htmlFor="whatsapp-code">
-                        Código recibido por WhatsApp
-                      </FieldLabel>
-                      <Input
-                        id="whatsapp-code"
-                        inputMode="numeric"
-                        autoComplete="one-time-code"
-                        pattern="[0-9]{6}"
-                        maxLength={6}
-                        required
-                        value={code}
-                        onChange={(e) => setCode(e.target.value)}
-                        disabled={n.busy}
-                      />
-                      <FieldDescription>
-                        Vence a las {format(contact.verificationExpiresAt)}.
-                        Máximo 5 intentos.
-                      </FieldDescription>
-                    </Field>
-                    <Button type="submit" disabled={n.busy}>
-                      Verificar número
-                    </Button>
-                  </FieldGroup>
-                </form>
-              )}
           </div>
           <Separator />
           <div className="flex flex-col gap-4">
@@ -327,7 +260,7 @@ export function Notifications() {
                 </div>
                 {!ready && (
                   <p className="text-sm text-muted-foreground">
-                    Verifica tu número y activa los avisos para continuar.
+                    Guarda tu número para recibir avisos.
                   </p>
                 )}
               </FieldGroup>
@@ -348,8 +281,7 @@ export function Notifications() {
                   </EmptyMedia>
                   <EmptyTitle>Aún no tienes avisos</EmptyTitle>
                   <EmptyDescription>
-                    Los códigos y recordatorios aparecerán aquí con su estado
-                    real.
+                    Tus recordatorios aparecerán aquí con su estado real.
                   </EmptyDescription>
                 </EmptyHeader>
               </Empty>

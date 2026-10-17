@@ -71,16 +71,6 @@ export function useEmailNotifications() {
     error,
     notice,
     refresh: () => load(),
-    requestCode: () =>
-      run(
-        () => emailApi.requestCode(),
-        "Código solicitado. El envío puede tardar hasta un minuto; revisa su estado en el historial."
-      ),
-    verify: (code: string) =>
-      run(
-        () => emailApi.verify(code),
-        "Correo verificado. Las notificaciones están activas."
-      ),
     preferences: (enabled: boolean) =>
       run(
         () => emailApi.preferences(enabled),

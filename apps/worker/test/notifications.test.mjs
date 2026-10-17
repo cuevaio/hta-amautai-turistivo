@@ -80,9 +80,8 @@ function setup() {
     code: () => "123456",
   }
   const service = notificationService(repo, gateway, cryptoPort, () => now)
-  async function verified() {
-    await service.requestCode(actor, "+51999999999")
-    await service.verify(actor, "123456")
+  async function registered() {
+    await service.register(actor, "+51999999999")
   }
   return {
     db,
@@ -93,7 +92,7 @@ function setup() {
     gateway,
     service,
     sent,
-    verified,
+    registered,
     connected(value) {
       connected = value
     },
@@ -102,7 +101,7 @@ function setup() {
     },
   }
 }
-test("verification stores no public code, blocks wrong/expired codes and activates only after proof", async () => {
+test("direct registration enables notifications without OTP or gateway connectivity", async () => {
   const s = setup()
   await assert.rejects(
     s.service.schedule(s.actor, {
@@ -110,57 +109,107 @@ test("verification stores no public code, blocks wrong/expired codes and activat
       scheduledAt: s.now,
       requestKey: crypto.randomUUID(),
     }),
-    /whatsapp_not_verified/
+    /whatsapp_not_registered/
   )
-  await s.service.requestCode(s.actor, "+51999999999")
+  s.connected(false)
+  await s.registered()
+  const contact = await s.repo.contact(s.actor)
+  assert.equal(contact.enabled, 1)
+  assert.equal(contact.verified_at, null)
+  assert.equal(contact.consent_at, s.now)
   const overview = await s.service.overview(s.actor)
-  assert.equal(overview.contact.verified, false)
-  assert.ok(!JSON.stringify(overview).includes("123456"))
-  const stored = s.db
-    .prepare("SELECT challenge_hash FROM notification_contacts")
-    .get()
-  assert.equal(stored.challenge_hash.length, 64)
-  await assert.rejects(
-    s.service.verify(s.actor, "999999"),
-    /invalid_whatsapp_code/
+  assert.equal(overview.contact.registered, true)
+  assert.equal("verified" in overview.contact, false)
+  assert.equal(overview.notifications.length, 0)
+  const reminder = await s.service.schedule(s.actor, {
+    title: "Recordatorio",
+    scheduledAt: s.now,
+    requestKey: crypto.randomUUID(),
+  })
+  assert.equal(reminder.status, "pending")
+  assert.equal(reminder.phone, "+51999999999")
+})
+test("saving the same phone preserves reminders; changing it cancels stale recipients and clears challenges", async () => {
+  const s = setup()
+  await s.registered()
+  const reminder = await s.service.schedule(s.actor, {
+    title: "Recordatorio",
+    scheduledAt: s.now,
+    requestKey: crypto.randomUUID(),
+  })
+  await s.registered()
+  assert.equal(
+    s.db.prepare("SELECT status FROM notifications WHERE id=?").get(reminder.id)
+      .status,
+    "pending"
   )
-  await s.service.verify(s.actor, "123456")
+  s.db.exec(
+    "UPDATE notification_contacts SET verified_at=1,challenge_id='old',challenge_hash='old',challenge_expires=9999999999999"
+  )
+  await s.service.register(s.actor, "+51988888888")
+  const contact = await s.repo.contact(s.actor)
+  assert.equal(contact.phone, "+51988888888")
+  assert.equal(contact.enabled, 1)
+  assert.equal(contact.verified_at, null)
+  assert.equal(contact.challenge_expires, null)
+  assert.equal(
+    s.db.prepare("SELECT status FROM notifications WHERE id=?").get(reminder.id)
+      .status,
+    "cancelled"
+  )
+  const next = await s.service.schedule(s.actor, {
+    title: "Nuevo destino",
+    scheduledAt: s.now,
+    requestKey: crypto.randomUUID(),
+  })
+  assert.equal(next.phone, "+51988888888")
+})
+test("direct registration isolates users in the same tenant", async () => {
+  const s = setup()
+  await s.registered()
+  const other = { ...s.actor, userId: "bob" }
+  await s.service.register(other, "+51988888888")
+  assert.equal((await s.repo.contact(s.actor)).phone, "+51999999999")
+  assert.equal((await s.repo.contact(other)).phone, "+51988888888")
+  await s.service.preferences(other, false, "America/Lima")
   assert.equal((await s.repo.contact(s.actor)).enabled, 1)
-  await assert.rejects(
-    s.service.verify(s.actor, "123456"),
-    /invalid_whatsapp_code/
-  )
 })
-test("five wrong verification attempts exhaust the challenge, even with the correct code next", async () => {
+test("unverified direct recipients retain daily limits and idempotent retries", async () => {
   const s = setup()
-  await s.service.requestCode(s.actor, "+51999999999")
-  for (let i = 0; i < 5; i++)
-    await assert.rejects(s.service.verify(s.actor, "000000"))
+  await s.registered()
+  let first
+  for (let i = 0; i < 20; i++) {
+    const input = {
+      title: "Recordatorio " + i,
+      scheduledAt: s.now,
+      requestKey: crypto.randomUUID(),
+    }
+    await s.service.schedule(s.actor, input)
+    first ||= input
+  }
   await assert.rejects(
-    s.service.verify(s.actor, "123456"),
-    /invalid_whatsapp_code/
-  )
-  assert.equal((await s.repo.contact(s.actor)).verified_at, null)
-})
-test("expired challenges fail and repeated requests are atomically rate limited", async () => {
-  const s = setup()
-  await s.service.requestCode(s.actor, "+51999999999")
-  await assert.rejects(
-    s.service.requestCode(s.actor, "+51988888888"),
+    s.service.schedule(s.actor, {
+      title: "Demasiados",
+      scheduledAt: s.now,
+      requestKey: crypto.randomUUID(),
+    }),
     /notification_rate_limited/
   )
-  assert.equal((await s.repo.contact(s.actor)).phone, "+51999999999")
-  s.db.exec("UPDATE notification_contacts SET challenge_expires=1")
-  await assert.rejects(s.service.verify(s.actor, "123456"))
-  s.connected(false)
+  assert.ok((await s.service.schedule(s.actor, first)).id)
+  const other = { ...s.actor, userId: "bob" }
+  await s.service.register(other, "+51999999999")
   await assert.rejects(
-    s.service.requestCode(s.actor, "+51999999999"),
-    /whatsapp_unavailable/
+    s.service.schedule(other, {
+      title: "Mismo destinatario",
+      scheduledAt: s.now,
+      requestKey: crypto.randomUUID(),
+    }),
+    /notification_rate_limited/
   )
 })
 test("reminder idempotency, ownership, consent revocation and cancellation use real SQL", async () => {
   const s = setup()
-  await s.verified()
+  await s.registered()
   const input = {
     title: "Practicar matemáticas",
     scheduledAt: s.now + 60000,
@@ -180,13 +229,12 @@ test("reminder idempotency, ownership, consent revocation and cancellation use r
   )
   await assert.rejects(
     s.service.schedule(s.actor, input),
-    /whatsapp_not_verified/
+    /whatsapp_not_registered/
   )
 })
 test("dispatcher atomically leases, retries with stable IDs, reconciles delivery and expires messages", async () => {
   const s = setup()
-  await s.verified()
-  // Verification message is no longer eligible once the code has been consumed.
+  await s.registered()
   await dispatchNotifications(s.repo, s.gateway, s.now)
   const n = await s.service.schedule(s.actor, {
     title: "Mi recordatorio",
@@ -298,6 +346,52 @@ test("HTTP enforces authenticated ownership, browser origin and strict contracts
     ).status,
     403
   )
+  for (const phone of [
+    "",
+    "+000",
+    "not-phone",
+    "++51999999999",
+    "1234567890123456",
+  ]) {
+    assert.equal(
+      (
+        await request("/api/notifications/phone", "POST", {
+          phone,
+          consent: true,
+        })
+      ).status,
+      400
+    )
+  }
+  const saved = await request("/api/notifications/phone", "POST", {
+    phone: "51 999-999-999",
+    consent: true,
+  })
+  assert.equal(saved.status, 200)
+  assert.deepEqual(await saved.json(), { registered: true, enabled: true })
+  const overview = await (await request("/api/notifications")).json()
+  assert.equal(overview.contact.phone, "+51999999999")
+  assert.equal(overview.contact.registered, true)
+  assert.equal(overview.notifications.length, 0)
+  assert.equal(
+    (await request("/api/notifications/verify", "POST", { code: "123456" }))
+      .status,
+    404
+  )
+  assert.equal(
+    (
+      await request("/api/notifications/test", "POST", {
+        requestKey: crypto.randomUUID(),
+      })
+    ).status,
+    200
+  )
+  await dispatchNotifications(s.repo, s.gateway, Date.now() + 1000)
+  await dispatchNotifications(s.repo, s.gateway, Date.now() + 2000)
+  const delivered = await (await request("/api/notifications")).json()
+  assert.equal(delivered.notifications.length, 1)
+  assert.equal(delivered.notifications[0].kind, "test")
+  assert.equal(delivered.notifications[0].status, "delivered")
   user = null
   assert.equal((await request("/api/notifications")).status, 401)
 })

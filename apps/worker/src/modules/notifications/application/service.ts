@@ -12,7 +12,7 @@ import type {
 export function notificationService(
   repo: NotificationRepository,
   gateway: WhatsAppGateway,
-  secure: VerificationCrypto,
+  secure: Pick<VerificationCrypto, "id">,
   clock = Date.now
 ) {
   return {
@@ -26,10 +26,9 @@ export function notificationService(
         contact: contact
           ? {
               phone: contact.phone,
-              verified: !!contact.verified_at,
+              registered: !!contact.phone && !!contact.consent_at,
               enabled: !!contact.enabled,
               timezone: contact.timezone,
-              verificationExpiresAt: contact.challenge_expires,
             }
           : null,
         notifications: items.map(
@@ -54,36 +53,14 @@ export function notificationService(
         connection,
       }
     },
-    async requestCode(actor: Actor, phone: string) {
-      if ((await gateway.connection()) !== "connected")
-        throw new NotificationError("whatsapp_unavailable")
-      const id = secure.id(),
-        code = secure.code(),
-        now = clock()
-      await repo.challenge(actor, {
-        id,
-        phone,
-        hash: await secure.hash(id, code),
-        body:
-          "Amautai: tu código de verificación es " +
-          code +
-          ". Vence en 10 minutos. No lo compartas.",
-        now,
-      })
-    },
-    async verify(actor: Actor, code: string) {
-      const id = await repo.challengeId(actor)
-      if (
-        !id ||
-        !(await repo.confirm(actor, await secure.hash(id, code), clock()))
-      )
-        throw new NotificationError("invalid_whatsapp_code")
+    async register(actor: Actor, phone: string) {
+      await repo.register(actor, phone, clock())
     },
     async preferences(actor: Actor, enabled: boolean, timezone: string) {
       if (enabled) {
         const contact = await repo.contact(actor)
-        if (!contact?.verified_at)
-          throw new NotificationError("whatsapp_not_verified")
+        if (!contact?.phone || !contact.consent_at)
+          throw new NotificationError("whatsapp_not_registered")
       }
       await repo.preferences(actor, enabled, timezone)
     },

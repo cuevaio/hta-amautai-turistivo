@@ -29,10 +29,20 @@ export function useNotifications() {
   useEffect(() => {
     active.current = true
     const controller = new AbortController()
-    notificationsApi.overview(controller.signal).then(value=>{
-      if(!controller.signal.aborted){setData(value);setError("")}
-    }).catch(e=>{if(!controller.signal.aborted)setError(e.message)})
-    .finally(()=>{if(!controller.signal.aborted)setLoading(false)})
+    notificationsApi
+      .overview(controller.signal)
+      .then((value) => {
+        if (!controller.signal.aborted) {
+          setData(value)
+          setError("")
+        }
+      })
+      .catch((e) => {
+        if (!controller.signal.aborted) setError(e.message)
+      })
+      .finally(() => {
+        if (!controller.signal.aborted) setLoading(false)
+      })
     const timer = setInterval(() => {
       if (!locked.current) void load(controller.signal)
     }, 15000)
@@ -71,15 +81,10 @@ export function useNotifications() {
     error,
     notice,
     refresh: () => load(),
-    requestCode: (phone: string) =>
+    register: (phone: string) =>
       run(
         () => notificationsApi.phone(phone),
-        "Código solicitado. El envío puede tardar hasta un minuto; revisa su estado en el historial."
-      ),
-    verify: (code: string) =>
-      run(
-        () => notificationsApi.verify(code),
-        "Número verificado. Las notificaciones están activas."
+        "Número guardado. Tus notificaciones por WhatsApp están activas."
       ),
     preferences: (enabled: boolean, timezone: string) =>
       run(

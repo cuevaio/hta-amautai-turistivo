@@ -100,3 +100,19 @@ Diego selected a different personal recipient. The public application queued its
 Diego entered the received code in the public application. The verified recipient shows active notifications. The public Enviar prueba action queued a new test notification; production cron dispatched it to Baileys, and the gateway recorded delivered with a WhatsApp message ID. This verifies the real application -> D1 outbox -> scheduled Worker -> VPS gateway -> distinct WhatsApp recipient flow. No code, recipient number or credentials are included in this note. The sender session was separately verified to reconnect after a container restart.
 
 All WhatsApp implementation, deployment and delivery verification work is complete. Educational task integration remains future work because that product module does not yet exist. The code and final evidence notes are backed up in the private GitHub repository.
+
+## Direct WhatsApp recipient registration
+
+Diego requested removing the recipient verification step. Saving a phone now records consent and immediately enables notifications, including when the sender is temporarily offline. The UI uses one phone field and Save/activate; the recipient OTP form/API is removed. Phone changes cancel pending messages to the previous number, while saving the same number preserves reminders. Historical verification evidence is retained without marking new phone registrations as verified. Limits apply per account and recipient phone.
+
+Automated tests exercise direct registration without historical verification or gateway connectivity, changed recipients, strict consent/input checks, isolation, idempotency, opt-out and delivery dispatch. Public deployment and the real separate-recipient test are verified after the coordinated email simplification.
+
+## Email verification moved to sign-in — October 17, 2026
+
+Removed the duplicate notification OTP and activation step at Diego's request. The backend uses WorkOS emailVerified from the trusted session; verified accounts have email notifications enabled by default, with persistent explicit opt-out. Migration 0004 retires pending OTPs and preserves known legacy opt-outs. Verified email changes cancel pending deliveries to the previous address. Old notification verification endpoints return 410. Login/signup/OAuth verification stays in the existing auth flow. Changes passed 64 backend tests; joint publication and real UI test follow the coordinated WhatsApp deployment.
+
+### Direct registration publicly verified
+
+Published Worker 34ccf34a-4f96-44ba-9a6c-3685ebeaece2; migration 0004 applied locally and remotely. Full gate passed: 64 backend, 3 web, 4 gateway and 9 architecture tests, lint/types/build.
+
+Automated interaction with the actual signed-in public UI saved the authorized recipient using digits plus country code (without a leading +). The UI reported immediate activation and exposed zero WhatsApp OTP fields. Enviar prueba created a real outbox item; production cron forwarded it and the Baileys gateway returned a delivery acknowledgment (delivered). Sender session/credentials were preserved. No recipient number, OTP or credential is included in these notes.

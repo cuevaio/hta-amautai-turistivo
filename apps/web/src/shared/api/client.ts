@@ -33,22 +33,26 @@ export async function api<T>(
     const body = (await response.json().catch(() => ({}))) as { error?: string }
     const authMessages: Record<string, string> = {
       email_not_configured: "El envío de email aún no está habilitado.",
-      email_not_verified: "Verifica tu correo y activa los avisos para continuar.",
-      invalid_email_code: "El código no es válido, venció o agotó sus 5 intentos.",
-      email_rate_limited: "Espera un minuto entre códigos. Límite diario: 5 códigos y 20 avisos.",
-      email_request_conflict: "La solicitud ya existe con otros datos. Actualiza el historial.",
-      email_not_pending: "El email ya se está procesando o cambió. Actualiza el historial.",
-      invalid_email_input: "Revisa el código y los datos del email.",
+      email_disabled: "Los avisos por email están desactivados.",
+      email_verification_required: "La verificación de tu correo se completa al iniciar sesión.",
+      email_verification_in_login: "La verificación ahora se completa al iniciar sesión. Actualiza esta página.",
+      email_rate_limited:
+        "Alcanzaste el límite diario de 20 avisos para tu cuenta o número.",
+      email_request_conflict:
+        "La solicitud ya existe con otros datos. Actualiza el historial.",
+      email_not_pending:
+        "El email ya se está procesando o cambió. Actualiza el historial.",
+      invalid_email_input: "Revisa los datos del email.",
       whatsapp_unavailable:
         "El emisor de WhatsApp no está conectado. Inténtalo cuando esté disponible.",
-      whatsapp_not_verified:
-        "Verifica tu número y activa los avisos para continuar.",
+      whatsapp_not_registered:
+        "Registra tu número y activa los avisos para continuar.",
       invalid_whatsapp_code:
         "El código no es válido, venció o agotó sus 5 intentos. Solicita uno nuevo.",
       notification_rate_limited:
-        "Espera un minuto entre códigos. Límite diario: 5 códigos y 20 avisos.",
+        "Alcanzaste el límite diario de 20 avisos para tu cuenta o número.",
       invalid_notification_input:
-        "Revisa el número, código y datos del recordatorio.",
+        "Revisa el número y los datos del recordatorio.",
       invalid_schedule: "Elige una fecha dentro de los próximos 30 días.",
       notification_not_pending:
         "El aviso ya se está procesando o cambió. Actualiza el historial.",

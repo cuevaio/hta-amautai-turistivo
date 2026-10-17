@@ -51,6 +51,7 @@ export async function resolveWorkosSession(cookie: string, env: Bindings) {
       user: {
         id: result.user.id,
         email: result.user.email,
+        emailVerified: result.user.emailVerified === true,
         firstName: result.user.firstName,
         lastName: result.user.lastName,
         profilePictureUrl: result.user.profilePictureUrl,

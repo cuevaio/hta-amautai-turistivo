@@ -10,7 +10,7 @@ export function d1Notifications(db: D1Database): NotificationRepository {
     contact: (a) =>
       db
         .prepare(
-          "SELECT phone,verified_at,enabled,timezone,challenge_expires FROM notification_contacts WHERE tenant_id=? AND user_id=?"
+          "SELECT phone,verified_at,consent_at,enabled,timezone,challenge_expires FROM notification_contacts WHERE tenant_id=? AND user_id=?"
         )
         .bind(a.tenantId, a.userId)
         .first<Contact>(),
@@ -26,8 +26,8 @@ export function d1Notifications(db: D1Database): NotificationRepository {
           .all<Notification>()
       ).results
     },
-    async challenge(a, d) {
-      const results = await db.batch([
+    async register(a, phone, now) {
+      await db.batch([
         db
           .prepare(
             "INSERT OR IGNORE INTO notification_contacts(tenant_id,user_id) VALUES(?,?)"
@@ -35,78 +35,21 @@ export function d1Notifications(db: D1Database): NotificationRepository {
           .bind(a.tenantId, a.userId),
         db
           .prepare(
-            "UPDATE notification_contacts SET phone=?,verified_at=NULL,enabled=0,consent_at=?,challenge_id=?,challenge_hash=?,challenge_expires=?,challenge_attempts=0,requested_at=? WHERE tenant_id=? AND user_id=? AND requested_at<=? AND (SELECT COUNT(*) FROM notifications WHERE kind='verification' AND tenant_id=? AND user_id=? AND created_at>?)<5 AND (SELECT COUNT(*) FROM notifications WHERE kind='verification' AND phone=? AND created_at>?)<5"
+            "UPDATE notifications SET status='cancelled',body='' WHERE tenant_id=? AND user_id=? AND status IN ('pending','dispatching') AND (phone<>? OR kind='verification')"
           )
-          .bind(
-            d.phone,
-            d.now,
-            d.id,
-            d.hash,
-            d.now + 600000,
-            d.now,
-            a.tenantId,
-            a.userId,
-            d.now - 60000,
-            a.tenantId,
-            a.userId,
-            d.now - 86400000,
-            d.phone,
-            d.now - 86400000
-          ),
+          .bind(a.tenantId, a.userId, phone),
         db
           .prepare(
-            "UPDATE notifications SET status='cancelled',body='' WHERE tenant_id=? AND user_id=? AND status IN ('pending','dispatching') AND EXISTS(SELECT 1 FROM notification_contacts WHERE tenant_id=? AND user_id=? AND challenge_id=?)"
+            "UPDATE notification_contacts SET phone=?,verified_at=CASE WHEN phone=? THEN verified_at ELSE NULL END,enabled=1,consent_at=?,challenge_id=NULL,challenge_hash=NULL,challenge_expires=NULL,challenge_attempts=0 WHERE tenant_id=? AND user_id=?"
           )
-          .bind(a.tenantId, a.userId, a.tenantId, a.userId, d.id),
-        db
-          .prepare(
-            "INSERT INTO notifications(id,tenant_id,user_id,kind,phone,title,body,scheduled_at,expires_at,created_at,next_attempt,request_key) SELECT ?,?,?,'verification',?,'Verificación de WhatsApp',?,?,?,?,?,? WHERE EXISTS(SELECT 1 FROM notification_contacts WHERE tenant_id=? AND user_id=? AND challenge_id=?)"
-          )
-          .bind(
-            d.id,
-            a.tenantId,
-            a.userId,
-            d.phone,
-            d.body,
-            d.now,
-            d.now + 600000,
-            d.now,
-            d.now,
-            "verify:" + d.id,
-            a.tenantId,
-            a.userId,
-            d.id
-          ),
+          .bind(phone, phone, now, a.tenantId, a.userId),
       ])
-      if (!results[1]!.meta.changes)
-        throw new NotificationError("notification_rate_limited")
-    },
-    async challengeId(a) {
-      return (
-        (
-          await db
-            .prepare(
-              "SELECT challenge_id FROM notification_contacts WHERE tenant_id=? AND user_id=?"
-            )
-            .bind(a.tenantId, a.userId)
-            .first<{ challenge_id: string | null }>()
-        )?.challenge_id || null
-      )
-    },
-    async confirm(a, hash, now) {
-      const result = await db
-        .prepare(
-          "UPDATE notification_contacts SET challenge_attempts=challenge_attempts+1,verified_at=CASE WHEN challenge_hash=? THEN ? ELSE verified_at END,enabled=CASE WHEN challenge_hash=? THEN 1 ELSE enabled END,challenge_expires=CASE WHEN challenge_hash=? THEN NULL ELSE challenge_expires END,challenge_hash=CASE WHEN challenge_hash=? THEN NULL ELSE challenge_hash END WHERE tenant_id=? AND user_id=? AND challenge_expires>? AND challenge_attempts<5 AND challenge_hash IS NOT NULL RETURNING verified_at"
-        )
-        .bind(hash, now, hash, hash, hash, a.tenantId, a.userId, now)
-        .first<{ verified_at: number | null }>()
-      return result?.verified_at === now
     },
     async preferences(a, enabled, timezone) {
       await db.batch([
         db
           .prepare(
-            "UPDATE notification_contacts SET enabled=?,timezone=? WHERE tenant_id=? AND user_id=? AND (?=0 OR verified_at IS NOT NULL)"
+            "UPDATE notification_contacts SET enabled=?,timezone=? WHERE tenant_id=? AND user_id=? AND (?=0 OR (phone IS NOT NULL AND consent_at IS NOT NULL))"
           )
           .bind(
             enabled ? 1 : 0,
@@ -125,7 +68,7 @@ export function d1Notifications(db: D1Database): NotificationRepository {
     async enqueue(n) {
       await db
         .prepare(
-          "INSERT OR IGNORE INTO notifications(id,tenant_id,user_id,kind,phone,title,body,scheduled_at,expires_at,created_at,next_attempt,request_key) SELECT ?,?,?,?,?,?,?,?,?,?,?,? WHERE (SELECT COUNT(*) FROM notifications WHERE tenant_id=? AND user_id=? AND kind!='verification' AND created_at>?)<20 AND EXISTS(SELECT 1 FROM notification_contacts WHERE tenant_id=? AND user_id=? AND enabled=1 AND verified_at IS NOT NULL AND phone=?)"
+          "INSERT OR IGNORE INTO notifications(id,tenant_id,user_id,kind,phone,title,body,scheduled_at,expires_at,created_at,next_attempt,request_key) SELECT ?,?,?,?,?,?,?,?,?,?,?,? WHERE (SELECT COUNT(*) FROM notifications WHERE tenant_id=? AND user_id=? AND kind!='verification' AND created_at>?)<20 AND (SELECT COUNT(*) FROM notifications WHERE phone=? AND kind!='verification' AND created_at>?)<20 AND EXISTS(SELECT 1 FROM notification_contacts WHERE tenant_id=? AND user_id=? AND enabled=1 AND consent_at IS NOT NULL AND phone=?)"
         )
         .bind(
           n.id,
@@ -142,6 +85,8 @@ export function d1Notifications(db: D1Database): NotificationRepository {
           n.request_key,
           n.tenantId,
           n.userId,
+          n.created_at - 86400000,
+          n.phone,
           n.created_at - 86400000,
           n.tenantId,
           n.userId,
@@ -215,9 +160,9 @@ export function d1Notifications(db: D1Database): NotificationRepository {
       if (n.expires_at <= now) return false
       const row = await db
         .prepare(
-          "SELECT n.id FROM notifications n JOIN notification_contacts c ON c.tenant_id=n.tenant_id AND c.user_id=n.user_id WHERE n.id=? AND n.tenant_id=? AND n.user_id=? AND n.status='dispatching' AND c.phone=n.phone AND ((n.kind='verification' AND c.challenge_id=n.id AND c.challenge_expires>?) OR (n.kind!='verification' AND c.enabled=1 AND c.verified_at IS NOT NULL))"
+          "SELECT n.id FROM notifications n JOIN notification_contacts c ON c.tenant_id=n.tenant_id AND c.user_id=n.user_id WHERE n.id=? AND n.tenant_id=? AND n.user_id=? AND n.status='dispatching' AND c.phone=n.phone AND n.kind!='verification' AND c.enabled=1 AND c.consent_at IS NOT NULL"
         )
-        .bind(n.id, n.tenantId, n.userId, now)
+        .bind(n.id, n.tenantId, n.userId)
         .first()
       return !!row
     },

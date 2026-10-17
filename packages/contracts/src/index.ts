@@ -40,6 +40,7 @@ export type AuthResult = {
 export type User = {
   id: string
   email: string
+  emailVerified: boolean
   firstName: string | null
   lastName: string | null
   profilePictureUrl: string | null
@@ -53,7 +54,14 @@ export type Session = { user: User; tenant: Tenant; database: string }
 
 export const notificationPhoneInput = z
   .object({
-    phone: z.string().regex(/^\+[1-9]\d{7,14}$/),
+    phone: z
+      .string()
+      .trim()
+      .max(32)
+      .transform(
+        (value) => "+" + value.replace(/[\s()-]/g, "").replace(/^\+/, "")
+      )
+      .pipe(z.string().regex(/^\+[1-9]\d{7,14}$/)),
     consent: z.literal(true),
   })
   .strict()
@@ -86,10 +94,9 @@ export const notificationScheduleInput = z
 export type NotificationOverview = {
   contact: {
     phone: string | null
-    verified: boolean
+    registered: boolean
     enabled: boolean
     timezone: string
-    verificationExpiresAt: number | null
   } | null
   connection: string
   notifications: {
@@ -103,11 +110,19 @@ export type NotificationOverview = {
   }[]
 }
 
-export const emailConsentInput = z.object({ consent: z.literal(true) }).strict()
 export const emailPreferencesInput = z.object({ enabled: z.boolean() }).strict()
 export const emailTestInput = z.object({ requestKey: z.uuid() }).strict()
 export type EmailNotificationOverview = {
- channel: "email"; configured: boolean
- contact: { email: string; verified: boolean; enabled: boolean }
- notifications: { id: string; kind: string; title: string; status: string; scheduledAt: number; createdAt: number; error: string | null }[]
+  channel: "email"
+  configured: boolean
+  contact: { email: string; verified: boolean; enabled: boolean }
+  notifications: {
+    id: string
+    kind: string
+    title: string
+    status: string
+    scheduledAt: number
+    createdAt: number
+    error: string | null
+  }[]
 }

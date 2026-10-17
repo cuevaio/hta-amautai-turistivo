@@ -5,6 +5,12 @@ import { defineConfig } from "vite"
 
 // https://vite.dev/config/
 export default defineConfig({
+  server: {
+    host: "0.0.0.0",
+    port: 5173,
+    strictPort: true,
+    proxy: { "/api": "http://127.0.0.1:8787", "/callback": "http://127.0.0.1:8787" },
+  },
   plugins: [react(), tailwindcss()],
   resolve: {
     alias: {

@@ -31,3 +31,13 @@ dist-ssr
 
 # typescript
 *.tsbuildinfo
+
+# Wrangler local runtime and secrets
+.wrangler/
+.dev.vars*
+
+# Local review artifacts
+.artifacts/
+
+# Public WorkOS configuration template
+!apps/web/.env.example

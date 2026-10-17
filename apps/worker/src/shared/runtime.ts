@@ -1,0 +1,15 @@
+export type Bindings = {
+  EMAIL_JMAP_SESSION_URL?: string
+  EMAIL_JMAP_USERNAME?: string
+  EMAIL_JMAP_PASSWORD?: string
+  EMAIL_FROM?: string
+  WHATSAPP_GATEWAY_URL?: string
+  WHATSAPP_GATEWAY_TOKEN?: string
+  DB: D1Database
+  WORKOS_CLIENT_ID: string
+  WORKOS_TOKEN_ISSUER: string
+  WORKOS_TOKEN_AUDIENCE?: string
+  WORKOS_API_KEY: string
+  WORKOS_COOKIE_PASSWORD: string
+  APP_ORIGINS: string
+}

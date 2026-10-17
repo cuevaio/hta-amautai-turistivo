@@ -1,0 +1,40 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "amautai",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-10-17",
+  "assets": {
+    "directory": "../web/dist",
+    "not_found_handling": "single-page-application",
+    "run_worker_first": [
+      "/api/*",
+      "/callback"
+    ]
+  },
+  "account_id": "6f820062b903f496de6330e4c926675e",
+  "routes": [
+    {
+      "pattern": "amautai.urday.dev",
+      "custom_domain": true
+    }
+  ],
+  "triggers": {
+    "crons": [
+      "* * * * *"
+    ]
+  },
+  "vars": {
+    "WORKOS_CLIENT_ID": "client_01M55794X1B33VNMX8PW0JEYQ9",
+    "WORKOS_TOKEN_ISSUER": "https://api.workos.com/user_management/client_01M55794X1B33VNMX8PW0JEYQ9",
+    "APP_ORIGINS": "http://localhost:5173,https://amautai.urday.dev",
+    "WHATSAPP_GATEWAY_URL": "https://notify.urday.dev/amautai-whatsapp"
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "andes-app-db",
+      "database_id": "b3693f74-2f25-464d-9704-8335005b58eb",
+      "migrations_dir": "migrations"
+    }
+  ]
+}

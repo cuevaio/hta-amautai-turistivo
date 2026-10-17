@@ -1,0 +1,40 @@
+[
+  {
+    "file": "national-basic-education-curriculum.pdf",
+    "title": "Currículo Nacional de la Educación Básica",
+    "source_url": "https://www.minedu.gob.pe/curriculo/pdf/curriculo-nacional-de-la-educacion-basica.pdf",
+    "retrieved_on": "2026-10-17",
+    "bytes": 12381710,
+    "sha256": "a745ca842113f53609c435df9a13eda67371164b22ccb8492b2b02167dc2299b",
+    "status": "National curriculum framework; not a primary-grade lesson-plan template."
+  },
+  {
+    "file": "eib-consultation-proposed-measure.pdf",
+    "title": "Política Nacional de Educación Intercultural Bilingüe al 2040 - Medida a consultar",
+    "source_url": "https://cdn.www.gob.pe/uploads/document/file/9711970/140138-medida-a-consultar.pdf",
+    "retrieved_on": "2026-10-17",
+    "bytes": 3150912,
+    "sha256": "b5bf743f70fab73ef385bc97fdb480e771f2e04cdfc0a0ad0dc90e9c99a7cec2",
+    "status": "Consultation proposal; this file does not establish final approval."
+  },
+  {
+    "file": "eib-consultation-plan.pdf",
+    "title": "Política Nacional de Educación Intercultural Bilingüe al 2040 - Plan de Consulta",
+    "source_url": "https://cdn.www.gob.pe/uploads/document/file/9711973/140138-plan-de-consulta.pdf",
+    "retrieved_on": "2026-10-17",
+    "bytes": 3071438,
+    "sha256": "307f6c557a6b114e2669d4e6c8a7b72fa833b4c12bd05d610ac1106269406d33",
+    "status": "Consultation process document; not a classroom curriculum or proof of policy approval."
+  },
+  {
+    "file": "hack-the-andes-rubric-sponsors.pdf",
+    "title": "Rubrica de evaluacion - Hack the Andes",
+    "source_url": null,
+    "provided_by": "Diego Urday",
+    "original_path": "D:/diegourday/Descargas/hack-the-andes-rubrica-sponsors.pdf",
+    "retrieved_on": "2026-10-17",
+    "bytes": 2540308,
+    "sha256": "97d0f90dbe76ee54ac66801fab82838baea2cf2db4971b1debbea9b9eac43ce0",
+    "status": "User-provided one-page judging rubric; visually reviewed. Publication provenance and later organizer revisions are unverified."
+  }
+]

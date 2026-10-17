@@ -4,4 +4,8 @@ packages:
 
 allowBuilds:
   esbuild: true
+  workerd: true
   msw: false
+
+  "@whiskeysockets/baileys": true
+  protobufjs: true

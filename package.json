@@ -1,13 +1,16 @@
 {
-  "name": "andes-app",
+  "name": "amautai",
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "build": "turbo build",
+    "build": "pnpm run check:architecture && turbo build",
     "dev": "turbo dev",
-    "lint": "turbo lint",
+    "lint": "pnpm run check:architecture && turbo lint",
     "format": "turbo format",
-    "typecheck": "turbo typecheck"
+    "typecheck": "turbo typecheck",
+    "check:architecture": "node scripts/check-architecture.mjs",
+    "test:architecture": "node --test scripts/check-architecture.test.mjs",
+    "check": "pnpm run lint && pnpm run test:architecture && pnpm run typecheck && pnpm --filter @amautai/worker run test && pnpm --filter web run test && pnpm --filter @amautai/whatsapp-gateway run test && pnpm run build"
   },
   "devDependencies": {
     "prettier": "^3.9.10",

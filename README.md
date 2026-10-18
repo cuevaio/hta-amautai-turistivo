@@ -1,26 +1,33 @@
 # Amautai
 
+<img src="apps/web/public/favicon.svg" alt="Amautai" width="48" />
+
+Amautai is a multilingual math-learning platform for primary-school teachers and families. The repository includes WorkOS authentication, teacher/parent onboarding, persisted second-grade Mathematics session drafts, three learning games, named game rooms, a tenant-scoped project workspace, and email/WhatsApp notification settings. The interface supports Spanish, Chanka Quechua, and Peruvian Aymara; linguistic review and measured learning outcomes remain pending.
+
 Mail transition (October 18, 2026): Stalwart domain `amautai.turistivo.com` and mailbox `notificaciones@amautai.turistivo.com` is created and authenticates Stalwart. The active sender is `amautai@turistivo.com`, an alias on the existing `turistivo.com` mail domain; `soporte@amautai.turistivo.com` and `postmaster@amautai.turistivo.com` remain aliases on the new domain. MX, SPF and DMARC for `turistivo.com` are published. The Worker uses the sender through four EMAIL_* secrets; a generic sender test and a real WorkOS password-reset email were delivered to the owner’s Outlook inbox from `amautai@turistivo.com`. The Worker JMAP secrets were corrected and the recovery flow now succeeds. The previous mailbox is retained. WorkOS Admin Portal invitations now use this address as their reply-to; Amautai verification/reset emails use it as the sender. WorkOS-hosted Magic Auth emails still use WorkOS delivery.
 
 The public `/privacidad` and `/terminos` pages took effect on October 18, 2026. Amautai is operated by Diego Urday as an individual; privacy and account requests go to `amautai@turistivo.com`. The published legal text is Spanish; Quechua and Aymara legal translations still need human review. Google OAuth uses Amautai's own client credentials in WorkOS Andes Staging. Google consent-screen publishing and WorkOS Production are still pending; WorkOS requires billing information to enable Production, and Google currently labels the app Testing.
 
 Development handoff: [messaging architecture, WhatsApp and email](docs/MESSAGING_HANDOFF.md).
 
-<img src="apps/web/public/favicon.svg" alt="Amautai" width="48" />
-
-Amautai is a multilingual math-learning platform for primary-school teachers and families. It includes WorkOS authentication, a localized public landing page, teacher onboarding, persisted learning-session drafts for second-grade Mathematics, a tenant-scoped project workspace, and email/WhatsApp notification settings. Interactive learning games and measured learning outcomes remain future work.
-
 The production configuration targets one Amautai Worker and its D1 database in the Turistivo Cloudflare account. The canonical domain binds directly to that Worker; the app does not proxy to `amautai.urday.dev`. See [project status](PROJECT_STATUS.md) for verified behavior and remaining work.
 
-The public code includes teacher onboarding and persisted learning-session drafts for second-grade primary Mathematics, the localized landing page and static login artwork. See [teacher onboarding and session drafts](docs/TEACHER_ONBOARDING.md).
+The last documented public release includes teacher onboarding and persisted second-grade Mathematics session drafts. The integrated onboarding and games were checked locally; merging or pushing this code does not deploy it. See [project status](PROJECT_STATUS.md) and [teacher onboarding and session drafts](docs/TEACHER_ONBOARDING.md).
 
 The public `/lista-de-espera` page lists respondent names from the family and teacher surveys in separate columns. It does not show phone numbers or survey answers. The names are a snapshot and are not synchronized automatically. See [survey method and results](docs/PROBLEM_VALIDATION_SURVEYS.md).
+
+## Profiles and games
+
+- After sign-in, users choose a teacher or parent profile at `/registro/perfil`. Family registration requires a primary grade, city, and main language. Registration uses its own loading layout; `/panel` uses the shared shadcn sidebar. See [profile onboarding](docs/PROFILE_ONBOARDING.md).
+- Teacher rooms at `/panel/salas` support names, participant scores, deletion, and three games: food-group multiplication, [market addition/subtraction](docs/MARKET_GAME.md), and [nursery units/tens](docs/NURSERY_GAME.md).
+- Parents can open a fixed second-grade multiplication sample at `/panel/familia/jugar`. Its score is not persisted and it is not generated or personalized from the saved profile.
+- Existing profile and game migration filenames are retained, including their shared numeric prefixes. Wrangler tracks full filenames; the standard migration command below applies only pending files.
 
 ## Stack
 
 React, Vite, TypeScript, shadcn/ui (Base UI), Tailwind CSS, Motion, native fetch, Hono, Cloudflare Workers, D1, WorkOS, and Zod. pnpm workspaces and Turborepo manage the monorepo.
 
-- `apps/web`: React routes, authentication screens, and project CRUD.
+- `apps/web`: React routes, onboarding, authentication, game runtime, and workspace UI.
 - `apps/worker`: Hono API, WorkOS integration, session validation, notifications, and D1 migrations.
 - `packages/ui`: shared components and theme.
 - `packages/contracts`: shared Zod schemas and TypeScript contracts used by the web app and API.
@@ -128,23 +135,26 @@ pnpm run check
 
 Build compiles the frontend and bundles the Worker with `--dry-run`; it does not publish anything. Tests cover token validation, cross-environment rejection, registration, verification, recovery, network failures, CRUD, tenant isolation, and stale writes.
 
+The integrated code passed `pnpm run check` on October 18, 2026: 11 architecture tests, 98 backend tests, 29 frontend tests, and 4 gateway tests, plus lint, typechecking, and the production build. Game tests cover scoring, room persistence, inventory, and movement rules. These checks do not establish production deployment or measured learning gains.
+
 On October 17, 2026, the user completed signup, email verification, password recovery, and password login in the isolated Andes Staging environment. Server responses confirmed password reset and login succeeded, with an unauthorized session after reset until the user signed in again.
 
 Browser checks confirmed Account displays the signed-in user, Settings reports the database available, logout succeeds and returns to login, and directly opening the protected projects route after logout redirects to login. The earlier signing-key timeout was addressed by reusing the SDK client and key cache. Evidence is saved locally in the ignored .artifacts directory.
 
-Before the architecture migration, 38 backend tests, type checking, lint, and the frontend/Worker dry-run build passed. The local migration gate now includes 41 backend tests, 3 frontend transport tests, and 7 architecture-checker tests. Automated tests cover logout revocation, retry after upstream failure, idempotent logout for expired sessions, origin enforcement, and WorkOS client cache isolation in addition to the authentication and CRUD cases above.
+Before the architecture migration, 38 backend tests, type checking, lint, and the frontend/Worker dry-run build passed. That migration checkpoint included 41 backend tests, 3 frontend transport tests, and 7 architecture-checker tests. Automated tests cover logout revocation, retry after upstream failure, idempotent logout for expired sessions, origin enforcement, and WorkOS client cache isolation in addition to the authentication and CRUD cases above.
 
 ## Deployment status
 
-Worker: amautai. Upstream domain: https://amautai.urday.dev. Public domain: https://amautai.turistivo.com. D1: andes-app-db (the existing database is preserved). Personal Cloudflare account: 6f820062b903f496de6330e4c926675e.
+Worker: `amautai`. Canonical domain: https://amautai.turistivo.com. D1: `andes-app-db`. The current configuration targets the Turistivo Cloudflare account (`49d9cc4a3f40d7228ed3593263d35588`) and binds the domain directly to the Worker. The former personal-account deployment at `amautai.urday.dev` is historical.
 
-Deployment completed on October 17, 2026. Initial deployment version: 7dc1712b-286e-48f6-8ddc-400f4b334933. Both local and public origins are allowed. WorkOS uses the public callback by default and keeps the local callback registered. Initiate login, signup, sign-out, and password recovery use the public domain. WorkOS has a single password reset URL per application: recovery emails requested locally now open the public app.
+The initial deployment completed on October 17, 2026, with version `7dc1712b-286e-48f6-8ddc-400f4b334933`; the Worker later moved to the Turistivo account. Both local and public origins are allowed. WorkOS uses the public callback by default and keeps the local callback registered. Login, signup, sign-out, and password recovery use the public domain. WorkOS has a single password reset URL per application: recovery emails requested locally open the public app.
 
 The public Worker has its own cookie encryption secret. Its WorkOS API key stays server-side. Secrets are provisioned separately from deployment configuration and never committed.
 
-To publish after reviewing this README and checking the intended account:
+To publish after reviewing this README, run `wrangler whoami` and confirm the Turistivo account before applying remote migrations or deploying:
 
 ```bash
+pnpm --filter @amautai/worker exec wrangler whoami
 pnpm run check
 pnpm --filter @amautai/worker exec wrangler d1 migrations apply andes-app-db --remote
 pnpm --filter @amautai/worker exec wrangler deploy

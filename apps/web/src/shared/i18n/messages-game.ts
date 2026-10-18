@@ -2,7 +2,6 @@
 export const gameRows: readonly (readonly [string, string, string])[] = [
   ["Abrir juego", "Pukllayta kichay", "Anatawi jist'araña"],
   ["Juego para familias", "Ayllukunapaq pukllay", "Familianakataki anatawi"],
-  ["Alimenta a tu comunidad", "Aylluykita mikuchiy", "Ayllumar manq'ayaña"],
   ["Una partida corta de multiplicación para 2.º de Primaria.", "2 ñiqi primariaq mirachiy pukllay", "2 t'aqa primaria mirayañ anatäwi"],
   ["Toca la pantalla para guiar al ave. Recoge tres grupos con la cantidad correcta.", "Pisquta pusarinapaq pantalla llachpay. Kimsa huñuta allin yupaywan huñuy.", "Jamach'i irpañataki pantalla llamkt'am. Kimsa tama chiqapa jakhumpi apthapim."],
   ["El puntaje de esta partida no se guarda.", "Kay pukllaypa puntunqa manam waqaychasqachu.", "Aka anatawina puntu janiwa imaskiti."],
@@ -13,7 +12,33 @@ export const gameRows: readonly (readonly [string, string, string])[] = [
   ["Puntaje final: {{score}}", "Tukuy puntuyki: {{score}}", "Tukuya puntu: {{score}}"],
   ["Inicio de Amautai", "Amautai qallariynin", "Amautai qalltaña"],
   ["Tu cuenta familiar está lista para jugar.", "Ayllu yupayniykim pukllaypaq wakichisqa kachkan.", "Ayllu cuenta-mamaxa anatañataki wakicht'atawa."],
-  ["No pudimos cargar el juego. Reintenta.", "Pukllayta mana kichayta atirqanikuchu. Yapamanta yantay.", "Anatawi janiwa jist’araña atipkti. Wasitata yant’am."],
+  ["Nombre de la sala", "Pukllana wasipa sutin", "Anatañ utana sutipa"],
+  [
+    "Por ejemplo: 2.º A · Matemática",
+    "Kayhina: 2.º A · Yupay yachay",
+    "Akjama: 2.º A · Jakhu yatiwi",
+  ],
+  ["Eliminar sala", "Pukllana wasita pichay", "Anatañ uta chhaqhtayaña"],
+  [
+    "Eliminar sala {{name}}",
+    "{{name}} pukllana wasita pichay",
+    "{{name}} anatañ uta chhaqhtayaña",
+  ],
+  [
+    "Eliminando sala…",
+    "Pukllana wasita pichachkan…",
+    "Anatañ uta chhaqhtayaskiwa…",
+  ],
+  [
+    "Se eliminarán la sala {{name}}, sus estudiantes y todos sus puntos. Esta acción no se puede deshacer.",
+    "{{name}} pukllana wasi, yachakuqkuna hinaspa llapan puntunkuna pichasqa kanqa. Kayqa mana kutichiy atikunchu.",
+    "{{name}} anatañ uta, yatiqirinaka ukhamaraki taqi puntunakapawa chhaqhtayasini. Aka lurawixa janiwa kutt’ayaskaspati.",
+  ],
+  [
+    "No pudimos cargar el juego. Reintenta.",
+    "Pukllayta mana kichayta atirqanikuchu. Yapamanta yantay.",
+    "Anatawi janiwa jist’araña atipkti. Wasitata yant’am.",
+  ],
   ["Alimenta a tu comunidad", "Aylluykita mikuchiy", "Ayllumar manq'ayaña"],
   [
     "Alimenta a tu comunidad · Multiplicación",
@@ -264,5 +289,80 @@ export const gameRows: readonly (readonly [string, string, string])[] = [
     "Escribe un nombre válido de hasta 80 caracteres.",
     "Allin sutita qillqay, 80 sanampakama.",
     "Aski suti qillqam, 80 qillqanakakama.",
+  ],
+  [
+    "Controles y cómo jugar",
+    "Kamachiykuna, imayna pukllay",
+    "Irpanaka ukat kunjamata anataña",
+  ],
+  [
+    "Recoge {{count}} grupos de {{value}} alimentos.",
+    "{{value}} mikuykunamanta {{count}} huñuta huñuy.",
+    "{{value}} manq’anakata {{count}} tamacha apthapim.",
+  ],
+  [
+    "Toca el cielo para volar. Evita los grupos con otra cantidad.",
+    "Hanaq pachata llachpay phawanaykipaq. Huk yupayniyuq huñukunata ama hap’iychu.",
+    "Alaxpacha llamkt’am thuqtañataki. Yaqha jakhuni tamachanaka jan katjamti.",
+  ],
+  [
+    "Recoge grupos de {{value}}",
+    "{{value}}manta huñukunata huñuy",
+    "{{value}} tamachanaka apthapim",
+  ],
+  [
+    "Grupos: {{caught}} de {{total}}",
+    "Huñukuna: {{total}}manta {{caught}}",
+    "Tamachanaka: {{total}} ukata {{caught}}",
+  ],
+  [
+    "Ese grupo tiene otra cantidad. Busca grupos de {{value}}. −15 puntos.",
+    "Chay huñuqa huk yupayniyuqmi. {{value}}manta huñukunata maskay. −15 puntu.",
+    "Uka tamachaxa yaqha jakhuniwa. {{value}} tamachanaka thaqham. −15 puntunaka.",
+  ],
+  [
+    "Grupo correcto. +20 puntos.",
+    "Allin huñu. +20 puntu.",
+    "Chiqapa tamacha. +20 puntunaka.",
+  ],
+  [
+    "Toca el camino para conducir. La entrega es automática al detenerte en el mercado.",
+    "Ñanta llachpay purinaykipaq. Qatupi sayaptiki qipita kikinmanta qunki.",
+    "Thakhi llamkt’am sarnaqañataki. Qhathuna sayt’ataxa q’ipixa pachpata churasini.",
+  ],
+  [
+    "Elige cuánto mover. Después toca el mercado para entregar.",
+    "Haykata kuyuchinaykita akllay. Chaymanta qatuta llachpay qunaykipaq.",
+    "Qhawqha unxtayaña ajllim. Ukatxa qhathu llamkt’am churañataki.",
+  ],
+  [
+    "Sal del mercado para preparar tu próxima entrega.",
+    "Qatumanta lluqsiy huk qipita wakichinaykipaq.",
+    "Qhathuta mistum jutiri q’ipi wakichañataki.",
+  ],
+  [
+    "Toca el almacén para preparar tu carga; después ve al mercado.",
+    "Waqaychana wasita llachpay qipiykita wakichinaykipaq; chaymanta qatuman riy.",
+    "Pirwäña uta llamkt’am q’ipima wakichañataki; ukatxa qhathuru saram.",
+  ],
+  [
+    "Guardando o esperando conexión…",
+    "Waqaychachkan utaq tinkiyta suyachkan…",
+    "Imaski jan ukaxa mayachawi suyt’aski…",
+  ],
+  [
+    "−20 puntos. Usa Deshacer o vuelve al almacén para corregir.",
+    "−20 puntu. Ñawpaqman kutiyta ñit’iy utaq waqaychana wasiman kutiy allichanaykipaq.",
+    "−20 puntunaka. Kuticht’aña apnaqam jan ukaxa pirwäña utaru kutt’am askichañataki.",
+  ],
+  ["Tu misión", "Ruranayki", "Lurawima"],
+  ["Oportunidades", "Atikuykuna", "Yant’añanaka"],
+  ["Racha", "Qatinasqa atipaykuna", "Arkiri atipäwinaka"],
+  ["Nivel", "Pata", "Pata"],
+  ["Grupos recogidos", "Huñusqa huñukuna", "Apthapita tamachanaka"],
+  [
+    "Alimentos: {{current}} de {{total}}",
+    "Mikuykuna: {{total}}manta {{current}}",
+    "Manq’anaka: {{total}} ukata {{current}}",
   ],
 ]

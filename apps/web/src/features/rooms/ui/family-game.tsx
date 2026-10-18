@@ -69,6 +69,8 @@ export function FamilyGamePage() {
             energy={game.state.caught * game.challenge.unitsPerGroup}
             target={game.challenge.groupCount * game.challenge.unitsPerGroup}
             paused={false}
+            saving={false}
+            feedbackVersion={game.state.feedbackVersion}
             launch={game.state.solved}
             onCollect={game.collect}
             score={game.state.score}

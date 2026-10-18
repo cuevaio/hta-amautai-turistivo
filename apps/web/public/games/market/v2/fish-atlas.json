@@ -1,0 +1,32 @@
+{
+  "frames": {
+    "item": {
+      "frame": {
+        "x": 84,
+        "y": 196,
+        "w": 1383,
+        "h": 657
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 1383,
+        "h": 657
+      },
+      "sourceSize": {
+        "w": 1383,
+        "h": 657
+      }
+    }
+  },
+  "meta": {
+    "image": "fish.png",
+    "size": {
+      "w": 1536,
+      "h": 1024
+    },
+    "scale": "1"
+  }
+}

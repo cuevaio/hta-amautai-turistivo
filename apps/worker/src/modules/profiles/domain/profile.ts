@@ -11,8 +11,11 @@ export type FamilyProfileInput = {
 }
 export type FamilyProfile = FamilyProfileInput & { updatedAt: string }
 export class FamilyProfileError extends Error {
-  constructor(readonly code: "invalid_family_profile") {
+  readonly code: "invalid_family_profile"
+
+  constructor(code: "invalid_family_profile") {
     super(code)
+    this.code = code
   }
 }
 

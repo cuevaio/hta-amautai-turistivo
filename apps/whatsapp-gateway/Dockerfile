@@ -8,4 +8,5 @@ COPY apps/whatsapp-gateway/src apps/whatsapp-gateway/src
 RUN mkdir /data && chown node:node /data
 USER node
 WORKDIR /app/apps/whatsapp-gateway
+ENV DATA_DIR=/data
 CMD ["node","--experimental-strip-types","src/server.ts"]

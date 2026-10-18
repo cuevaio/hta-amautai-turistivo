@@ -301,3 +301,267 @@ test("speed bonus is deterministic and small, with the same mathematical rewards
   assert.equal(slow.solved, 1)
   assert.equal(catchFood(base, 5, 2000).score, -15)
 })
+
+test("market room persists loss and retry, rejects duplicate scoring and cargo endpoints", async () => {
+  const { request } = setup()
+  const { room } = await (
+    await request("", {
+      method: "POST",
+      data: { region: "coast", kind: "market", mode: "challenge" },
+    })
+  ).json()
+  await request(`/${room.id}/participants`, {
+    method: "POST",
+    data: { name: "Market student" },
+  })
+  const detail = await (await request("/" + room.id)).json()
+  const id = detail.participants[0].id,
+    prefix = `/${room.id}/participants/${id}`
+  let run = await (
+    await request(prefix + "/market/start", { method: "POST" })
+  ).json()
+  assert.equal(
+    (
+      await request(prefix + "/collect", {
+        method: "POST",
+        data: { version: run.participant.version, value: 4 },
+      })
+    ).status,
+    409
+  )
+  assert.equal(
+    (
+      await request(prefix + "/market/answer", {
+        method: "POST",
+        data: { version: run.participant.version, answer: 8, score: 9999 },
+      })
+    ).status,
+    400
+  )
+  for (let i = 0; i < 3; i++) {
+    const input = { version: run.participant.version, answer: 0 }
+    run = await (
+      await request(prefix + "/market/answer", { method: "POST", data: input })
+    ).json()
+    const repeated = await (
+      await request(prefix + "/market/answer", { method: "POST", data: input })
+    ).json()
+    assert.equal(run.participant.score, repeated.participant.score)
+  }
+  const saved = await (
+    await request(prefix + "/market/start", { method: "POST" })
+  ).json()
+  assert.equal(saved.participant.score, -60)
+  assert.equal(saved.participant.mistakes, 3)
+  assert.equal(
+    (
+      await request(prefix + "/market/help", {
+        method: "POST",
+        data: { version: saved.participant.version },
+      })
+    ).status,
+    409
+  )
+  const restart = await (
+    await request(prefix + "/market/retry", {
+      method: "POST",
+      data: { version: saved.participant.version },
+    })
+  ).json()
+  assert.equal(restart.participant.score, 0)
+  assert.equal(restart.participant.mistakes, 0)
+  assert.equal(
+    (await request(prefix + "/market/start", { method: "POST", user: "bob" }))
+      .status,
+    404
+  )
+})
+
+test("nursery rooms persist equivalent answers, deduplicate scoring, isolate games, and retain loss until retry", async () => {
+  const { service, actor, request, db } = setup()
+  const room = await service.create(actor, "jungle", "nursery", "challenge")
+  await service.add(actor, room.id, "Prueba vivero")
+  const p = (await service.detail(actor, room.id)).participants[0]
+  let run = await service.nurseryStart(actor, room.id, p.id)
+  const prefix = `/${room.id}/participants/${p.id}/nursery`
+  const input = {
+    version: run.participant.version,
+    trays: 0,
+    units: run.task.target,
+  }
+  const answer = await request(prefix + "/answer", {
+    method: "POST",
+    data: input,
+  })
+  assert.equal(answer.status, 200)
+  run = await answer.json()
+  assert.equal(run.participant.score, 100)
+  const duplicate = await request(prefix + "/answer", {
+    method: "POST",
+    data: input,
+  })
+  assert.equal((await duplicate.json()).participant.score, 100)
+  assert.equal(
+    (
+      await request(prefix + "/answer", {
+        method: "POST",
+        data: { ...input, score: 999 },
+      })
+    ).status,
+    400
+  )
+  assert.equal(
+    (await request(prefix + "/start", { method: "POST", user: "bob" })).status,
+    404
+  )
+  await assert.rejects(() => service.marketStart(actor, room.id, p.id), {
+    code: "room_conflict",
+  })
+  await assert.rejects(() => service.start(actor, room.id, p.id), {
+    code: "room_conflict",
+  })
+  for (let i = 0; i < 3; i++)
+    run = await service.nurseryAction(actor, room.id, p.id, {
+      version: run.participant.version,
+      trays: 0,
+      units: 0,
+    })
+  const saved = await service.nurseryStart(actor, room.id, p.id)
+  assert.equal(saved.participant.score, 40)
+  assert.equal(saved.participant.mistakes, 3)
+  await assert.rejects(
+    () =>
+      service.nurseryAction(actor, room.id, p.id, {
+        version: saved.participant.version,
+        trays: 1,
+        units: 4,
+      }),
+    { code: "room_conflict" }
+  )
+  run = await service.nurseryRetry(
+    actor,
+    room.id,
+    p.id,
+    saved.participant.version
+  )
+  assert.equal(run.participant.score, 0)
+  assert.equal(run.task.id, 0)
+  assert.equal((await service.detail(actor, room.id)).room.kind, "nursery")
+  assert.equal(db.prepare("PRAGMA foreign_key_check").all().length, 0)
+})
+
+test("nursery migration preserves preexisting market rooms, student scores and foreign keys", () => {
+  const db = new DatabaseSync(":memory:")
+  db.exec("PRAGMA foreign_keys=ON")
+  const migrations = new URL("../migrations/", import.meta.url)
+  for (const file of readdirSync(migrations)
+    .filter((n) => n.endsWith(".sql") && n < "0011_nursery_game.sql")
+    .sort())
+    db.exec(readFileSync(new URL(file, migrations), "utf8"))
+  db.exec(
+    "INSERT INTO tenants(id,kind,name,created_by) VALUES('t','personal','Test','u')"
+  )
+  db.exec(
+    "INSERT INTO game_rooms(id,tenant_id,user_id,region,kind,mode) VALUES('old','t','u','coast','market','practice')"
+  )
+  db.exec(
+    "INSERT INTO game_participants(id,room_id,name,name_key,score) VALUES('p','old','Test','test',240)"
+  )
+  db.exec(readFileSync(new URL("0011_nursery_game.sql", migrations), "utf8"))
+  assert.equal(
+    db.prepare("SELECT kind FROM game_rooms WHERE id='old'").get().kind,
+    "market"
+  )
+  assert.equal(
+    db.prepare("SELECT score FROM game_participants WHERE id='p'").get().score,
+    240
+  )
+  assert.equal(db.prepare("PRAGMA foreign_key_check").all().length, 0)
+  assert.throws(() =>
+    db.exec(
+      "INSERT INTO game_participants(id,room_id,name,name_key) VALUES('other','old','TEST','test')"
+    )
+  )
+  db.exec(
+    "INSERT INTO game_rooms(id,tenant_id,user_id,region,kind,mode) VALUES('new','t','u','jungle','nursery','challenge')"
+  )
+})
+
+test("room names persist, validate and preserve existing unnamed rooms", async () => {
+  const { request, service, actor } = setup()
+  const legacy = await service.create(actor, "coast")
+  assert.equal(legacy.name, null)
+  for (const name of ["", "   ", "a".repeat(81), "hidden\u200bname"]) {
+    assert.equal(
+      (await request("", { method: "POST", data: { region: "coast", name } }))
+        .status,
+      400
+    )
+  }
+  const result = await request("", {
+    method: "POST",
+    data: { region: "jungle", kind: "nursery", name: "  Segundo   A  " },
+  })
+  assert.equal(result.status, 200)
+  const { room } = await result.json()
+  assert.equal(room.name, "Segundo A")
+  assert.equal(
+    (await (await request("/" + room.id)).json()).room.name,
+    "Segundo A"
+  )
+  assert.equal(
+    (await service.list(actor)).find((r) => r.id === room.id).name,
+    "Segundo A"
+  )
+})
+
+test("room deletion enforces owner, tenant, authentication and CSRF and cascades participants", async () => {
+  const { request, service, actor, db } = setup()
+  const room = await service.create(
+    actor,
+    "coast",
+    "nursery",
+    "practice",
+    "Delete test"
+  )
+  const keep = await service.create(actor, "jungle")
+  await service.add(actor, room.id, "Test participant")
+  const participant = (await service.detail(actor, room.id)).participants[0]
+  await service.nurseryStart(actor, room.id, participant.id)
+  const path = "/" + room.id
+  assert.equal(
+    (await request(path, { method: "DELETE", user: "" })).status,
+    401
+  )
+  assert.equal(
+    (await request(path, { method: "DELETE", csrf: false })).status,
+    403
+  )
+  assert.equal(
+    (await request(path, { method: "DELETE", user: "bob" })).status,
+    404
+  )
+  await assert.rejects(
+    service.deleteRoom({ ...actor, userId: "bob" }, room.id),
+    { code: "room_not_found" }
+  )
+  await assert.rejects(
+    service.deleteRoom({ ...actor, tenantId: "user:bob" }, room.id),
+    { code: "room_not_found" }
+  )
+  assert.equal((await service.detail(actor, room.id)).participants.length, 1)
+  assert.equal((await request(path, { method: "DELETE" })).status, 200)
+  assert.equal((await request(path)).status, 404)
+  assert.equal((await request(path, { method: "DELETE" })).status, 404)
+  assert.equal(
+    db
+      .prepare("SELECT COUNT(*) AS n FROM game_participants WHERE room_id=?")
+      .get(room.id).n,
+    0
+  )
+  assert.deepEqual(
+    (await service.list(actor)).map((r) => r.id),
+    [keep.id]
+  )
+  assert.equal(db.prepare("PRAGMA foreign_key_check").all().length, 0)
+})

@@ -253,6 +253,14 @@ test("HTTP enforces auth, mutation origin, strict scope and absent onboarding", 
     (await s.request("/api/education/profile", { user: "" })).status,
     401
   )
+  assert.equal((await s.request("/api/education/catalog")).status, 403)
+  assert.equal(
+    (await s.request("/api/profile", {
+      method: "PUT",
+      data: { role: "teacher" },
+    })).status,
+    200
+  )
   assert.equal((await s.request("/api/education/catalog")).status, 200)
   assert.deepEqual(await (await s.request("/api/education/profile")).json(), {
     profile: null,
@@ -297,6 +305,15 @@ test("HTTP enforces auth, mutation origin, strict scope and absent onboarding", 
 })
 test("HTTP round trip persists independent session versions and reports only missing fields", async () => {
   const s = setup()
+  for (const user of ["alice", "bob"])
+    assert.equal(
+      (await s.request("/api/profile", {
+        method: "PUT",
+        data: { role: "teacher" },
+        user,
+      })).status,
+      200
+    )
   assert.equal(
     (
       await s.request("/api/education/profile", {

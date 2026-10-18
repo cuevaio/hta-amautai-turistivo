@@ -14,6 +14,7 @@ type State = {
   mistakes: number
   score: number
   feedback: Feedback
+  feedbackVersion: number
 }
 
 const freshState = (): State => ({
@@ -23,6 +24,7 @@ const freshState = (): State => ({
   mistakes: 0,
   score: 0,
   feedback: "",
+  feedbackVersion: 0,
 })
 
 export function useFamilyGame() {
@@ -42,6 +44,7 @@ export function useFamilyGame() {
       mistakes: state.mistakes + Number(!correct),
       score: state.score + (correct ? 20 : -15) + (complete ? 100 : 0),
       feedback: complete ? "win" : correct ? "correct" : "wrong",
+      feedbackVersion: state.feedbackVersion + 1,
     })
   }
 

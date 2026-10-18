@@ -9,6 +9,11 @@ export type FoodHud = {
   level: string
   win: string
   scoreValue: number
+  feedbackVersion: number
+  feedback: string
+  progress: string
+  instruction: string
+  status: string
 }
 export type CargoRuntime = {
   challenge: (
@@ -60,6 +65,11 @@ export function createCargoGame(
     level: "",
     win: "",
     scoreValue: 0,
+    feedbackVersion: 0,
+    feedback: "",
+    progress: "",
+    instruction: "",
+    status: "",
   }
   const keys = new Set<string>(),
     movementKeys = new Set([
@@ -78,7 +88,14 @@ export function createCargoGame(
     destination = null
   }
   const keydown = (e: KeyboardEvent) => {
-    if (!movementKeys.has(e.code) || stopped) return
+    if (
+      !movementKeys.has(e.code) ||
+      stopped ||
+      e.metaKey ||
+      e.ctrlKey ||
+      e.altKey
+    )
+      return
     e.preventDefault()
     keys.add(e.code)
     destination = null
@@ -86,6 +103,10 @@ export function createCargoGame(
   const keyup = (e: KeyboardEvent) => {
     keys.delete(e.code)
   }
+  const visibility = () => {
+    if (document.hidden) clearInput()
+  }
+  document.addEventListener("visibilitychange", visibility)
   host.addEventListener("keydown", keydown)
   host.addEventListener("keyup", keyup)
   host.addEventListener("blur", clearInput)
@@ -96,6 +117,11 @@ export function createCargoGame(
     goalText?: Phaser.GameObjects.Text
     livesText?: Phaser.GameObjects.Text
     levelText?: Phaser.GameObjects.Text
+    instructionText?: Phaser.GameObjects.Text
+    progressText?: Phaser.GameObjects.Text
+    statusText?: Phaser.GameObjects.Text
+    feedbackUntil = 0
+    feedbackBox?: Phaser.GameObjects.Container
     drops: { sprite: Phaser.GameObjects.Container; value: number }[] = []
     count = 0
     preload() {
@@ -113,6 +139,7 @@ export function createCargoGame(
     }
     create() {
       if (failed) return
+      this.cameras.main.setScroll(0, 104)
       this.add.image(480, 320, "land").setDisplaySize(960, 640)
       this.anims.create({
         key: "fly",
@@ -125,30 +152,13 @@ export function createCargoGame(
         140 / Math.max(this.player.width, this.player.height)
       )
       if (!options.reducedMotion) this.player.play("fly")
-      this.add.rectangle(480, 52, 960, 104, 0x102f38, 0.93).setDepth(10)
-      const style = {
-        fontFamily: "sans-serif",
-        fontSize: "25px",
-        color: "#ffffff",
-      }
-      this.goalText = this.add.text(22, 14, hud.goal, style).setDepth(11)
-      this.levelText = this.add
-        .text(22, 57, hud.level, { ...style, fontSize: "20px" })
-        .setDepth(11)
-      this.scoreText = this.add
-        .text(938, 14, hud.score, style)
-        .setOrigin(1, 0)
-        .setDepth(11)
-      this.livesText = this.add
-        .text(938, 57, hud.lives, { ...style, fontSize: "20px" })
-        .setOrigin(1, 0)
-        .setDepth(11)
       const pointTo = (p: Phaser.Input.Pointer) => {
         if (stopped) return
         host.focus({ preventScroll: true })
+        const point = this.cameras.main.getWorldPoint(p.x, p.y)
         destination = {
-          x: Phaser.Math.Clamp(p.x, flightBounds.left, flightBounds.right),
-          y: Phaser.Math.Clamp(p.y, flightBounds.top, flightBounds.bottom),
+          x: Phaser.Math.Clamp(point.x, flightBounds.left, flightBounds.right),
+          y: Phaser.Math.Clamp(point.y, flightBounds.top, flightBounds.bottom),
         }
       }
       this.input.on("pointerdown", pointTo)
@@ -168,27 +178,27 @@ export function createCargoGame(
       const n = this.count++,
         amount = n % 3 === 2 ? (value === 5 ? 3 : value + 1) : value
       const x = 130 + ((n * 173 + 300) % 560)
-      const sprite = this.add.container(x, 135)
+      const sprite = this.add.container(x, 160)
       sprite.add(
         this.add
-          .rectangle(0, 0, 100, 70, 0xfff9e9, 0.92)
+          .rectangle(0, 0, 124, 104, 0xfff9e9, 0.97)
           .setStrokeStyle(2, 0x173e3b)
       )
       for (let i = 0; i < amount; i++) {
         const icon = this.add.image(
-          -30 + (i % 3) * 30,
-          -15 + Math.floor(i / 3) * 23,
+          -36 + (i % 3) * 36,
+          -27 + Math.floor(i / 3) * 29,
           "meal",
           "item"
         )
-        icon.setScale(26 / Math.max(icon.width, icon.height))
+        icon.setScale(32 / Math.max(icon.width, icon.height))
         sprite.add(icon)
       }
       sprite.add(
         this.add
-          .text(0, 34, String(amount), {
+          .text(0, 38, String(amount), {
             fontFamily: "sans-serif",
-            fontSize: "24px",
+            fontSize: "44px",
             color: "#102f38",
             backgroundColor: "#fff9e9",
             padding: { x: 4, y: 1 },
@@ -202,7 +212,14 @@ export function createCargoGame(
       this.drops = this.drops.filter((d) => d !== drop)
     }
     update(_time: number, delta: number) {
-      if (stopped || waiting || celebrating || !this.player) return
+      if (
+        stopped ||
+        waiting ||
+        celebrating ||
+        this.time.now < this.feedbackUntil ||
+        !this.player
+      )
+        return
       const dir = {
         x:
           held.x +
@@ -244,7 +261,7 @@ export function createCargoGame(
     type: Phaser.AUTO,
     parent: host,
     width: 960,
-    height: 640,
+    height: 536,
     pixelArt: true,
     roundPixels: true,
     antialias: false,
@@ -264,6 +281,45 @@ export function createCargoGame(
         scene.player.setTint(0xff6666)
         scene.time.delayedCall(350, () => scene.player?.clearTint())
       }
+      if (
+        nextHud.feedbackVersion !== hud.feedbackVersion &&
+        nextHud.feedback &&
+        scene.player
+      ) {
+        scene.feedbackBox?.destroy(true)
+        const wrong = nextHud.scoreValue < hud.scoreValue
+        if (wrong) clearInput()
+        scene.feedbackUntil = wrong ? scene.time.now + 2200 : 0
+        const box = scene.add.container(480, wrong ? 270 : 565).setDepth(20)
+        scene.feedbackBox = box
+        box.add(
+          scene.add
+            .rectangle(
+              0,
+              0,
+              wrong ? 790 : 660,
+              wrong ? 126 : 78,
+              0x102f38,
+              0.97
+            )
+            .setStrokeStyle(3, wrong ? 0xf09b73 : 0xffda65)
+        )
+        box.add(
+          scene.add
+            .text(0, 0, nextHud.feedback, {
+              fontFamily: "sans-serif",
+              fontSize: "28px",
+              color: "#ffffff",
+              align: "center",
+              wordWrap: { width: 730 },
+            })
+            .setOrigin(0.5)
+        )
+        scene.time.delayedCall(wrong ? 2200 : 1600, () => {
+          box.destroy(true)
+          if (scene.feedbackBox === box) scene.feedbackBox = undefined
+        })
+      }
       value = next
       target = goal
       hud = nextHud
@@ -271,6 +327,9 @@ export function createCargoGame(
       scene.goalText?.setText(hud.goal)
       scene.livesText?.setText(hud.lives)
       scene.levelText?.setText(hud.level)
+      scene.instructionText?.setText(hud.instruction)
+      scene.progressText?.setText(hud.progress)
+      scene.statusText?.setText(hud.status).setVisible(!!hud.status)
     },
     pause(paused) {
       stopped = paused
@@ -328,6 +387,7 @@ export function createCargoGame(
       host.removeEventListener("keyup", keyup)
       host.removeEventListener("blur", clearInput)
       window.removeEventListener("blur", clearInput)
+      document.removeEventListener("visibilitychange", visibility)
       game.destroy(true)
     },
   }

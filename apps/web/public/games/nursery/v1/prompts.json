@@ -1,0 +1,9 @@
+{
+  "tool": "Built-in image_gen",
+  "useCase": "stylized-concept",
+  "prompts": {
+    "caretaker": "Use case: stylized-concept. Production pixel-art game sprite sheet for a Peruvian community nursery learning game. One friendly adult garden caretaker, brown skin, straw hat, teal shirt, earth-brown trousers and boots, carrying a small empty wooden cart in front. True crisp 16-bit pixel art, outlined, warm sunlight, side / three-quarter view suitable for top-down 2D movement. Four animation frames in a precise 2 by 2 grid on a square canvas, identical cell dimensions, identical feet baseline and scale in each cell, all facing right. Alternating walking steps and subtle cart wheel rotation, no extra characters, no lettering, no UI. Isolate each frame with generous transparent margins. Genuine transparent background.",
+    "plant": "Use case: stylized-concept. A single production game inventory icon, a healthy young seedling with two pairs of green leaves in a warm terracotta nursery pot. Polished crisp 16-bit pixel art, dark readable outline, warm top-left light, slight three-quarter view. Large and centered on a square genuinely transparent canvas with generous empty margins, no ground, no background, no letters, no numbers, no other objects. Must remain recognizable as one plant at 24px height.",
+    "tray": "Use case: stylized-concept. Single game asset: empty wooden seedling nursery tray, three-quarter overhead view, exactly TWO rows of FIVE empty square planting sockets, ten sockets total, every socket completely visible. Crisp polished 16-bit pixel art, warm cedar wood, dark outline, top-left sunlight, low wooden rim, readable at 180px width. Centered horizontally on a square genuinely transparent background, generous margins. Tray empty: no plants, no soil piles, no decorative objects, no lettering or digits. Intended as a base on which the game draws one plant per socket."
+  }
+}

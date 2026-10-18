@@ -35,6 +35,7 @@ dist-ssr
 # Wrangler local runtime and secrets
 .wrangler/
 .dev.vars*
+apps/whatsapp-gateway/.data/
 
 # Local review artifacts
 .artifacts/

@@ -40,7 +40,6 @@ export function CargoPlayer({
           <h1 className="text-2xl font-semibold">
             {m("Alimenta a tu comunidad")}
           </h1>
-          <p className="break-words">{run.participant.name}</p>
         </div>
         <div className="flex flex-wrap gap-2">
           {!lost && (
@@ -75,6 +74,8 @@ export function CargoPlayer({
           value={run.challenge.unitsPerGroup}
           energy={run.participant.caught * run.challenge.unitsPerGroup}
           target={run.challenge.groupCount * run.challenge.unitsPerGroup}
+          saving={game.busy}
+          feedbackVersion={run.participant.version}
           paused={run.participant.paused || game.busy || !!game.error}
           launch={run.participant.solved}
           onCollect={game.collect}

@@ -1,0 +1,86 @@
+{
+  "generator": "Built-in image_gen",
+  "originalsPreserved": true,
+  "assets": [
+    {
+      "region": "coast",
+      "file": "coast.png",
+      "dimensions": [
+        1672,
+        940
+      ],
+      "sha256": "03ac4311260c9d8d153eb18e7244630f916360f2b50f41cc336335182e728c3d",
+      "prompt": "Polished professional 16-bit pixel art background for an educational Peruvian coastal community plant nursery game, wide landscape panorama. Warm coastal daylight, soft blue sky with distant ocean strip, sandy pale ochre paths, tasteful reed-shade greenhouse, terracotta pots and seedling benches along the very back edge, cream adobe garden walls, flowering native-looking shrubs, layered greenery and a clean broad walkable beige courtyard occupying most of the lower half. Rich carefully placed pixel details, warm wood, subtle shadows, cohesive teal and sage palette, clear silhouettes, charming premium indie farming game quality. Background scenery only: no people, no animals, no text, no signs, no HUD, no numbers, no icons, no controls. Courtyard foreground intentionally open for player movement and runtime interaction stations. Side-on three-quarter view, slightly elevated camera, flat ground no obstacles in foreground. Full bleed opaque landscape image."
+    },
+    {
+      "region": "highlands",
+      "file": "highlands.png",
+      "dimensions": [
+        1774,
+        887
+      ],
+      "sha256": "0652492dca038cfc11f98831db18e9626ad931960e987c1e5a02359558e38313",
+      "prompt": "Polished professional 16-bit pixel art background for an educational Peruvian highland community plant nursery game, wide landscape panorama. Gentle sunny Andean morning, distant layered green mountains and pale snowy peaks, low stone terrace walls, rustic clay-tile shade greenhouse with wooden seedling benches along the very back edge, terracotta pots and small shrubs, sage grass, clear broad ochre-earth courtyard occupying most of the lower half. Rich carefully placed pixel details, warm wood, subtle shadows, cohesive teal and sage palette, clear silhouettes, charming premium indie farming game quality. Background scenery only: no people, no animals, no text, no signs, no HUD, no numbers, no icons, no controls. Courtyard foreground intentionally open for player movement and runtime interaction stations. Side-on three-quarter view, slightly elevated camera, flat ground no obstacles in foreground. Full bleed opaque landscape image."
+    },
+    {
+      "region": "jungle",
+      "file": "jungle.png",
+      "dimensions": [
+        1672,
+        940
+      ],
+      "sha256": "6dcec07e5a7918a303e415b242c74f33f654b6d10866128487370df3b5c73c05",
+      "prompt": "Polished professional 16-bit pixel art background for an educational Peruvian Amazon community plant nursery game, wide landscape panorama. Soft warm tropical daylight, distant leafy tropical canopy and a quiet narrow river behind the garden, small raised timber and thatched shade nursery with seedling benches along the very back edge, terracotta pots and lush shrubs, clear broad firm light ochre courtyard occupying most of the lower half. Rich carefully placed pixel details, warm wood, subtle shadows, cohesive teal and sage palette, clear silhouettes, charming premium indie farming game quality. Background scenery only: no people, no animals, no text, no signs, no HUD, no numbers, no icons, no controls. Courtyard foreground intentionally open for player movement and runtime interaction stations. Side-on three-quarter view, slightly elevated camera, flat ground no obstacles in foreground. Full bleed opaque landscape image."
+    }
+  ],
+  "delivery": [
+    {
+      "file": "coast.webp",
+      "source": "coast.png",
+      "sha256": "155cd45d8547c9735eb43ae2f3509bbf294ec78a2f6a653d07a3b9217bd83869",
+      "bytes": 2095784,
+      "lossless": true,
+      "decodedRGBAIdentical": true
+    },
+    {
+      "file": "highlands.webp",
+      "source": "highlands.png",
+      "sha256": "47a8191a6868246ba88bdd0c46be49b0c81ee8f47e74fa50be12702f56a72976",
+      "bytes": 2404626,
+      "lossless": true,
+      "decodedRGBAIdentical": true
+    },
+    {
+      "file": "jungle.webp",
+      "source": "jungle.png",
+      "sha256": "c1d97c150a970b19b18ecfdd504aa211eb0c085d6f9e2b1d942d78ff4b9ef776",
+      "bytes": 2253222,
+      "lossless": true,
+      "decodedRGBAIdentical": true
+    },
+    {
+      "file": "caretaker.webp",
+      "source": "../v1/caretaker.png",
+      "sha256": "208ab0d6731917d3b0f26e6f9f7d6a6dfb2efcd639579e334e53fafd13e2444c",
+      "bytes": 847604,
+      "lossless": true,
+      "decodedRGBAIdentical": true
+    },
+    {
+      "file": "plant.webp",
+      "source": "../v1/plant.png",
+      "sha256": "2ad2bb43abea2fcfecefb8878d62f1839381ae14b647b4650d16aee33d44adba",
+      "bytes": 311888,
+      "lossless": true,
+      "decodedRGBAIdentical": true
+    },
+    {
+      "file": "tray.webp",
+      "source": "../v1/tray.png",
+      "sha256": "ee5f3e39cb6170bd9323c0692f9917160ae127c97bf662ebd08ca01276a57304",
+      "bytes": 471784,
+      "lossless": true,
+      "decodedRGBAIdentical": true
+    }
+  ]
+}

@@ -1,5 +1,7 @@
 // Initial AI-authored interface translations. No bilingual human review has been recorded.
 // Curriculum labels are localized for display; original sources and teacher content stay intact.
+import { nurseryRows } from "./messages-nursery.ts"
+import { marketRows } from "./messages-market.ts"
 import { gameRows } from "./messages-game.ts"
 import { additionalRows } from "./messages-extra.ts"
 import { landingRows } from "./messages-landing.ts"
@@ -23,6 +25,11 @@ const rows: readonly (readonly [string, string, string])[] = [
   ],
   ["Volver al inicio", "Qallariyman kutiy", "Qalltáru kuttʼaña"],
   ["Reintentar", "Yapamanta ruway", "Wasitata luraña"],
+  [
+    "Inténtalo de nuevo en unos momentos.",
+    "Pisi pachamanta yapamanta ruway.",
+    "Mä jukʼata wasitata yantʼam.",
+  ],
   ["Amautai", "Amautai", "Amautai"],
   ["Elige tu perfil", "Akllay imayna kasqaykita", "Ajllam kunjamasa"],
   [
@@ -348,6 +355,7 @@ const rows: readonly (readonly [string, string, string])[] = [
     "Uta chiqanaksa yatiqirinakana sapankiri yatiyawipsa jani qillqt'amti.",
   ],
   ["Ciudad", "Llaqta", "Marka"],
+  ["Lugar o comunidad", "Kiti utaq llaqta", "Chiqa jan ukaxa ayllu"],
   ["Idioma principal", "Aswan simi", "Jilpacha aru"],
   ["Región", "Suyu", "Suyu"],
   ["Ámbito", "Tiyakusqan", "Jakawi chiqa"],
@@ -881,19 +889,37 @@ const rows: readonly (readonly [string, string, string])[] = [
   ["Datos pendientes", "Huntanapaq willakuykuna", "Phuqachañ yatiyawinaka"],
 ]
 export const spanishMessages: Record<string, string> = Object.fromEntries(
-  [...rows, ...gameRows, ...additionalRows, ...landingRows, ...legalRows].map(
-    ([es]) => [es, es]
-  )
+  [
+    ...rows,
+    ...marketRows,
+    ...nurseryRows,
+    ...gameRows,
+    ...additionalRows,
+    ...landingRows,
+    ...legalRows,
+  ].map(([es]) => [es, es])
 )
 export const chankaMessages: Record<string, string> = Object.fromEntries(
-  [...rows, ...gameRows, ...additionalRows, ...landingRows, ...legalRows].map(
-    ([es, quy]) => [es, quy]
-  )
+  [
+    ...rows,
+    ...marketRows,
+    ...nurseryRows,
+    ...gameRows,
+    ...additionalRows,
+    ...landingRows,
+    ...legalRows,
+  ].map(([es, quy]) => [es, quy])
 )
 export const aymaraMessages: Record<string, string> = Object.fromEntries(
-  [...rows, ...gameRows, ...additionalRows, ...landingRows, ...legalRows].map(
-    ([es, , ay]) => [es, ay]
-  )
+  [
+    ...rows,
+    ...marketRows,
+    ...nurseryRows,
+    ...gameRows,
+    ...additionalRows,
+    ...landingRows,
+    ...legalRows,
+  ].map(([es, , ay]) => [es, ay])
 )
 spanishMessages["Datos pendientes_one"] = "{{count}} dato por completar"
 chankaMessages["Datos pendientes_one"] = "{{count}} willakuy huntanapaq"

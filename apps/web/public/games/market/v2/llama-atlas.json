@@ -1,0 +1,92 @@
+{
+  "frames": {
+    "0": {
+      "frame": {
+        "x": 160,
+        "y": 11,
+        "w": 492,
+        "h": 482
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 492,
+        "h": 482
+      },
+      "sourceSize": {
+        "w": 492,
+        "h": 482
+      }
+    },
+    "1": {
+      "frame": {
+        "x": 928,
+        "y": 11,
+        "w": 492,
+        "h": 482
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 492,
+        "h": 482
+      },
+      "sourceSize": {
+        "w": 492,
+        "h": 482
+      }
+    },
+    "2": {
+      "frame": {
+        "x": 160,
+        "y": 523,
+        "w": 492,
+        "h": 482
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 492,
+        "h": 482
+      },
+      "sourceSize": {
+        "w": 492,
+        "h": 482
+      }
+    },
+    "3": {
+      "frame": {
+        "x": 928,
+        "y": 523,
+        "w": 492,
+        "h": 482
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 492,
+        "h": 482
+      },
+      "sourceSize": {
+        "w": 492,
+        "h": 482
+      }
+    }
+  },
+  "meta": {
+    "image": "llama-sheet.png",
+    "size": {
+      "w": 1536,
+      "h": 1024
+    },
+    "scale": "1"
+  }
+}

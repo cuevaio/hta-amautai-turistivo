@@ -9,7 +9,15 @@ Node.js 22, TypeScript, pinned Baileys, SQLite and Docker. Authentication creden
 Environment:
 - GATEWAY_TOKEN: at least 32 random characters; also configure WHATSAPP_GATEWAY_TOKEN as a Worker secret.
 - AUTH_ENCRYPTION_KEY: 64 hexadecimal characters.
-- DATA_DIR: defaults to /data.
+- DATA_DIR: defaults to apps/whatsapp-gateway/.data in the checkout. Docker explicitly uses /data for its persistent volume.
+
+For local development, create the Git-ignored `.env.local` in this directory before running root `pnpm run dev`. The gateway dev command loads it automatically (Node.js 22.9 or newer):
+
+~~~bash
+node --input-type=module -e 'import { randomBytes } from "node:crypto"; import { writeFileSync } from "node:fs"; writeFileSync(".env.local", `GATEWAY_TOKEN=${randomBytes(32).toString("hex")}\nAUTH_ENCRYPTION_KEY=${randomBytes(32).toString("hex")}\n`, { flag: "wx", mode: 0o600 })'
+~~~
+
+Keep this file between restarts: changing the encryption key prevents reading existing WhatsApp credentials. Local SQLite data is also ignored by Git. The Worker uses its configured gateway URL; to use this local gateway, set `WHATSAPP_GATEWAY_URL=http://127.0.0.1:3000` and the matching `WHATSAPP_GATEWAY_TOKEN` in `apps/worker/.dev.vars`. Pair the local sender at http://localhost:3001 before testing delivery.
 
 The deployment reads /opt/amautai-whatsapp-secrets/gateway.env. Docker uses the persistent whatsapp-data volume.
 

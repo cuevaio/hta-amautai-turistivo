@@ -67,7 +67,7 @@ export function useCargoRun(room: string, participant: string) {
               ? "wrong"
               : "correct"
         )
-      else if (kind === "retry") setFeedback("")
+      else setFeedback("")
     } catch (e) {
       if (active.current === key) setError(roomError(e))
     } finally {

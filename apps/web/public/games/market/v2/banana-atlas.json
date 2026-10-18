@@ -1,0 +1,32 @@
+{
+  "frames": {
+    "item": {
+      "frame": {
+        "x": 61,
+        "y": 53,
+        "w": 1426,
+        "h": 936
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 1426,
+        "h": 936
+      },
+      "sourceSize": {
+        "w": 1426,
+        "h": 936
+      }
+    }
+  },
+  "meta": {
+    "image": "banana.png",
+    "size": {
+      "w": 1536,
+      "h": 1024
+    },
+    "scale": "1"
+  }
+}

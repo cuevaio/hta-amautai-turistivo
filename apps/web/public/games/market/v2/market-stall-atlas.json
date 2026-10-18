@@ -1,0 +1,92 @@
+{
+  "frames": {
+    "0": {
+      "frame": {
+        "x": 114,
+        "y": 10,
+        "w": 590,
+        "h": 491
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 590,
+        "h": 491
+      },
+      "sourceSize": {
+        "w": 590,
+        "h": 491
+      }
+    },
+    "1": {
+      "frame": {
+        "x": 882,
+        "y": 10,
+        "w": 590,
+        "h": 491
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 590,
+        "h": 491
+      },
+      "sourceSize": {
+        "w": 590,
+        "h": 491
+      }
+    },
+    "2": {
+      "frame": {
+        "x": 114,
+        "y": 522,
+        "w": 590,
+        "h": 491
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 590,
+        "h": 491
+      },
+      "sourceSize": {
+        "w": 590,
+        "h": 491
+      }
+    },
+    "3": {
+      "frame": {
+        "x": 882,
+        "y": 522,
+        "w": 590,
+        "h": 491
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 590,
+        "h": 491
+      },
+      "sourceSize": {
+        "w": 590,
+        "h": 491
+      }
+    }
+  },
+  "meta": {
+    "image": "market-stall-sheet.png",
+    "size": {
+      "w": 1536,
+      "h": 1024
+    },
+    "scale": "1"
+  }
+}

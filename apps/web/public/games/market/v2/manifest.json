@@ -1,0 +1,135 @@
+{
+  "version": 2,
+  "style": "pixel-art",
+  "tool": "built-in image_gen",
+  "assets": [
+    {
+      "name": "tricycle",
+      "prompt": "Use case: stylized-concept. Production game sprite for a Peruvian primary-school mathematics game. Beautiful polished hand-crafted 16-bit PIXEL ART, crisp visible square pixels, confident dark outline, warm rich palette, readable friendly forms, comparable to premium SNES adventure sprites. True transparent RGBA background. No text, letters, numbers, labels, watermark, panels, ground, drop shadows, or scenery. Output exactly ONE sprite sheet in a 2 by 2 regular grid of FOUR equal rectangular cells, no grid lines. Each frame depicts exactly the SAME subject, same size, same angle facing RIGHT, same palette and same baseline, centered in its own cell with generous transparent margin and nothing touching cell edges. Reading order top-left, top-right, bottom-left, bottom-right is a smooth four-frame looping animation. All parts remain inside their cell; no frame overlaps. Subject: a charming teal cargo delivery TRICYCLE with a tan-skinned adult delivery rider wearing a simple straw hat, coral shirt and dark trousers, a big open wooden cargo box behind, clearly three-wheeled human-powered cycle. Animation: four pedalling positions with spinning wheel spokes and tiny body bounce. Side view, vehicle and rider complete, consistent proportions. Empty cargo box; no foods.",
+      "file": "tricycle-sheet.png",
+      "atlas": "tricycle-atlas.json",
+      "frames": 4,
+      "sha256": "b4e5aa14a79c146672a54f0d4fcd1a77ce41c69bcb1435b4d6eaa20183cd55df",
+      "size": {
+        "w": 1536,
+        "h": 1024
+      },
+      "frameSize": {
+        "w": 685,
+        "h": 474
+      }
+    },
+    {
+      "name": "llama",
+      "prompt": "Use case: stylized-concept. Production game sprite for a Peruvian primary-school mathematics game. Beautiful polished hand-crafted 16-bit PIXEL ART, crisp visible square pixels, confident dark outline, warm rich palette, readable friendly forms, comparable to premium SNES adventure sprites. True transparent RGBA background. No text, letters, numbers, labels, watermark, panels, ground, drop shadows, or scenery. Output exactly ONE sprite sheet in a 2 by 2 regular grid of FOUR equal rectangular cells, no grid lines. Each frame depicts exactly the SAME subject, same size, same angle facing RIGHT, same palette and same baseline, centered in its own cell with generous transparent margin and nothing touching cell edges. Reading order top-left, top-right, bottom-left, bottom-right is a smooth four-frame looping animation. All parts remain inside their cell; no frame overlaps. Subject: one lovely cream-colored Andean pack LLAMA with an ochre saddle blanket with simple red geometric bands and empty wicker panniers, big gentle eyes and upright ears. Animation: four distinct walking leg poses in a natural walk cycle, subtle head and neck motion. Side view complete body including feet and ears, consistent anatomy and proportions, no rider.",
+      "file": "llama-sheet.png",
+      "atlas": "llama-atlas.json",
+      "frames": 4,
+      "sha256": "0195ffa5809aad7233470865d741564eae8331b0d551e544cde82f90278f2ac0",
+      "size": {
+        "w": 1536,
+        "h": 1024
+      },
+      "frameSize": {
+        "w": 492,
+        "h": 482
+      }
+    },
+    {
+      "name": "peque-peque",
+      "prompt": "Use case: stylized-concept. Production game sprite for a Peruvian primary-school mathematics game. Beautiful polished hand-crafted 16-bit PIXEL ART, crisp visible square pixels, confident dark outline, warm rich palette, readable friendly forms, comparable to premium SNES adventure sprites. True transparent RGBA background. No text, letters, numbers, labels, watermark, panels, ground, drop shadows, or scenery. Output exactly ONE sprite sheet in a 2 by 2 regular grid of FOUR equal rectangular cells, no grid lines. Each frame depicts exactly the SAME subject, same size, same angle facing RIGHT, same palette and same baseline, centered in its own cell with generous transparent margin and nothing touching cell edges. Reading order top-left, top-right, bottom-left, bottom-right is a smooth four-frame looping animation. All parts remain inside their cell; no frame overlaps. Subject: a charming small Peruvian Amazon wooden PEQUE-PEQUE motorized riverboat with narrow teal and mahogany hull, simple ochre canopy on poles, a tan-skinned adult boat operator in a plain coral shirt, and the characteristic long motor shaft behind the stern. Bow faces RIGHT, engine at LEFT. Animation: four gently rocking poses, slight propeller and operator arm motion; keep complete hull and long shaft in frame. No water or wake painted into the asset.",
+      "file": "peque-peque-sheet.png",
+      "atlas": "peque-peque-atlas.json",
+      "frames": 4,
+      "sha256": "a2d4bccc33699d50a86a4897050ed85abd2825ef3b4047884265ec1f1631943f",
+      "size": {
+        "w": 1536,
+        "h": 1024
+      },
+      "frameSize": {
+        "w": 733,
+        "h": 282
+      }
+    },
+    {
+      "name": "fish",
+      "prompt": "Use case: stylized-concept. Production game sprite for a Peruvian primary-school mathematics game. Beautiful polished hand-crafted 16-bit PIXEL ART, crisp visible square pixels, confident dark outline, warm rich palette, readable friendly forms, comparable to premium SNES adventure sprites. True transparent RGBA background. No text, letters, numbers, labels, watermark, panels, ground, drop shadows, or scenery. Single inventory icon of exactly ONE small whole silver-blue fish, side view facing right, clear eye, fins and tail. Soft turquoise highlights and navy outline. Not a school of fish, not cooked, no plate. Large centered icon occupying 70 percent of the image with wide transparent margins.",
+      "file": "fish.png",
+      "atlas": "fish-atlas.json",
+      "frames": 1,
+      "sha256": "59065f16c05f26683af09acce054e9142e2b64643ac89274e5a5519a24dc178b",
+      "size": {
+        "w": 1536,
+        "h": 1024
+      },
+      "frameSize": {
+        "w": 1383,
+        "h": 657
+      }
+    },
+    {
+      "name": "corn",
+      "prompt": "Use case: stylized-concept. Production game sprite for a Peruvian primary-school mathematics game. Beautiful polished hand-crafted 16-bit PIXEL ART, crisp visible square pixels, confident dark outline, warm rich palette, readable friendly forms, comparable to premium SNES adventure sprites. True transparent RGBA background. No text, letters, numbers, labels, watermark, panels, ground, drop shadows, or scenery. Single inventory icon of exactly ONE fresh Peruvian yellow CORN COB (choclo) with large golden kernels and a few green husk leaves peeled back at its base, slightly diagonal upright. Readable bright silhouette, large centered icon occupying 70 percent of image, generous transparent margins. Only one cob, no bundle, no plate.",
+      "file": "corn.png",
+      "atlas": "corn-atlas.json",
+      "frames": 1,
+      "sha256": "0ff78cbe5dc9a608e1fe925d6300b41bf6e34eddfc98ee5c53efb03470c3f780",
+      "size": {
+        "w": 1254,
+        "h": 1254
+      },
+      "frameSize": {
+        "w": 905,
+        "h": 1126
+      }
+    },
+    {
+      "name": "banana",
+      "prompt": "Use case: stylized-concept. Production game sprite for a Peruvian primary-school mathematics game. Beautiful polished hand-crafted 16-bit PIXEL ART, crisp visible square pixels, confident dark outline, warm rich palette, readable friendly forms, comparable to premium SNES adventure sprites. True transparent RGBA background. No text, letters, numbers, labels, watermark, panels, ground, drop shadows, or scenery. Single inventory icon of exactly ONE ripe yellow BANANA with a gentle curve, short green-brown stem, warm gold shadows and dark outline. The fruit is whole and unpeeled. One banana, NOT a bunch, not multiple bananas. Large centered icon occupying 70 percent of image with generous transparent margins.",
+      "file": "banana.png",
+      "atlas": "banana-atlas.json",
+      "frames": 1,
+      "sha256": "d46b6da5b4a0d67c63c5fda95ce6266da0779da23c356a3458721ee98411ef56",
+      "size": {
+        "w": 1536,
+        "h": 1024
+      },
+      "frameSize": {
+        "w": 1426,
+        "h": 936
+      }
+    },
+    {
+      "name": "crate",
+      "prompt": "Use case: stylized-concept. Production game sprite for a Peruvian primary-school mathematics game. Beautiful polished hand-crafted 16-bit PIXEL ART, crisp visible square pixels, confident dark outline, warm rich palette, readable friendly forms, comparable to premium SNES adventure sprites. True transparent RGBA background. No text, letters, numbers, labels, watermark, panels, ground, drop shadows, or scenery. Single inventory icon of exactly ONE empty open wooden produce crate viewed slightly from above, warm honey wood, reinforced corners and readable individual planks, a large empty central space so a number can be drawn by the game later. Rustic but clean, no markings. Large centered icon occupying 70 percent of image, generous transparent margins.",
+      "file": "crate.png",
+      "atlas": "crate-atlas.json",
+      "frames": 1,
+      "sha256": "e91de7ccea96491fc6403a784b691de87df8b95521d12f24b64c623d989cfc3b",
+      "size": {
+        "w": 1536,
+        "h": 1024
+      },
+      "frameSize": {
+        "w": 1102,
+        "h": 780
+      }
+    },
+    {
+      "name": "market-stall",
+      "prompt": "Use case: stylized-concept. Production game sprite for a Peruvian primary-school mathematics game. Beautiful polished hand-crafted 16-bit PIXEL ART, crisp visible square pixels, confident dark outline, warm rich palette, readable friendly forms, comparable to premium SNES adventure sprites. True transparent RGBA background. No text, letters, numbers, labels, watermark, panels, ground, drop shadows, or scenery. Output exactly ONE sprite sheet in a 2 by 2 regular grid of FOUR equal rectangular cells, no grid lines. Each frame depicts exactly the SAME subject, same size, same angle facing RIGHT, same palette and same baseline, centered in its own cell with generous transparent margin and nothing touching cell edges. Reading order top-left, top-right, bottom-left, bottom-right is a smooth four-frame looping animation. All parts remain inside their cell; no frame overlaps. Subject: a welcoming small Peruvian outdoor produce MARKET STALL, complete coral-and-cream striped canvas awning, wood counter with a few attractive produce baskets, and one smiling tan-skinned adult market vendor in a plain teal blouse behind the counter. Animation: four gentle welcoming waving arm poses and subtle awning flutter, stall geometry stays fixed. Front three-quarter view, full roof, full counter and legs. NO text or signs.",
+      "file": "market-stall-sheet.png",
+      "atlas": "market-stall-atlas.json",
+      "frames": 4,
+      "sha256": "df126cf09cb9229305529f61a5c016ff3cdec63f21cbe6596a703a79a4c5b320",
+      "size": {
+        "w": 1536,
+        "h": 1024
+      },
+      "frameSize": {
+        "w": 590,
+        "h": 491
+      }
+    }
+  ]
+}

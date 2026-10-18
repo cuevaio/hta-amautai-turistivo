@@ -1,0 +1,22 @@
+{
+  "frames": {
+    "0": {
+      "frame": {
+        "x": 314,
+        "y": 217,
+        "w": 646,
+        "h": 872
+      },
+      "rotated": false,
+      "trimmed": false
+    }
+  },
+  "meta": {
+    "image": "plant.png",
+    "size": {
+      "w": 1254,
+      "h": 1254
+    },
+    "scale": "1"
+  }
+}

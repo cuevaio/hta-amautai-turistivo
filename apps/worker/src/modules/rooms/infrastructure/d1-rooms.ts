@@ -1,3 +1,5 @@
+import type { NurseryState } from "../domain/nursery.ts"
+import type { MarketState } from "../domain/market.ts"
 import type { RoomRepository } from "../application/service.ts"
 import type { Actor, Participant, Room } from "../domain/cargo.ts"
 import { RoomError } from "../domain/cargo.ts"
@@ -24,6 +26,60 @@ export function d1Rooms(db: D1Database): RoomRepository {
   const owner =
     "room_id IN (SELECT id FROM game_rooms WHERE id=? AND tenant_id=? AND user_id=?)"
   return {
+    async market(a, room, id) {
+      const row = await db
+        .prepare(
+          `SELECT market_state AS state FROM game_participants WHERE id=? AND ${owner}`
+        )
+        .bind(id, ...owned(a, room))
+        .first<{ state: string | null }>()
+      return row?.state ? (JSON.parse(row.state) as MarketState) : null
+    },
+    async saveMarket(a, room, p, state, version) {
+      const result = await db
+        .prepare(
+          `UPDATE game_participants SET score=?,solved=?,mistakes=?,caught=0,paused=0,market_state=?,version=? WHERE id=? AND version=? AND ${owner}`
+        )
+        .bind(
+          p.score,
+          p.solved,
+          p.mistakes,
+          JSON.stringify(state),
+          p.version,
+          p.id,
+          version,
+          ...owned(a, room)
+        )
+        .run()
+      return !!result.meta.changes
+    },
+    async nursery(a, room, id) {
+      const row = await db
+        .prepare(
+          `SELECT nursery_state AS state FROM game_participants WHERE id=? AND ${owner}`
+        )
+        .bind(id, ...owned(a, room))
+        .first<{ state: string | null }>()
+      return row?.state ? (JSON.parse(row.state) as NurseryState) : null
+    },
+    async saveNursery(a, room, p, state, version) {
+      const result = await db
+        .prepare(
+          `UPDATE game_participants SET score=?,solved=?,mistakes=?,caught=0,paused=0,nursery_state=?,version=? WHERE id=? AND version=? AND ${owner}`
+        )
+        .bind(
+          p.score,
+          p.solved,
+          p.mistakes,
+          JSON.stringify(state),
+          p.version,
+          p.id,
+          version,
+          ...owned(a, room)
+        )
+        .run()
+      return !!result.meta.changes
+    },
     async teacher(a) {
       return !!(await db
         .prepare(
@@ -36,25 +92,34 @@ export function d1Rooms(db: D1Database): RoomRepository {
       return (
         await db
           .prepare(
-            "SELECT id,region,created_at AS createdAt FROM game_rooms WHERE tenant_id=? AND user_id=? ORDER BY created_at DESC,id DESC LIMIT 100"
+            "SELECT id,name,region,kind,mode,created_at AS createdAt FROM game_rooms WHERE tenant_id=? AND user_id=? ORDER BY created_at DESC,id DESC LIMIT 100"
           )
           .bind(a.tenantId, a.userId)
           .all<Room>()
       ).results
     },
-    async create(a, id, region) {
+    async create(a, id, region, kind, mode, name) {
       await db
         .prepare(
-          "INSERT INTO game_rooms(id,tenant_id,user_id,region) VALUES(?,?,?,?)"
+          "INSERT INTO game_rooms(id,tenant_id,user_id,region,kind,mode,name) VALUES(?,?,?,?,?,?,?)"
         )
-        .bind(id, a.tenantId, a.userId, region)
+        .bind(id, a.tenantId, a.userId, region, kind, mode, name)
         .run()
       return (await this.find(a, id))!
+    },
+    async deleteRoom(a, id) {
+      const result = await db
+        .prepare(
+          "DELETE FROM game_rooms WHERE id=? AND tenant_id=? AND user_id=?"
+        )
+        .bind(...owned(a, id))
+        .run()
+      return !!result.meta.changes
     },
     async find(a, id) {
       return db
         .prepare(
-          "SELECT id,region,created_at AS createdAt FROM game_rooms WHERE id=? AND tenant_id=? AND user_id=?"
+          "SELECT id,name,region,kind,mode,created_at AS createdAt FROM game_rooms WHERE id=? AND tenant_id=? AND user_id=?"
         )
         .bind(...owned(a, id))
         .first<Room>()

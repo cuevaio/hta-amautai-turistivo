@@ -94,10 +94,26 @@ export function useRooms(roomId?: string) {
     error,
     busy,
     refresh: () => setRevision((n) => n + 1),
-    create: (region: CargoRegion, onCreated: (room: CargoRoom) => void) =>
+    create: (
+      region: CargoRegion,
+      onCreated: (room: CargoRoom) => void,
+      kind: CargoRoom["kind"] = "cargo",
+      mode: CargoRoom["mode"] = "challenge",
+      name?: string
+    ) =>
       action(async () => {
-        const { room } = await roomsApi.create(region)
+        const { room } = await roomsApi.create(region, kind, mode, name)
         if (alive.current) onCreated(room)
+      }),
+    deleteRoom: (id: string) =>
+      action(async () => {
+        await roomsApi.deleteRoom(id)
+        if (alive.current) {
+          setResource((current) => ({
+            ...current,
+            rooms: current.rooms.filter((room) => room.id !== id),
+          }))
+        }
       }),
     add: (name: string) =>
       action(async () => {

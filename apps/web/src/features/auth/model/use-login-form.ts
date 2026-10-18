@@ -49,11 +49,11 @@ export function useLoginForm(mode: "login" | "signup") {
     try {
       const result = await authApi.signIn(signup, input.data)
       if (result.verificationRequired) {
-        navigate("/verify-email", { replace: true })
+        navigate("/verificar-correo", { replace: true })
         return
       }
       if (await reloadSession())
-        navigate("/dashboard/projects", { replace: true })
+        navigate("/panel/proyectos", { replace: true })
       else
         setError(
           "No pudimos comprobar tu sesión. Recarga para intentarlo de nuevo."

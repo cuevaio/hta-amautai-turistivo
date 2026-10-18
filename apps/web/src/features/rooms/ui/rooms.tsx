@@ -72,7 +72,7 @@ function RoomManager({ roomId }: { roomId?: string }) {
           <Button
             nativeButton={false}
             variant="outline"
-            render={<Link to="/dashboard/rooms" />}
+            render={<Link to="/panel/salas" />}
           >
             {m("Ver salas")}
           </Button>
@@ -102,7 +102,7 @@ function RoomManager({ roomId }: { roomId?: string }) {
           onSubmit={(e) => {
             e.preventDefault()
             void data.create(region, (room) =>
-              nav("/dashboard/rooms/" + room.id)
+              nav("/panel/salas/" + room.id)
             )
           }}
         >
@@ -240,9 +240,9 @@ function RoomManager({ roomId }: { roomId?: string }) {
                               render={
                                 <Link
                                   to={
-                                    "/dashboard/rooms/" +
+                                    "/panel/salas/" +
                                     roomId +
-                                    "/play/" +
+                                    "/jugar/" +
                                     p.id
                                   }
                                 />
@@ -343,7 +343,7 @@ function RoomManager({ roomId }: { roomId?: string }) {
                 <Button
                   nativeButton={false}
                   variant="outline"
-                  render={<Link to={"/dashboard/rooms/" + room.id} />}
+                  render={<Link to={"/panel/salas/" + room.id} />}
                 >
                   {m("Abrir sala")}
                 </Button>

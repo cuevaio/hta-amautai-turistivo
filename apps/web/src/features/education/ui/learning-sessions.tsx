@@ -94,7 +94,7 @@ function SessionEditor({
         nativeButton={false}
         variant="ghost"
         className="self-start"
-        render={<Link to="/dashboard/sessions" />}
+        render={<Link to="/panel/sesiones" />}
         disabled={editor.busy}
       >
         <ArrowLeftIcon data-icon="inline-start" />
@@ -157,7 +157,7 @@ function SessionEditor({
             e.preventDefault()
             const result = await editor.save()
             if (result && !existing)
-              navigate("/dashboard/sessions/" + result.id, { replace: true })
+              navigate("/panel/sesiones/" + result.id, { replace: true })
           }}
           className="flex flex-col gap-6"
         >
@@ -251,7 +251,7 @@ export function LearningSessions({ sessionId }: { sessionId?: string }) {
       <div className="flex flex-col items-start gap-4 py-6">
         <p role="alert">{errorMessage(data.error)}</p>
         <Button onClick={data.retry}>{m("Reintentar")}</Button>
-        <Link to="/dashboard/sessions" className="text-sm underline">
+        <Link to="/panel/sesiones" className="text-sm underline">
           {m("Volver a sesiones")}
         </Link>
       </div>
@@ -284,7 +284,7 @@ export function LearningSessions({ sessionId }: { sessionId?: string }) {
         </div>
         <Button
           nativeButton={false}
-          render={<Link to="/dashboard/sessions/new" />}
+          render={<Link to="/panel/sesiones/new" />}
         >
           <PlusIcon data-icon="inline-start" />
           {m("Nueva sesión")}
@@ -305,7 +305,7 @@ export function LearningSessions({ sessionId }: { sessionId?: string }) {
             <Button
               nativeButton={false}
               variant="outline"
-              render={<Link to="/dashboard/sessions/new" />}
+              render={<Link to="/panel/sesiones/new" />}
             >
               {m("Crear mi primera sesión")}
             </Button>
@@ -320,7 +320,7 @@ export function LearningSessions({ sessionId }: { sessionId?: string }) {
             >
               <div className="flex min-w-0 flex-1 flex-col gap-2">
                 <Link
-                  to={"/dashboard/sessions/" + session.id}
+                  to={"/panel/sesiones/" + session.id}
                   className="font-medium break-words underline-offset-4 hover:underline"
                 >
                   {session.title}
@@ -343,7 +343,7 @@ export function LearningSessions({ sessionId }: { sessionId?: string }) {
               <Button
                 nativeButton={false}
                 variant="outline"
-                render={<Link to={"/dashboard/sessions/" + session.id} />}
+                render={<Link to={"/panel/sesiones/" + session.id} />}
               >
                 {m("Abrir")}
               </Button>

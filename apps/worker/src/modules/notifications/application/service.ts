@@ -92,7 +92,7 @@ export function notificationService(
           : (input.eventType ? "Amautai · " : "Amautai · Recordatorio: ") +
             title +
             String.fromCharCode(10) +
-            "Revisa tus actividades en https://amautai.turistivo.com/dashboard/notifications",
+            "Revisa tus actividades en https://amautai.turistivo.com/panel/notificaciones",
         status: "pending",
         scheduled_at: at,
         expires_at: at + 3600000,

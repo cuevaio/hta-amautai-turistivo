@@ -82,7 +82,7 @@ export async function finishOAuth(
 ) {
   const cookie = getCookie(c, OAUTH)
   deleteCookie(c, OAUTH, { path: "/" })
-  if (!cookie) return c.redirect("/login?error=oauth_expired")
+  if (!cookie) return c.redirect("/iniciar-sesion?error=oauth_expired")
   try {
     const { payload } = await jwtDecrypt(cookie, await encryptionKey(c))
     if (
@@ -91,10 +91,10 @@ export async function finishOAuth(
       !origins(c).includes(payload.origin) ||
       typeof payload.verifier !== "string"
     ) {
-      return c.redirect("/login?error=oauth_state")
+      return c.redirect("/iniciar-sesion?error=oauth_state")
     }
     const code = c.req.query("code")
-    if (!code) return c.redirect("/login?error=oauth_denied")
+    if (!code) return c.redirect("/iniciar-sesion?error=oauth_denied")
     const result = await factory(c).authenticateWithCode({
       code,
       codeVerifier: payload.verifier,
@@ -105,11 +105,11 @@ export async function finishOAuth(
     })
     if (!result.sealedSession) throw new Error("Session unavailable")
     setSession(c, result.sealedSession)
-    return c.redirect(payload.origin + "/dashboard/projects")
+    return c.redirect(payload.origin + "/panel/proyectos")
   } catch (error) {
     if (await beginEmailVerification(c, error))
-      return c.redirect("/verify-email")
+      return c.redirect("/verificar-correo")
     logAuthFailure("oauth_callback", error)
-    return c.redirect("/login?error=oauth_failed")
+    return c.redirect("/iniciar-sesion?error=oauth_failed")
   }
 }

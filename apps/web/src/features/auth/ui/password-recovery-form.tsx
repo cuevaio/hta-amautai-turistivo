@@ -33,7 +33,7 @@ export function PasswordRecoveryForm({ reset = false }: { reset?: boolean }) {
             "Este enlace no está disponible o venció. Solicita otro para recuperar tu contraseña."
           )}
         </p>
-        <Button nativeButton={false} render={<Link to="/forgot-password" />}>
+        <Button nativeButton={false} render={<Link to="/recuperar-contrasena" />}>
           {m("Solicitar nuevo enlace")}
         </Button>
       </div>
@@ -138,7 +138,7 @@ export function PasswordRecoveryForm({ reset = false }: { reset?: boolean }) {
           </Field>
         )}
         <FieldDescription className="text-center">
-          <Link to="/login">{m("Volver a iniciar sesión")}</Link>
+          <Link to="/iniciar-sesion">{m("Volver a iniciar sesión")}</Link>
         </FieldDescription>
       </FieldGroup>
     </form>

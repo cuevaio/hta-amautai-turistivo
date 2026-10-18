@@ -8,7 +8,7 @@ After WorkOS authentication, an account without a teacher profile enters `/onboa
 
 Context includes free-text location/community, geographical region (Costa/Sierra/Selva), urban/rural setting, and the group's language. Each is optional and independent; location does not determine language or environment. Context does not include student identity records. Settings can edit the profile later.
 
-The dashboard opens the learning-session list. `/dashboard/sessions/new` creates a draft; `/dashboard/sessions/:id` opens its summary and editor. `/dashboard/projects` retains the existing project workspace.
+The dashboard opens the learning-session list. `/panel/sesiones/new` creates a draft; `/panel/sesiones/:id` opens its summary and editor. `/panel/proyectos` retains the existing project workspace.
 
 A draft contains:
 
@@ -60,4 +60,4 @@ The web app is at `http://localhost:5173`, and the Worker is at port 8787. The f
 
 Automated coverage executes all migrations against SQLite and checks persistence, same-tenant user isolation, cross-tenant denial, incomplete drafts, scope/catalogue validation and stale-write rejection. Browser verification used a real local WorkOS session and actual local D1: onboarding/reload, create/edit/reload/copy, context snapshot preservation and a conflict between two tabs. Narrow 550 px and desktop 1280 px, light/dark themes and keyboard focus were checked. Physical-phone behavior has not been tested.
 
-No AI/provider integration, Phaser runtime, family flow, student profile, assignment, export file or notification producer is included. Deployment was completed with the domain migration; commit and push remain subject to user approval.
+See [Profile onboarding](PROFILE_ONBOARDING.md) for the teacher/parent role choice and family learning context. No AI/provider integration, Phaser runtime, named student records, assignments, export files or family game-generation flow is included. Deployment was completed with the domain migration; commit and push remain subject to user approval.

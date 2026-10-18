@@ -85,7 +85,7 @@ export function NavUser({
           >
             <DropdownMenuGroup>
               <DropdownMenuLabel>{m("Mi cuenta")}</DropdownMenuLabel>
-              <DropdownMenuItem render={<Link to="/dashboard/account" />}>
+              <DropdownMenuItem render={<Link to="/panel/cuenta" />}>
                 <UserIcon />
                 {m("Mi cuenta")}
               </DropdownMenuItem>

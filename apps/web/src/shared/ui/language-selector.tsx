@@ -1,4 +1,5 @@
 import { useId } from "react"
+import { Languages } from "lucide-react"
 import { useMessages } from "@/shared/i18n/use-messages"
 import { changeUiLocale } from "@/shared/i18n/config"
 import { locales, resolveLocale } from "@/shared/i18n/locales"
@@ -25,14 +26,21 @@ const languageItems = locales.map((locale) => ({
 export function LanguageSelector({
   compact = false,
   touchTarget = false,
+  wide = false,
 }: {
   compact?: boolean
   touchTarget?: boolean
+  wide?: boolean
 }) {
   const id = useId()
   const { m, locale: language } = useMessages()
   return (
-    <Field className={compact ? "w-40 max-w-[40vw] shrink-0" : undefined}>
+    <Field
+      className={cn(
+        compact &&
+          (wide ? "w-48 max-w-full shrink-0" : "w-48 max-w-[65vw] shrink-0")
+      )}
+    >
       <FieldLabel htmlFor={id} className={compact ? "sr-only" : undefined}>
         {m("Idioma de la interfaz")}
       </FieldLabel>
@@ -53,7 +61,12 @@ export function LanguageSelector({
           size={compact ? "sm" : "default"}
           aria-describedby={compact ? undefined : id + "-help"}
         >
-          <SelectValue />
+          <Languages
+            aria-hidden="true"
+            className="text-muted-foreground"
+            size={16}
+          />
+          <SelectValue className="min-w-0 truncate" />
         </SelectTrigger>
         <SelectContent align="end" alignItemWithTrigger={false}>
           <SelectGroup>

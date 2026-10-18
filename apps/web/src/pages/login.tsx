@@ -18,7 +18,7 @@ export function LoginPage({
   const { user, isLoading } = useAuth()
   if (isLoading) return <PageLoading message="Comprobando tu sesión…" />
   if (user && mode !== "forgot" && mode !== "reset")
-    return <Navigate to="/dashboard" replace />
+    return <Navigate to="/panel" replace />
   return (
     <div className="grid min-h-svh lg:grid-cols-2">
       <div className="flex flex-col gap-4 p-6 md:p-10">

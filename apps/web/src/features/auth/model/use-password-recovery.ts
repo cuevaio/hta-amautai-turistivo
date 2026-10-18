@@ -60,7 +60,7 @@ export function usePasswordRecovery(reset: boolean) {
         : authApi.recover(String(data.get("email") || "").trim()))
       if (reset) {
         await reloadSession()
-        navigate("/login?password_reset=1", { replace: true })
+        navigate("/iniciar-sesion?password_reset=1", { replace: true })
       } else setSent(true)
     } catch (err) {
       setInvalid(

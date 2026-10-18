@@ -61,7 +61,7 @@ export function registerRecoveryRoutes(
     c.header("Referrer-Policy", "no-referrer")
     if (!token.success || !c.env.WORKOS_COOKIE_PASSWORD) {
       clear(c)
-      return c.redirect("/reset-password")
+      return c.redirect("/restablecer-contrasena")
     }
     const value = await new EncryptJWT({ token: token.data })
       .setProtectedHeader({ alg: "dir", enc: "A256GCM" })
@@ -76,7 +76,7 @@ export function registerRecoveryRoutes(
       secure: new URL(c.req.url).protocol === "https:",
       maxAge: 900,
     })
-    return c.redirect("/reset-password")
+    return c.redirect("/restablecer-contrasena")
   })
   app.get("/api/auth/password-reset/status", async (c) =>
     c.json({ valid: !!(await readToken(c)) })

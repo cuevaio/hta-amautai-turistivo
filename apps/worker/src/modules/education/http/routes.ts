@@ -20,19 +20,22 @@ export function registerEducationRoutes(
   app: Hono<AppEnv>,
   deps: {
     service: (c: AppContext) => EducationService
-    ensure: (c: AppContext) => Promise<unknown>
+    ensure: (c: AppContext) => Promise<boolean>
   }
 ) {
   app.use("/api/education/*", async (c, next) => {
-    await deps.ensure(c)
+    if (!(await deps.ensure(c)))
+      return c.json({ error: "profile_role_required" }, 403)
     await next()
   })
   app.use("/api/learning-sessions", async (c, next) => {
-    await deps.ensure(c)
+    if (!(await deps.ensure(c)))
+      return c.json({ error: "profile_role_required" }, 403)
     await next()
   })
   app.use("/api/learning-sessions/*", async (c, next) => {
-    await deps.ensure(c)
+    if (!(await deps.ensure(c)))
+      return c.json({ error: "profile_role_required" }, 403)
     await next()
   })
   const actor = (c: AppContext) => ({

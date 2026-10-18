@@ -60,7 +60,7 @@ Treat the frequency scale as ordinal. Keep "No lo pude observar" separate from "
 
 The response-linked Sheets contained 28 teacher submissions and 56 family submissions at the time of review. Among teachers, 18 of 28 (64.3%) selected frequently or always for students needing additional help in the last four weeks; 11 of 28 (39.3%) identified understanding what a problem asked as the main difficulty. Among families, 33 of 56 (58.9%) selected sometimes, frequently or always for needing help; 14 of 56 (25.0%) identified understanding what a problem asked as the main difficulty. These are separate question totals, not linked respondent-level findings.
 
-The public evidence page at `/evidence` presents aggregated counts and the original respondent links. Names, telephone numbers and free-text answers are excluded because the forms collect contact details and narratives. The page is a snapshot and does not sync automatically with the private response Sheets. The convenience sample is not representative of Peru; these self-reports do not demonstrate product adoption, learning gains or Amautai efficacy.
+The public page at `/lista-de-espera` lists only the names from the family and teacher response Sheets in separate columns. It excludes phone numbers and survey answers. This is a static snapshot and does not sync automatically with the private response Sheets. The convenience sample is not representative of Peru; these self-reports do not demonstrate product adoption, learning gains or Amautai efficacy.
 
 ## Product context and history
 

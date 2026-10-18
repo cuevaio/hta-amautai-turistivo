@@ -34,7 +34,7 @@ export function ContextFields({
     <FieldGroup>
       <Field>
         <FieldLabel htmlFor={prefix + "-location"}>
-          {m("Ubicación o comunidad (opcional)")}
+          {m("Lugar o comunidad")}
         </FieldLabel>
         <Input
           id={prefix + "-location"}
@@ -45,16 +45,12 @@ export function ContextFields({
           onChange={(e) => update("location", e.target.value)}
         />
         <FieldDescription>
-          {m(
-            "Describe el lugar sin incluir direcciones ni datos personales de estudiantes."
-          )}
+          {m("Sin direcciones ni datos de estudiantes.")}
         </FieldDescription>
       </Field>
       <div className="grid gap-5 sm:grid-cols-2">
         <Field>
-          <FieldLabel htmlFor={prefix + "-region"}>
-            {m("Región geográfica (opcional)")}
-          </FieldLabel>
+          <FieldLabel htmlFor={prefix + "-region"}>{m("Región")}</FieldLabel>
           <Select
             items={[
               { value: "", label: m("Sin indicar") },
@@ -82,9 +78,7 @@ export function ContextFields({
           </Select>
         </Field>
         <Field>
-          <FieldLabel htmlFor={prefix + "-setting"}>
-            {m("Ámbito (opcional)")}
-          </FieldLabel>
+          <FieldLabel htmlFor={prefix + "-setting"}>{m("Ámbito")}</FieldLabel>
           <Select
             items={[
               { value: "", label: m("Sin indicar") },
@@ -112,7 +106,7 @@ export function ContextFields({
       </div>
       <Field>
         <FieldLabel htmlFor={prefix + "-language"}>
-          {m("Idioma principal del grupo (opcional)")}
+          {m("Idioma del grupo")}
         </FieldLabel>
         <Input
           id={prefix + "-language"}
@@ -123,9 +117,7 @@ export function ContextFields({
           onChange={(e) => update("language", e.target.value)}
         />
         <FieldDescription>
-          {m(
-            "El idioma se registra como contexto; no implica que ya haya contenido traducido."
-          )}
+          {m("Solo orienta el contexto; no activa traducciones.")}
         </FieldDescription>
       </Field>
     </FieldGroup>

@@ -67,5 +67,5 @@ test("anonymous, forged cookies, cross-origin mutations and invalid OAuth destin
   assert.equal((await s.request("/api/projects")).status, 401)
   assert.equal((await s.request("/api/projects", "POST", project, "https://evil.test")).status, 403)
   assert.equal((await s.request("/api/auth/oauth/github?origin=https://evil.test")).status, 400)
-  assert.equal((await s.request("/callback?code=forged&state=forged")).headers.get("location"), "/login?error=oauth_expired")
+  assert.equal((await s.request("/callback?code=forged&state=forged")).headers.get("location"), "/iniciar-sesion?error=oauth_expired")
 })

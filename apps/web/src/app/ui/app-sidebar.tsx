@@ -27,25 +27,25 @@ import {
 const navMain = [
   {
     title: "Inicio",
-    url: "/dashboard",
+    url: "/panel",
     icon: <LayoutDashboardIcon />,
     isActive: true,
     items: [
-      { title: "Vista general", url: "/dashboard" },
-      { title: "Salas de juego", url: "/dashboard/rooms" },
-      { title: "Sesiones de aprendizaje", url: "/dashboard/sessions" },
+      { title: "Vista general", url: "/panel" },
+      { title: "Salas de juego", url: "/panel/salas" },
+      { title: "Sesiones de aprendizaje", url: "/panel/sesiones" },
     ],
   },
-  { title: "Proyectos", url: "/dashboard/projects", icon: <BookOpenIcon /> },
+  { title: "Proyectos", url: "/panel/proyectos", icon: <BookOpenIcon /> },
   {
     title: "Notificaciones",
-    url: "/dashboard/notifications",
+    url: "/panel/notificaciones",
     icon: <BellIcon />,
   },
-  { title: "Mi cuenta", url: "/dashboard/account", icon: <UserIcon /> },
+  { title: "Mi cuenta", url: "/panel/cuenta", icon: <UserIcon /> },
   {
     title: "Configuración",
-    url: "/dashboard/settings",
+    url: "/panel/configuracion",
     icon: <SettingsIcon />,
   },
 ]
@@ -74,7 +74,7 @@ export function AppSidebar(props: ComponentProps<typeof Sidebar>) {
             <SidebarMenuButton
               size="lg"
               aria-label={m("Amautai")}
-              render={<Link to="/dashboard" />}
+              render={<Link to="/panel" />}
             >
               <BrandLogo className="group-data-[collapsible=icon]:hidden" />
               <img

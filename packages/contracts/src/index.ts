@@ -2,6 +2,21 @@ import { z } from "zod"
 export * from "./education.ts"
 export * from "./rooms.ts"
 
+export const accountProfileInput = z
+  .object({ role: z.enum(["teacher", "parent"]) })
+  .strict()
+export type AccountProfileRole = z.infer<typeof accountProfileInput>["role"]
+export type AccountProfile = { role: AccountProfileRole; updatedAt: string }
+export const familyProfileInput = z
+  .object({
+    grade: z.number().int().min(1).max(6),
+    location: z.string().trim().min(1).max(200),
+    language: z.string().trim().min(1).max(100),
+  })
+  .strict()
+export type FamilyProfileInput = z.infer<typeof familyProfileInput>
+export type FamilyProfile = FamilyProfileInput & { updatedAt: string }
+
 export const projectInput = z
   .object({
     name: z.string().trim().min(3).max(100),

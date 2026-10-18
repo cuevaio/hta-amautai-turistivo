@@ -25,9 +25,15 @@ type Education = Omit<Resource, "key" | "attempt"> & {
   saveProfile: (input: TeacherProfileInput) => Promise<void>
 }
 const Context = createContext<Education | null>(null)
-export function EducationProvider({ children }: { children: ReactNode }) {
+export function EducationProvider({
+  children,
+  enabled = true,
+}: {
+  children: ReactNode
+  enabled?: boolean
+}) {
   const { user, tenant } = useAuth()
-  const key = user && tenant ? tenant.id + ":" + user.id : ""
+  const key = enabled && user && tenant ? tenant.id + ":" + user.id : ""
   const [attempt, setAttempt] = useState(0)
   const [resource, setResource] = useState<Resource>({
     key: "",

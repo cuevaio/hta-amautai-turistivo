@@ -4,19 +4,28 @@ import { Navigate } from "react-router"
 import { useEducation } from "../model/education-provider"
 import { PageLoading } from "@/shared/ui/page-loading"
 import { Button } from "@workspace/ui/components/button"
+import { useProfile } from "@/features/profiles"
 export function EducationGate({
   children,
   onboarding = false,
+  loadingLayout = "dashboard",
 }: {
   children: ReactNode
   onboarding?: boolean
+  loadingLayout?: "auth" | "dashboard"
 }) {
   const { m, errorMessage } = useMessages()
 
   const { profile, loading, error, retry } = useEducation()
+  const { profile: accountProfile } = useProfile()
+  if (accountProfile?.role === "parent")
+    return onboarding ? <Navigate to="/panel" replace /> : children
   if (loading)
     return (
-      <PageLoading layout="dashboard" message="Cargando tu perfil docente…" />
+      <PageLoading
+        layout={loadingLayout}
+        message="Cargando tu perfil docente…"
+      />
     )
   if (error)
     return (
@@ -28,7 +37,8 @@ export function EducationGate({
         <Button onClick={retry}>{m("Reintentar")}</Button>
       </main>
     )
-  if (!profile && !onboarding) return <Navigate to="/onboarding" replace />
-  if (profile && onboarding) return <Navigate to="/dashboard" replace />
+  if (!profile && !onboarding)
+    return <Navigate to="/registro/docente" replace />
+  if (profile && onboarding) return <Navigate to="/panel" replace />
   return children
 }

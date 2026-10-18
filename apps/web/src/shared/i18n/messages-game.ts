@@ -1,5 +1,18 @@
 // AI-authored interface translations; review by Chanka Quechua and Aymara educators remains pending.
 export const gameRows: readonly (readonly [string, string, string])[] = [
+  ["Abrir juego", "Pukllayta kichay", "Anatawi jist'araña"],
+  ["Juego para familias", "Ayllukunapaq pukllay", "Familianakataki anatawi"],
+  ["Alimenta a tu comunidad", "Aylluykita mikuchiy", "Ayllumar manq'ayaña"],
+  ["Una partida corta de multiplicación para 2.º de Primaria.", "2 ñiqi primariaq mirachiy pukllay", "2 t'aqa primaria mirayañ anatäwi"],
+  ["Toca la pantalla para guiar al ave. Recoge tres grupos con la cantidad correcta.", "Pisquta pusarinapaq pantalla llachpay. Kimsa huñuta allin yupaywan huñuy.", "Jamach'i irpañataki pantalla llamkt'am. Kimsa tama chiqapa jakhumpi apthapim."],
+  ["El puntaje de esta partida no se guarda.", "Kay pukllaypa puntunqa manam waqaychasqachu.", "Aka anatawina puntu janiwa imaskiti."],
+  ["Empezar a jugar", "Pukllayta qallariy", "Anataña qalltaña"],
+  ["Volver a empezar", "Yapamanta qallariy", "Wasitata qalltaña"],
+  ["Reto {{level}} de 3", "3-manta {{level}} sasachakuy", "3-tat {{level}} yant'a"],
+  ["¡Terminaste la partida!", "¡Pukllayta tukuchirqanki!", "¡Anatawi tukuytaxa!"],
+  ["Puntaje final: {{score}}", "Tukuy puntuyki: {{score}}", "Tukuya puntu: {{score}}"],
+  ["Inicio de Amautai", "Amautai qallariynin", "Amautai qalltaña"],
+  ["Tu cuenta familiar está lista para jugar.", "Ayllu yupayniykim pukllaypaq wakichisqa kachkan.", "Ayllu cuenta-mamaxa anatañataki wakicht'atawa."],
   ["No pudimos cargar el juego. Reintenta.", "Pukllayta mana kichayta atirqanikuchu. Yapamanta yantay.", "Anatawi janiwa jist’araña atipkti. Wasitata yant’am."],
   ["Alimenta a tu comunidad", "Aylluykita mikuchiy", "Ayllumar manq'ayaña"],
   [

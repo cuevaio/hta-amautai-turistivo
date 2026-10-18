@@ -12,12 +12,20 @@ import {
   EmptyContent,
 } from "@workspace/ui/components/empty"
 
-export function AuthGuard({ children }: { children: ReactNode }) {
+export function AuthGuard({
+  children,
+  loadingLayout = "dashboard",
+}: {
+  children: ReactNode
+  loadingLayout?: "auth" | "dashboard"
+}) {
   const { m, errorMessage } = useMessages()
 
-  const { isLoading, user, error } = useAuth()
+  const { isLoading, user, error, reloadSession } = useAuth()
   if (isLoading)
-    return <PageLoading layout="dashboard" message="Comprobando tu sesión…" />
+    return (
+      <PageLoading layout={loadingLayout} message="Comprobando tu sesión…" />
+    )
   if (error)
     return (
       <main className="flex min-h-svh items-center p-6">
@@ -29,13 +37,13 @@ export function AuthGuard({ children }: { children: ReactNode }) {
             </EmptyDescription>
           </EmptyHeader>
           <EmptyContent>
-            <Button onClick={() => window.location.reload()}>
+            <Button onClick={() => void reloadSession()} disabled={isLoading}>
               {m("Reintentar")}
             </Button>
           </EmptyContent>
         </Empty>
       </main>
     )
-  if (!user) return <Navigate to="/login" replace />
+  if (!user) return <Navigate to="/iniciar-sesion" replace />
   return children
 }

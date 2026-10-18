@@ -44,7 +44,7 @@ test("recovery reports rate limits and upstream failures instead of claiming suc
 test("email link exchanges its token for an encrypted HttpOnly cookie and a clean URL", async () => {
   const s = setup()
   const response = await s.request("password-reset/start?token=fixture-reset-token")
-  assert.equal(response.headers.get("location"), "/reset-password")
+  assert.equal(response.headers.get("location"), "/restablecer-contrasena")
   assert.equal(response.headers.get("referrer-policy"), "no-referrer")
   assert.match(response.headers.get("set-cookie"), /HttpOnly/)
   assert.match(response.headers.get("set-cookie"), /Secure/)

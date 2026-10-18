@@ -2,7 +2,7 @@
 
 Mail transition (October 18, 2026): Stalwart domain `amautai.turistivo.com` and mailbox `notificaciones@amautai.turistivo.com` is created and authenticates Stalwart. The active sender is `amautai@turistivo.com`, an alias on the existing `turistivo.com` mail domain; `soporte@amautai.turistivo.com` and `postmaster@amautai.turistivo.com` remain aliases on the new domain. MX, SPF and DMARC for `turistivo.com` are published. The Worker uses the sender through four EMAIL_* secrets; a generic sender test and a real WorkOS password-reset email were delivered to the owner’s Outlook inbox from `amautai@turistivo.com`. The Worker JMAP secrets were corrected and the recovery flow now succeeds. The previous mailbox is retained. WorkOS Admin Portal invitations now use this address as their reply-to; Amautai verification/reset emails use it as the sender. WorkOS-hosted Magic Auth emails still use WorkOS delivery.
 
-The public `/privacy` and `/terms` pages took effect on October 18, 2026. Amautai is operated by Diego Urday as an individual; privacy and account requests go to `amautai@turistivo.com`. The published legal text is Spanish; Quechua and Aymara legal translations still need human review. Google OAuth uses Amautai's own client credentials in WorkOS Andes Staging. Google consent-screen publishing and WorkOS Production are still pending; WorkOS requires billing information to enable Production, and Google currently labels the app Testing.
+The public `/privacidad` and `/terminos` pages took effect on October 18, 2026. Amautai is operated by Diego Urday as an individual; privacy and account requests go to `amautai@turistivo.com`. The published legal text is Spanish; Quechua and Aymara legal translations still need human review. Google OAuth uses Amautai's own client credentials in WorkOS Andes Staging. Google consent-screen publishing and WorkOS Production are still pending; WorkOS requires billing information to enable Production, and Google currently labels the app Testing.
 
 Development handoff: [messaging architecture, WhatsApp and email](docs/MESSAGING_HANDOFF.md).
 
@@ -14,7 +14,7 @@ The production configuration targets one Amautai Worker and its D1 database in t
 
 The public code includes teacher onboarding and persisted learning-session drafts for second-grade primary Mathematics, the localized landing page and static login artwork. See [teacher onboarding and session drafts](docs/TEACHER_ONBOARDING.md).
 
-The public `/evidence` page presents the October 18, 2026 aggregate results from the problem-validation surveys, with links to the original teacher and family forms. Individual names, telephone numbers and free-text responses remain private; the published results are a snapshot and are not synchronized automatically. See [survey method and results](docs/PROBLEM_VALIDATION_SURVEYS.md).
+The public `/lista-de-espera` page lists respondent names from the family and teacher surveys in separate columns. It does not show phone numbers or survey answers. The names are a snapshot and are not synchronized automatically. See [survey method and results](docs/PROBLEM_VALIDATION_SURVEYS.md).
 
 ## Stack
 
@@ -37,11 +37,11 @@ Local development uses the dedicated WorkOS environment currently labeled **Ande
 | Client ID | `client_01M55794X1B33VNMX8PW0JEYQ9` |
 | Trusted issuer | `https://api.workos.com/user_management/client_01M55794X1B33VNMX8PW0JEYQ9` |
 | Custom audience | None; this environment does not inherit the Walpia JWT template |
-| Local login | http://localhost:5173/login |
-| Local signup | http://localhost:5173/signup |
+| Local login | http://localhost:5173/iniciar-sesion |
+| Local signup | http://localhost:5173/crear-cuenta |
 | OAuth callbacks | `https://amautai.turistivo.com/callback` (default), `http://localhost:5173/callback` |
 | Password reset entry | `https://amautai.turistivo.com/api/auth/password-reset/start` |
-| Public login / signup | https://amautai.turistivo.com/login / https://amautai.turistivo.com/signup |
+| Public login / signup | https://amautai.turistivo.com/iniciar-sesion / https://amautai.turistivo.com/crear-cuenta |
 
 The isolated environment was created on October 17, 2026 with no users. The original user and Turistivo membership remain in the shared WorkOS environment. Signing up here creates a separate account, even when using the same email.
 
@@ -92,9 +92,9 @@ The previous local credentials are preserved in the ignored `.dev.vars.shared` f
 
 The login, signup, email verification, and password recovery screens live inside Amautai. Google and GitHub use direct OAuth provider authorization through WorkOS; after authorization the browser returns to the app. Google uses Amautai's own OAuth client credentials in Andes Staging; GitHub still uses demo credentials. Google's consent screen remains in Testing, and WorkOS Production is not enabled.
 
-Email signup collects a name, email, and password of at least 12 characters. WorkOS enforces its password policy and issues verification challenges when required. With `AUTH_EMAIL_MODE=custom`, Amautai delivers verification codes through Stalwart; WorkOS still validates them. Both password authentication and OAuth callbacks handle these challenges inside the app. Pending verification tokens stay in encrypted HttpOnly cookies for ten minutes. Users enter the code at `/verify-email`.
+Email signup collects a name, email, and password of at least 12 characters. WorkOS enforces its password policy and issues verification challenges when required. With `AUTH_EMAIL_MODE=custom`, Amautai delivers verification codes through Stalwart; WorkOS still validates them. Both password authentication and OAuth callbacks handle these challenges inside the app. Pending verification tokens stay in encrypted HttpOnly cookies for ten minutes. Users enter the code at `/verificar-correo`.
 
-Password recovery starts at `/forgot-password`. The email link enters a server endpoint that exchanges the URL token for an encrypted HttpOnly cookie and opens a clean `/reset-password` URL. Successful password changes return to login. WorkOS revokes the account's existing sessions. Unknown and registered email addresses receive the same request confirmation; configuration and network failures are not reported as successful sends.
+Password recovery starts at `/recuperar-contrasena`. The email link enters a server endpoint that exchanges the URL token for an encrypted HttpOnly cookie and opens a clean `/restablecer-contrasena` URL. Successful password changes return to login. WorkOS revokes the account's existing sessions. Unknown and registered email addresses receive the same request confirmation; configuration and network failures are not reported as successful sends.
 
 OAuth uses PKCE, encrypted short-lived state, and explicit origin validation. Sealed session cookies are HttpOnly, SameSite=Lax, and Secure on HTTPS. The server verifies signature, issuer, expiry, session, and exact application Client ID. WorkOS handles token refresh. Sign-out revokes the session and clears the app cookie. Repeated sign-out with an expired session also clears the cookie. Revocation failures keep the current page and offer a retry in the user menu. The WorkOS client and its signing-key cache are reused between requests; exact application and issuer checks remain enforced. Mutations require an allowed Origin and a custom request header.
 
@@ -182,7 +182,7 @@ Read [PROJECT_STATUS.md](PROJECT_STATUS.md) for the latest handoff, verified beh
 
 ## WhatsApp notifications
 
-The notification settings at /dashboard/notifications list automatic task-assignment, deadline and new-message alerts. Each type independently selects email, WhatsApp, both or none. The selection persists per tenant and user. Task and messaging producers will be connected when those modules exist; no synthetic events are generated. The public page has no test-send buttons or manual reminder forms. WhatsApp still uses direct E.164 phone registration with consent.
+The notification settings at /panel/notificaciones list automatic task-assignment, deadline and new-message alerts. Each type independently selects email, WhatsApp, both or none. The selection persists per tenant and user. Task and messaging producers will be connected when those modules exist; no synthetic events are generated. The public page has no test-send buttons or manual reminder forms. WhatsApp still uses direct E.164 phone registration with consent.
 
 - Worker: modules/notifications follows the existing domain/application/infrastructure/HTTP boundaries. D1 migration 0002_notifications.sql adds contact verification and a durable outbox.
 - A scheduled handler runs every minute, leases due rows, checks current consent, retries gateway failures with stable IDs, and polls delivery states. Accepted, sent and delivered are distinct; uncertain sends are not automatically replayed.

@@ -1,11 +1,11 @@
 import { useMessages } from "@/shared/i18n/use-messages"
-import { LanguageSelector } from "@/shared/ui/language-selector"
 import { Notifications } from "@/features/notifications"
 import { LearningSessions, TeacherProfileForm } from "@/features/education"
 import { WorkspaceSettings } from "@/features/settings"
 import { NotFoundPage } from "@/pages/not-found"
 import { Projects } from "@/features/projects"
 import { Rooms } from "@/features/rooms"
+import { ParentProfileHome, useProfile } from "@/features/profiles"
 import { MoonIcon, SunIcon } from "lucide-react"
 import { motion } from "motion/react"
 import { Link, useParams } from "react-router"
@@ -37,15 +37,25 @@ const sections: Record<string, string> = {
   account: "Mi cuenta",
 }
 
+const routeSections: Record<string, string> = {
+  proyectos: "projects",
+  sesiones: "sessions",
+  salas: "rooms",
+  configuracion: "settings",
+  notificaciones: "notifications",
+  cuenta: "account",
+}
+
 export function DashboardPage({
   sectionOverride,
 }: {
   sectionOverride?: "sessions" | "rooms"
 }) {
   const { m } = useMessages()
+  const { profile } = useProfile()
 
   const { section: routeSection, sessionId } = useParams()
-  const section = sectionOverride ?? routeSection ?? "overview"
+  const section = sectionOverride ?? (routeSection && routeSections[routeSection]) ?? routeSection ?? "overview"
   const title = sections[section] ?? "Página no encontrada"
   const { theme, setTheme } = useTheme()
   return (
@@ -65,7 +75,7 @@ export function DashboardPage({
             <Breadcrumb aria-label={m("Navegación")} className="min-w-0">
               <BreadcrumbList className="flex-nowrap">
                 <BreadcrumbItem className="hidden md:block">
-                  <BreadcrumbLink render={<Link to="/dashboard" />}>
+                  <BreadcrumbLink render={<Link to="/panel" />}>
                     Amautai
                   </BreadcrumbLink>
                 </BreadcrumbItem>
@@ -79,7 +89,6 @@ export function DashboardPage({
             </Breadcrumb>
           </div>
           <div className="flex shrink-0 items-center gap-1">
-            <LanguageSelector compact />
             <Button
               variant="ghost"
               size="icon"
@@ -97,7 +106,9 @@ export function DashboardPage({
           transition={{ duration: 0.2 }}
           className="flex flex-1 flex-col gap-4 p-4 pt-0"
         >
-          {section === "notifications" ? (
+          {profile?.role === "parent" ? (
+            <ParentProfileHome />
+          ) : section === "notifications" ? (
             <Notifications />
           ) : section === "settings" ? (
             <>

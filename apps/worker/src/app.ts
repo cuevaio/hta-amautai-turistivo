@@ -26,6 +26,14 @@ import { client, workosGateway } from "./modules/auth/infrastructure/workos.ts"
 import { resolveWorkosSession } from "./modules/auth/infrastructure/session-verifier.ts"
 import { resolveIdentity } from "./modules/auth/http/sessions.ts"
 import { registerAuthRoutes } from "./modules/auth/http/routes.ts"
+import {
+  familyProfileService,
+  profileService,
+} from "./modules/profiles/application/service.ts"
+import { d1Profiles } from "./modules/profiles/infrastructure/d1-profiles.ts"
+import { d1FamilyProfiles } from "./modules/profiles/infrastructure/d1-family-profiles.ts"
+import { registerProfileRoutes } from "./modules/profiles/http/routes.ts"
+import { registerFamilyProfileRoutes } from "./modules/profiles/http/family-routes.ts"
 import { createWorkspaceService } from "./modules/workspace/application/workspace-service.ts"
 import { d1Workspaces } from "./modules/workspace/infrastructure/d1-workspaces.ts"
 import { createProjectService } from "./modules/projects/application/project-service.ts"
@@ -50,6 +58,22 @@ export function createApp(
     c.set("tenant", tenant)
     return tenant
   }
+  async function ensureTeacher(c: AppContext) {
+    await ensureTenant(c)
+    const profile = await d1Profiles(c.env.DB).find({
+      tenantId: c.get("tenant").id,
+      userId: c.get("identity").user.id,
+    })
+    return profile?.role === "teacher"
+  }
+  async function ensureParent(c: AppContext) {
+    await ensureTenant(c)
+    const profile = await d1Profiles(c.env.DB).find({
+      tenantId: c.get("tenant").id,
+      userId: c.get("identity").user.id,
+    })
+    return profile?.role === "parent"
+  }
   registerAuthRoutes(app, {
     authenticate,
     service: (c) =>
@@ -69,6 +93,14 @@ export function createApp(
     ensureTenant,
     healthy: (c) => workspace(c).healthy(),
   })
+  registerProfileRoutes(app, {
+    service: (c) => profileService(d1Profiles(c.env.DB)),
+    ensure: ensureTenant,
+  })
+  registerFamilyProfileRoutes(app, {
+    service: (c) => familyProfileService(d1FamilyProfiles(c.env.DB)),
+    ensureParent,
+  })
   registerProjectRoutes(
     app,
     (c) =>
@@ -80,7 +112,7 @@ export function createApp(
   registerEducationRoutes(app, {
     service: (c) =>
       educationService(d1Education(c.env.DB), () => crypto.randomUUID()),
-    ensure: ensureTenant,
+    ensure: ensureTeacher,
   })
   registerRoomRoutes(app, {
     service: (c) => roomService(d1Rooms(c.env.DB), () => crypto.randomUUID()),

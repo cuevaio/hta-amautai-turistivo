@@ -1,6 +1,8 @@
 // Initial UI translations, including localized curriculum display labels.
 // Original curriculum data and user-authored content remain unchanged.
 export const additionalRows: readonly (readonly [string, string, string])[] = [
+  ["Personas registradas", "Runasqa runakuna", "Qillqantayata jaqinaka"],
+  ["Lista de espera", "Suyakuqkuna", "Suytʼirinaka"],
   ["Resultados de las encuestas", "Kutichiykunapaq tapukuykunapa lluqsiyninkuna", "Jisktʼawinakana qhanstayañanakapa"],
   ["Resultados de validación del problema", "Sasachakuy qawarinapaq kutichiykuna", "Jan waltʼawi uñakipañana qhanstayañanaka"],
   ["Experiencias recientes de docentes y familias", "Yachachiqkunapa ayllukunapapas kunanllapi yachasqankuna", "Yatichirinakana ukhamaraki familiakana jichha jakawinakapa"],

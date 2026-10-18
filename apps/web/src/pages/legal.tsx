@@ -155,7 +155,7 @@ export function LegalPage({ document }: { document: "privacy" | "terms" }) {
             {m("Volver al inicio")}
           </Link>
           <Link
-            to={isPrivacy ? "/terms" : "/privacy"}
+            to={isPrivacy ? "/terminos" : "/privacidad"}
             className="underline underline-offset-4"
           >
             {m(isPrivacy ? "Términos de uso" : "Política de privacidad")}

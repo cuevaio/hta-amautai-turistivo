@@ -21,13 +21,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [isLoading, setLoading] = useState(true)
   const [error, setError] = useState("")
   async function reloadSession() {
+    setLoading(true)
+    setError("")
     try {
       const data = await authApi.session()
       setSession(data)
       setError("")
       return data !== null
     } catch {
-      setError("No pudimos comprobar tu sesión. Intenta recargar.")
+      setError("No pudimos conectar con el servicio de acceso. Inténtalo de nuevo en unos momentos.")
       return false
     } finally {
       setLoading(false)
@@ -42,7 +44,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       })
       .catch(() => {
         if (!controller.signal.aborted)
-          setError("No pudimos comprobar tu sesión. Intenta recargar.")
+          setError("No pudimos conectar con el servicio de acceso. Inténtalo de nuevo en unos momentos.")
       })
       .finally(() => {
         if (!controller.signal.aborted) setLoading(false)
@@ -52,7 +54,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   async function signOut() {
     await authApi.logout()
     setSession(null)
-    window.location.replace("/login")
+    window.location.replace("/iniciar-sesion")
   }
   return (
     <Context.Provider

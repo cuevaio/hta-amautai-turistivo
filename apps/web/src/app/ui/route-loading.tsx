@@ -5,7 +5,7 @@ export function RouteLoading() {
   const { m } = useMessages()
 
   const { pathname } = useLocation()
-  if (["/", "/privacy", "/terms"].includes(pathname)) {
+  if (["/", "/privacidad", "/terminos"].includes(pathname)) {
     return (
       <div
         role="status"
@@ -16,7 +16,7 @@ export function RouteLoading() {
     )
   }
   const dashboard =
-    pathname.startsWith("/dashboard") || pathname === "/callback"
+    pathname.startsWith("/panel") || pathname === "/callback"
   return (
     <PageLoading
       layout={dashboard ? "dashboard" : "auth"}

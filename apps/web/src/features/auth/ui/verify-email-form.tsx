@@ -55,7 +55,7 @@ export function VerifyEmailForm() {
           </Button>
           <FieldDescription>
             {m("Si no llega, revisa spam o")}{" "}
-            <Link to="/login">{m("inicia sesión otra vez")}</Link>
+            <Link to="/iniciar-sesion">{m("inicia sesión otra vez")}</Link>
             {m("para solicitar un nuevo código.")}
           </FieldDescription>
         </Field>

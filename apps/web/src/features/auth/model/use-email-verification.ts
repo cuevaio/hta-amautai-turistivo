@@ -21,7 +21,7 @@ export function useEmailVerification() {
     try {
       await authApi.verify(code)
       if (await reloadSession())
-        navigate("/dashboard/projects", { replace: true })
+        navigate("/panel/proyectos", { replace: true })
       else
         setError(
           "No pudimos comprobar tu sesión. Intenta iniciar sesión de nuevo."

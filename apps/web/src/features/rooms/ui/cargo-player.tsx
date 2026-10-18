@@ -18,7 +18,7 @@ export function CargoPlayer({
     <Button
       nativeButton={false}
       variant="outline"
-      render={<Link to={"/dashboard/rooms/" + roomId} />}
+      render={<Link to={"/panel/salas/" + roomId} />}
     >
       {m("Volver a la sala")}
     </Button>

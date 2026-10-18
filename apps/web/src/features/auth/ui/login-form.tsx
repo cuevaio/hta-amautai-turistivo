@@ -70,7 +70,7 @@ export function LoginForm({
           >
             {m("Aprender empieza aquí")}
           </motion.p>
-          <motion.h1 variants={entrance} className="text-3xl font-semibold">
+          <motion.h1 variants={entrance} className="text-2xl font-semibold">
             {signup ? m("Crea tu cuenta") : m("Bienvenido a Amautai")}
           </motion.h1>
           <motion.p
@@ -222,7 +222,7 @@ export function LoginForm({
                       </FieldLabel>
                       {!signup && (
                         <Link
-                          to="/forgot-password"
+                          to="/recuperar-contrasena"
                           className="text-sm underline-offset-4 hover:underline"
                         >
                           {m("Olvidé mi contraseña")}
@@ -305,7 +305,7 @@ export function LoginForm({
                       {signup
                         ? m("¿Ya tienes una cuenta?")
                         : m("¿No tienes una cuenta?")}{" "}
-                      <Link to={signup ? "/login" : "/signup"}>
+                      <Link to={signup ? "/iniciar-sesion" : "/crear-cuenta"}>
                         {signup ? m("Inicia sesión") : m("Crear cuenta")}
                       </Link>
                     </FieldDescription>
@@ -322,7 +322,7 @@ export function LoginForm({
         )}
         <MotionDescription variants={entrance} className="text-center">
           {signup ? m("¿Ya tienes una cuenta?") : m("¿No tienes una cuenta?")}{" "}
-          <Link to={signup ? "/login" : "/signup"}>
+          <Link to={signup ? "/iniciar-sesion" : "/crear-cuenta"}>
             {signup ? m("Inicia sesión") : m("Crear cuenta")}
           </Link>
         </MotionDescription>

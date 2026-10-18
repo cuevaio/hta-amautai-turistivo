@@ -29,7 +29,7 @@ export function NotFoundPage() {
           </EmptyDescription>
         </EmptyHeader>
         <EmptyContent>
-          <Button nativeButton={false} render={<Link to="/dashboard" />}>
+          <Button nativeButton={false} render={<Link to="/panel" />}>
             {m("Volver al inicio")}
           </Button>
         </EmptyContent>

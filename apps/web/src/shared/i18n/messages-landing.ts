@@ -1,6 +1,136 @@
 // Initial interface translations; original curriculum and user content remain unchanged.
 export const landingRows: readonly (readonly [string, string, string])[] = [
   [
+    "Matemáticas · Primaria · Perú",
+    "Yupay yachay · Qallariy yachay · Piruw",
+    "Jakhu yatiqawi · Qallta yatiqawi · Perú",
+  ],
+  [
+    "Matemáticas que se sienten de aquí.",
+    "Kaypi kawsaymanta yupay yachay.",
+    "Akan jakhu yatiqawi.",
+  ],
+  [
+    "Amautai te ayuda a enseñar y aprender matemáticas de primaria con experiencias cercanas al contexto de cada grupo.",
+    "Amautaiqa qallariy yachaypi yupay yachayta yachachinaykipaq, yachanaykipaqpas yanapam, sapa qutupa kawsayninwan tinkusqa ruwaykunawan.",
+    "Amautaixa qallta yatiqawina jakhu yatiqawi yatichañataki ukhamaraki yatiqañataki yanaptʼtam, sapa tamana jakawiparu jakʼa lurawinakampi.",
+  ],
+  [
+    "Conoce cómo funciona →",
+    "Imayna llamk'achisqanta riqsiy →",
+    "Kunjams irnaqki uk uñtʼam →",
+  ],
+  ["Empezar ahora", "Kunan qallariy", "Jichhaki qalltaña"],
+  [
+    "Conoce cómo funciona",
+    "Imayna llamkasqanta riqsiy",
+    "Kunjams irnaqki uk uñtʼam",
+  ],
+  ["Para docentes", "Yachachiqkunapaq", "Yatichirinakataki"],
+  ["Para familias", "Ayllukunapaq", "Familianakataki"],
+  ["Un camino para cada quien", "Sapankapaq ñan", "Sapa maynitaki mä thakhi"],
+  [
+    "Al iniciar sesión eliges tu perfil y queda guardado en tu cuenta.",
+    "Yaykuchkaspa imayna kasqaykita akllanki hinaspa yupayniykipi waqaychasqa kanqa.",
+    "Mantkasaxa profilma ajllta ukhamaraki cuentamana imantatawa.",
+  ],
+  ["Disponible", "Kachkan", "Utji"],
+  ["Soy docente", "Yachachiqmi kani", "Yatichiritwa"],
+  [
+    "Prepara sesiones de Matemática para tu grupo y guarda tus borradores para retomarlos cuando quieras.",
+    "Qutuykipaq yupay yachay yachay qutukunata wakichiy, ñawpaq qillqasqaykikunata waqaychay hinaspa munaspa kutiy.",
+    "Tamamataki jakhu yatiqawi tantachawinaka wakicham, nayrïr qillqatanakama imas ukhamaraki munasaxa ukaru kuttʼam.",
+  ],
+  [
+    "La planificación disponible empieza con Matemática de 2.º de primaria.",
+    "Kunanqa qallariy yachaypa 2 ñiqin yupay yachaywan wakichiyta atinki.",
+    "Jichhaxa qallta yatiqawina 2 tʼaqa jakhu yatiqawimpi wakichañ qallti.",
+  ],
+  ["Soy padre o madre", "Tayta utaq mama kani", "Awki jan ukaxa taykätwa"],
+  [
+    "Acompaña el aprendizaje en casa con un perfil que guarda el grado y, de manera opcional, el lugar o comunidad y el idioma.",
+    "Wasipi yachayta yanapay, ñiqi willakuyta waqaychaspa; kiti ayllu simi willakuykunatapas munaspa yapay.",
+    "Utana yatiqawi yanaptʼam, tʼaqa yatiyawimpi; chiqa ayllu ukhamaraki aru yatiyawinaka munasaxa yapxatam.",
+  ],
+  [
+    "También puedes probar el juego de multiplicación disponible para segundo grado.",
+    "Iskay ñiqipaq yupay kutichiy pukllayta qawariyta atikunki.",
+    "Payïri tʼaqatak wakichata jakhu mirayaña anatawi uñjañ yatiraktawa.",
+  ],
+  [
+    "Cómo funciona para docentes",
+    "Imaynataq yachachiqkunapaq llamkan",
+    "Kunjamsa yatichirinakataki irnaqi",
+  ],
+  [
+    "Configura el contexto de tu grupo",
+    "Qutuykipa kawsayninta allichay",
+    "Tamamana jakawipa wakicham",
+  ],
+  [
+    "Cuéntale a Amautai sobre el grado, la comunidad y lo que viven tus estudiantes día a día.",
+    "Amautaima willay ñiqimanta, ayllumanta hinaspa yachakuqniykikuna sapa punchaw kawsasqankumanta.",
+    "Amautairu tʼaqata, aylluta ukhamaraki yatiqirinakaman sapa uru jakawipa yatiyam.",
+  ],
+  [
+    "Prepara una sesión de matemáticas",
+    "Yupay yachay yachay qututa wakichiy",
+    "Jakhu yatiqawi tantachawi wakicham",
+  ],
+  [
+    "Arma un borrador con un propósito matemático y situaciones que tus estudiantes reconocen.",
+    "Yupay yachaypa munayninwan, yachakuqniykikuna riqsisqankuwan ñawpaq qillqasqata ruway.",
+    "Jakhu yatiqawi amtampi ukhamaraki yatiqirinakam uñtʼapki uka jakawinakampi mä nayrïr qillqata wakicham.",
+  ],
+  [
+    "Guarda y retoma tu borrador",
+    "Ñawpaq qillqasqaykita waqaychay hinaspa kutiy",
+    "Nayrïr qillqatama imas ukhamaraki kuttʼam",
+  ],
+  [
+    "Conserva tus sesiones y vuelve a editarlas cuando quieras seguir preparando tu clase.",
+    "Yachay qutuykikunata waqaychay hinaspa yachachinaykita allichayta munaspa musuqmanta llamkay.",
+    "Tantachawinakama imam ukhamaraki yatichañama wakichaña munasaxa wasitata askicham.",
+  ],
+  [
+    "El contexto también enseña.",
+    "Kawsaypas yachachinmi.",
+    "Jakawisa yaticharakiwa.",
+  ],
+  [
+    "Una niña de Ayacucho y un niño de Lima no cuentan las mismas cosas camino a la escuela.",
+    "Ayacuchomanta sipas hinaspa Limamanta irqim manam hukllachu yachay wasiman rispa willakunku.",
+    "Ayacuchot mä imilla ukhamaraki Limat mä yuqalla yatiqaña utar sarkasaxa pachpa yatiyawinak jan arsupkiti.",
+  ],
+  [
+    "Por eso en Amautai el contexto, el idioma y la realidad de cada comunidad importan desde el primer paso. Seguimos trabajando para que más lenguas peruanas tengan su lugar.",
+    "Chayraykum Amautaipi ayllupa kawsaynin, simin, imayna kasqankupas qallariymantapacha ancha allin. Aswan Piruw simikuna kachkanankupaq llamkachkanchikraq.",
+    "Ukatwa Amautaina sapa aylluna jakawipa, arupa ukhamaraki chiqpach jakawipa qalltatpacha wakiskiri. Walja Perú arunakax utjañapataki irnaqaskaktanwa.",
+  ],
+  [
+    "Empieza a preparar tu próxima sesión",
+    "Hamuq yachay qutuykita allichayta qallariy",
+    "Jutïr tantachawima wakichaña qalltam",
+  ],
+  [
+    "Para docentes y familias",
+    "Yachachiqkunapaq ayllukunapaqpas",
+    "Yatichirinakataki ukhamaraki familianakataki",
+  ],
+  [
+    "Planifica Matemática para tu aula y acompaña el aprendizaje en casa. Docentes y familias pueden guardar un contexto sin registrar datos personales.",
+    "Yachay wasiykipaq Yupay Yachayta wakichiy, wasipipas yachayta yanapay. Yachachiqkuna ayllukuna ima kawsay willakuyta waqaychayta atinku, runakunamanta willakuyta mana qillqaspankupas.",
+    "Yatichañamataki jakhu yatiqawi wakicham ukhamaraki utana yatiqawi yanaptʼam. Yatichirinakasa familianakasa jakawi yatiyawi imapxaspa, jaqina yatiyawinaka jan qillqasa.",
+  ],
+  ["Perfil familiar", "Ayllupa perfil", "Familia perfil"],
+  [
+    "Crear mi perfil familiar",
+    "Ayllupa imayna kasqayta ruway",
+    "Familia profilja luraña",
+  ],
+  ["Del 1.º al 6.º grado", "1 ñiqimanta 6 ñiqikama", "1 tʼaqat 6 tʼaqakama"],
+  ["Opcional", "Munaylla", "Munañjama"],
+  [
     "Prepara sesiones de Matemática a partir del contexto de tu grupo. Guarda tus borradores y retómalos cuando lo necesites.",
     "Qutuykipa kawsayninmanta yupay yachay qutukunata allichay. Ñawpaq qillqasqaykikunata waqaychay hinaspa munaspa kutiy.",
     "Tamamana jakawipata jakhu yatiqawi tantachawinaka wakicham. Nayrïr qillqatanakama imam ukhamaraki munasaxa ukaru kuttʼam.",
@@ -14,11 +144,6 @@ export const landingRows: readonly (readonly [string, string, string])[] = [
     "Disponible para Matemática de 2.º de Primaria.",
     "Qallariy yachaypa 2 ñiqinpi yupay yachaypaq kachkan.",
     "Qallta yatiqawina 2 tʼaqapa jakhu yatiqawipataki utji.",
-  ],
-  [
-    "Amautai · Aprender juntos",
-    "Amautai · Kuska yachay",
-    "Amautai · Mayachtʼata yatiqaña",
   ],
   [
     "Así puede empezar una sesión.",
@@ -142,11 +267,6 @@ export const landingRows: readonly (readonly [string, string, string])[] = [
     "Jumawa amta ajllta ukhamaraki tantachawi yatiqirinakamaru wakichta.",
   ],
   [
-    "Su entorno también enseña.",
-    "Kawsayninpas yachachinmi.",
-    "Utjawipaxa yaticharakiwa.",
-  ],
-  [
     "Una feria, un río o una cosecha pueden ser el comienzo de una gran pregunta matemática.",
     "Qatu, mayu utaq pallaypas allin yupay yachay tapukuypa qallariynin kanmanmi.",
     "Mä qhathu, mä jawira jan ukaxa apthapiwixa mä jachʼa jakhu jisktʼana qalltapäspawa.",
@@ -162,4 +282,62 @@ export const landingRows: readonly (readonly [string, string, string])[] = [
     "IA ukampi anatawinakaxa jutïr lurawinakasankaniwa.",
   ],
   ["Empezar con Amautai", "Amautaiwan qallariy", "Amautai ukampi qalltaña"],
+  [
+    "Enseña matemáticas desde tu aula.",
+    "Yachay wasiykimanta yupay yachayta yachachiy.",
+    "Yatichañ utamat jakhu yatiqawi yaticham.",
+  ],
+  [
+    "Dos formas de acompañar",
+    "Iskay ñawpaqman purichiy",
+    "Paya thakhinakampi yanaptʼaña",
+  ],
+  ["Para el aula", "Yachay wasipaq", "Yatichañ utataki"],
+  ["Desde casa", "Wasimanta", "Utatpacha"],
+  [
+    "Una preparación clara, paso a paso",
+    "Sapa puriypi sut'i wakichiy",
+    "Sapa thakhina qhan wakichaña",
+  ],
+  ["Aprendizaje con raíces", "Sapikunayuq yachay", "Saphinakani yatiqawi"],
+  ["Próximamente", "Hamuqllapi", "Jutïri pachana"],
+  [
+    "Recordatorios para que ninguna tarea se quede atrás",
+    "Yachay ruwaykuna mana qipaman saqisqa kananpaq yuyachiykuna",
+    "Taqi lurañanaka phuqhañataki amtayañanaka",
+  ],
+  [
+    "Avisos automáticos por WhatsApp sobre tus tareas",
+    "WhatsApp nisqapi yachay ruwaykunamanta kikillanmanta willakuykuna",
+    "WhatsApp tuqita lurañanakamata automatiku yatiyawinaka",
+  ],
+  [
+    "Estamos preparando recordatorios por WhatsApp para ayudarte a seguir las tareas y sus fechas. Podrás elegir tus preferencias; los envíos se activarán cuando estén disponibles las tareas y la mensajería.",
+    "WhatsApp nisqapi yuyachiykunata wakichichkaniku, yachay ruwaykunata p'unchawkunatapas qatipanaykipaq. Imayna munasqaykita akllayta atinki; yachay ruwaykuna willakuykunapas kachkanqaku chaypim willakuykuna qallarinqa.",
+    "WhatsApp tuqita amtayañanaka wakichasktanwa, lurañanaka ukhamaraki urunakapa arktañamataki. Kunjam yatiyawi munas uk ajllasmawa; lurañanaka ukhamaraki yatiyawi utjxi ukhawa apayasiñanakax qalltaskani.",
+  ],
+  [
+    "Una experiencia que habla contigo",
+    "Qamwan rimay yachay",
+    "Jumampi aruskipir yatiqawi",
+  ],
+  [
+    "Aprende en el idioma que se siente como casa",
+    "Wasiyki hina simipi yachay",
+    "Uta arumampi yatiqam",
+  ],
+  [
+    "La interfaz de Amautai está disponible en español, quechua chanka y aimara. Elige tu idioma desde el selector para recorrer la plataforma a tu manera.",
+    "Amautai qawachinaqa kastilla simipi, Chanka qichwa simipi, aimara simipipas kachkan. Simiykita akllay hinaspa munasqaykimanhina Amautaita qaway.",
+    "Amautai uñstayawixa kastilla aruta, Chanka qhichwa aruta ukhamaraki aimara aruta utji. Aruma ajllim ukhamaraki munatamjama plataforma uñakipam.",
+  ],
+  ["Español", "Runasimi", "Kastilla aru"],
+  ["Quechua chanka", "Chanka qichwa", "Chanka qhichwa aru"],
+  ["Aimara", "Aimara simi", "Aimara aru"],
+  ["Idiomas disponibles", "Kachkan simikuna", "Utjiri arunaka"],
+  [
+    "Matemáticas conectadas con cada comunidad",
+    "Yupay yachay sapa aylluwan tinkusqa",
+    "Jakhu yatiqawi sapa ayllumpi mayachata",
+  ],
 ]

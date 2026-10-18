@@ -29,7 +29,7 @@ export async function api<T>(
   })
   if (!response.ok) {
     if (response.status === 401 && !path.startsWith("/api/auth/"))
-      window.location.replace("/login")
+      window.location.replace("/iniciar-sesion")
     const body = (await response.json().catch(() => ({}))) as { error?: string }
     const authMessages: Record<string, string> = {
       invalid_education_input:

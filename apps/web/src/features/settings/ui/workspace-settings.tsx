@@ -121,7 +121,7 @@ export function WorkspaceSettings({ account = false }: { account?: boolean }) {
           <Button
             nativeButton={false}
             variant="outline"
-            render={<Link to="/forgot-password" />}
+            render={<Link to="/recuperar-contrasena" />}
           >
             {m("Recuperar contraseña")}
           </Button>

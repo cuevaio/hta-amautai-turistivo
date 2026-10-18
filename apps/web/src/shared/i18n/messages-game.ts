@@ -326,11 +326,6 @@ export const gameRows: readonly (readonly [string, string, string])[] = [
     "Chiqapa tamacha. +20 puntunaka.",
   ],
   [
-    "Toca el camino para conducir. La entrega es automática al detenerte en el mercado.",
-    "Ñanta llachpay purinaykipaq. Qatupi sayaptiki qipita kikinmanta qunki.",
-    "Thakhi llamkt’am sarnaqañataki. Qhathuna sayt’ataxa q’ipixa pachpata churasini.",
-  ],
-  [
     "Elige cuánto mover. Después toca el mercado para entregar.",
     "Haykata kuyuchinaykita akllay. Chaymanta qatuta llachpay qunaykipaq.",
     "Qhawqha unxtayaña ajllim. Ukatxa qhathu llamkt’am churañataki.",

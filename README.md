@@ -20,8 +20,9 @@ Teachers can now register a student's name with their **father, mother, or guard
 
 ## Profiles and games
 
-- After sign-in, users choose a teacher or parent profile at `/registro/perfil`. The profile step accepts nine Peruvian mobile digits, prepends `+51`, and registers the number for an automatic WhatsApp welcome; notification preferences are managed under Notifications. Family registration requires a primary grade, city, and main language. Registration uses its own loading layout; `/panel` uses the shared shadcn sidebar. See [profile onboarding](docs/PROFILE_ONBOARDING.md).
-- Teacher rooms at `/panel/salas` support names, participant scores, deletion, and five games: food-group multiplication, [market addition/subtraction](docs/MARKET_GAME.md), [nursery units/tens](docs/NURSERY_GAME.md), [equality fair](docs/FAIR_GAME.md), and [builders geometry](docs/BUILDER_GAME.md).
+- The public landing page uses a mobile drawer for navigation, language, theme, and account actions. The interface defaults to light theme until the user chooses another theme.
+- After sign-in, users choose a teacher or parent profile at `/registro/perfil`; its Amautai wordmark returns to `/`. The profile step accepts nine Peruvian mobile digits, prepends `+51`, and registers the number for an automatic WhatsApp welcome; notification preferences are managed under Notifications. Family registration requires a primary grade, city, and main language. Registration uses its own loading layout; `/panel` uses the shared shadcn sidebar. See [profile onboarding](docs/PROFILE_ONBOARDING.md).
+- Teacher rooms at `/panel/salas` support names, participant scores, deletion, and five games: food-group multiplication, [market addition/subtraction](docs/MARKET_GAME.md) with always-visible direction controls above the collect/deliver actions, [nursery units/tens](docs/NURSERY_GAME.md), [equality fair](docs/FAIR_GAME.md), and [builders geometry](docs/BUILDER_GAME.md).
 - Parents use `/panel` to manage multiple child aliases and create private practice sessions using the same five teacher games. Each child has an explicit regional context, saved scores and resumable sessions. See [family games](docs/FAMILY_GAMES.md).
 - Existing profile and game migration filenames are retained, including their shared numeric prefixes. Wrangler tracks full filenames; the standard migration command below applies only pending files.
 
@@ -125,7 +126,7 @@ Projects support create, list, detail, edit, and soft delete. Zod validates name
 
 Preset `b7Br6guwa`: Maia, Base UI, blue theme, Inter, and Lucide. Official `sidebar-08` and `login-02` blocks provide the foundation. The login uses a generated Andean mountain image and an SVG mountain mark.
 
-Dark mode is the default. The dashboard toggle and D shortcut outside text fields change the persisted theme.
+Light mode is the default. The dashboard toggle and D shortcut outside text fields change the persisted theme.
 
 Account shows the signed-in user's name and email as read-only fields, with a password recovery link. Settings shows the workspace, a persisted light/dark/system preference, and a live database health check with retry. Unknown routes display a 404 with a way back to the dashboard. Project loading uses skeletons. Route and session loading preserve the responsive login or dashboard layout with branded placeholders and screen-reader status messages. Skeleton motion respects reduced-motion preferences, and session checks time out after 15 seconds with a retryable error. Authentication and dashboard screens are loaded separately. The latest route/session loading refinements were included in the notifications deployment.
 

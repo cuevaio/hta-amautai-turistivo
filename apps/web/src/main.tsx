@@ -19,7 +19,7 @@ function Application() {
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <ThemeProvider defaultTheme="dark" storageKey="amautai-theme">
+    <ThemeProvider defaultTheme="light" storageKey="amautai-theme">
       <AuthProvider>
         <ProfileProvider>
           <Application />

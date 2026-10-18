@@ -4,7 +4,7 @@ import {
   type AccountProfileRole,
 } from "@amautai/contracts"
 import { ArrowRight } from "lucide-react"
-import { useNavigate } from "react-router"
+import { Link, useNavigate } from "react-router"
 import { useMessages } from "@/shared/i18n/use-messages"
 import { BrandLogo } from "@/shared/ui/brand-logo"
 import { LanguageSelector } from "@/shared/ui/language-selector"
@@ -69,7 +69,9 @@ export function ProfileTypeSelection() {
     <main className="flex min-h-svh items-center justify-center bg-muted/70 p-5 sm:p-8">
       <section className="w-full max-w-2xl rounded-4xl bg-card p-6 text-card-foreground sm:p-8">
         <div className="mb-8 flex flex-wrap items-center justify-between gap-3">
-          <BrandLogo className="h-10 w-40" />
+          <Link to="/" aria-label={m("Amautai")}>
+            <BrandLogo className="h-10 w-40" />
+          </Link>
           <LanguageSelector compact />
         </div>
         <div className="mb-7 flex flex-col gap-2">
@@ -158,11 +160,6 @@ export function ProfileTypeSelection() {
               <FieldDescription id="registration-phone-help">
                 {m(
                   "Ingresa 9 dígitos. También puedes pegar tu número con +51."
-                )}
-              </FieldDescription>
-              <FieldDescription>
-                {m(
-                  "Al continuar recibirás una bienvenida por WhatsApp según tu perfil. Puedes gestionar tus avisos en Notificaciones."
                 )}
               </FieldDescription>
               {phoneError && (

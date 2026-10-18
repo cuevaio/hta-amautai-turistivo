@@ -14,11 +14,6 @@ import { landingRows } from "./messages-landing.ts"
 import { legalRows } from "./messages-legal.ts"
 const rows: readonly (readonly [string, string, string])[] = [
   [
-    "Al continuar recibirás una bienvenida por WhatsApp según tu perfil. Puedes gestionar tus avisos en Notificaciones.",
-    "Qatipaspaqa akllasqayki rurayman hina WhatsApppi allin hamusqa willakuyta chaskinki. Willakuykunapi allichayta atinki.",
-    "Sarantañaxa ajllita lurawimarjama WhatsApp tuqi suma jutäwi katuqäta. Yatiyawinakana yatiyawinakama apnaqasmawa.",
-  ],
-  [
     "Al guardar aceptas recibir los avisos que elijas en este número. El prefijo +51 ya está incluido.",
     "Waqaychaspaqa kay yupaypi akllasqayki willakuykunata chaskiyta munanki. +51 ñawpaq yupayqa churakusqañam.",
     "Imasaxa aka jakhuru ajllita yatiyawinaka katuqaña iyawsmawa. +51 nayrïri jakhuxa yapxatataxiwa.",

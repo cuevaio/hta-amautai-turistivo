@@ -188,11 +188,6 @@ export const marketRows: readonly (readonly [string, string, string])[] = [
   ],
   ["Controles de conducción", "Purinapaq ñit'inakuna", "Sarnaqawi limt'anaka"],
   [
-    "Flechas o WASD para moverte. Detente y pulsa E o Espacio para actuar.",
-    "Wachikunawan utaq WASDwan puriy. Sayay hinaspa E utaq Espacio ñit'iy.",
-    "Wach'inakampi jan ukaxa WASD unxtam. Sayt'am ukat E jan ukaxa Espacio limt'am.",
-  ],
-  [
     "Conduce hasta los alimentos para recoger. Después ve al mercado.",
     "Mikuykunaman puriy huñunaykipaq. Chaymanta qatuman riy.",
     "Manq'anakaru saram apthapiñataki. Ukatxa qhathuru saram.",

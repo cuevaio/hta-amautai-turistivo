@@ -63,13 +63,9 @@ export function MarketCanvas({
   }, [onTransfer, onZone, onCheckout])
   const [status, setStatus] = useState("loading"),
     [attempt, setAttempt] = useState(0)
-  const action = m(operation === "+" ? "Recoger 1" : "Dejar 1"),
-    cargo = m("Tu carga"),
+  const cargo = m("Tu carga"),
     source = m("Almacén"),
-    destination = m("Mercado"),
-    instruction = m(
-      "Toca el camino para conducir. La entrega es automática al detenerte en el mercado."
-    )
+    destination = m("Mercado")
   const scoreLabel = m("Puntos: {{score}}", {
       score: new Intl.NumberFormat(locale).format(score),
     }),
@@ -84,11 +80,9 @@ export function MarketCanvas({
       operation,
       enabled,
       remaining,
-      action,
       cargo,
       source,
       destination,
-      instruction,
       scoreLabel,
       livesLabel,
       streakLabel,
@@ -104,11 +98,9 @@ export function MarketCanvas({
       operation,
       enabled,
       remaining,
-      action,
       cargo,
       source,
       destination,
-      instruction,
       scoreLabel,
       livesLabel,
       streakLabel,
@@ -236,47 +228,6 @@ export function MarketCanvas({
                       : "Toca el almacén para preparar tu carga; después ve al mercado."
               )}
             </p>
-            <div className="flex flex-wrap gap-2">
-              <Button
-                type="button"
-                disabled={
-                  !enabled || !near || remaining < 1 || status !== "ready"
-                }
-                onClick={() => runtime.current?.interact(1)}
-              >
-                {m(operation === "+" ? "Recoger 1" : "Dejar 1")}
-              </Button>
-              <Button
-                type="button"
-                variant="outline"
-                disabled={
-                  !enabled || !near || remaining < 10 || status !== "ready"
-                }
-                onClick={() => runtime.current?.interact(10)}
-              >
-                {m(operation === "+" ? "Recoger 10" : "Dejar 10")}
-              </Button>
-            </div>
-          </div>
-          <div className="flex flex-wrap gap-1">{tools}</div>
-          <details
-            className="mt-auto border-t pt-3"
-            onToggle={(e) => {
-              if (!e.currentTarget.open) {
-                pointers.current.clear()
-                runtime.current?.steer(0, 0)
-              }
-            }}
-          >
-            <summary className="cursor-pointer text-sm font-medium">
-              {m("Controles y cómo jugar")}
-            </summary>
-            <p className="my-3 text-sm text-muted-foreground">
-              {instruction}{" "}
-              {m(
-                "Flechas o WASD para moverte. Detente y pulsa E o Espacio para actuar."
-              )}
-            </p>
             <div
               role="group"
               aria-label={m("Controles de conducción")}
@@ -351,7 +302,29 @@ export function MarketCanvas({
                 </Button>
               ))}
             </div>
-          </details>
+            <div className="flex flex-wrap gap-2">
+              <Button
+                type="button"
+                disabled={
+                  !enabled || !near || remaining < 1 || status !== "ready"
+                }
+                onClick={() => runtime.current?.interact(1)}
+              >
+                {m(operation === "+" ? "Recoger 1" : "Dejar 1")}
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                disabled={
+                  !enabled || !near || remaining < 10 || status !== "ready"
+                }
+                onClick={() => runtime.current?.interact(10)}
+              >
+                {m(operation === "+" ? "Recoger 10" : "Dejar 10")}
+              </Button>
+            </div>
+          </div>
+          <div className="flex flex-wrap gap-1">{tools}</div>
         </aside>
       </div>
       {status !== "ready" && (

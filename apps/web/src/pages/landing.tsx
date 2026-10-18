@@ -1,5 +1,14 @@
+import { useState } from "react"
 import { Link } from "react-router"
 import { Button } from "@workspace/ui/components/button"
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@workspace/ui/components/sheet"
+import { MenuIcon } from "lucide-react"
 import { BrandLogo } from "@/shared/ui/brand-logo"
 import { LanguageSelector } from "@/shared/ui/language-selector"
 import { ThemeToggle } from "@/shared/ui/theme-toggle"
@@ -8,6 +17,8 @@ import { LandingMetadata } from "@/shared/ui/landing-metadata"
 
 export function LandingPage() {
   const { m } = useMessages()
+  const [menuOpen, setMenuOpen] = useState(false)
+  const closeMenu = () => setMenuOpen(false)
   return (
     <div className="min-h-svh bg-background text-foreground">
       <LandingMetadata />
@@ -18,7 +29,7 @@ export function LandingPage() {
         {m("Ir al contenido")}
       </a>
       <header className="bg-background/95">
-        <div className="mx-auto flex max-w-7xl flex-col gap-3 px-5 py-4 sm:px-8 lg:flex-row lg:items-center lg:gap-4 lg:px-12">
+        <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-5 py-4 sm:px-8 lg:gap-4 lg:px-12">
           <Link
             to="/"
             className="flex min-h-11 w-fit items-center"
@@ -28,7 +39,7 @@ export function LandingPage() {
           </Link>
           <nav
             aria-label={m("Navegación principal")}
-            className="flex flex-wrap items-center gap-x-5 gap-y-1 border-t border-border/70 pt-2 text-sm lg:ml-0 lg:flex-1 lg:gap-x-3 lg:border-0 lg:pt-0 xl:flex-nowrap xl:gap-x-5"
+            className="hidden min-w-0 items-center gap-x-5 text-sm lg:ml-0 lg:flex lg:flex-1 lg:gap-x-3 xl:flex-nowrap xl:gap-x-5"
           >
             <a
               href="#como-funciona"
@@ -55,7 +66,7 @@ export function LandingPage() {
               {m("Lista de espera")}
             </Link>
           </nav>
-          <div className="flex items-center justify-between gap-3 border-t border-border/70 pt-2 sm:justify-end lg:shrink-0 lg:border-0 lg:pt-0">
+          <div className="hidden items-center justify-end gap-3 lg:flex lg:shrink-0">
             <div className="flex items-center gap-2">
               <ThemeToggle className="size-9" />
               <LanguageSelector compact />
@@ -71,6 +82,85 @@ export function LandingPage() {
               {m("Crear cuenta")}
             </Button>
           </div>
+          <Sheet open={menuOpen} onOpenChange={setMenuOpen}>
+            <SheetTrigger
+              render={
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="lg:hidden"
+                  aria-label={m("Navegación principal")}
+                />
+              }
+            >
+              <MenuIcon />
+            </SheetTrigger>
+            <SheetContent
+              side="right"
+              className="w-[min(20rem,calc(100vw-2rem))]"
+              closeLabel={m("Cerrar")}
+            >
+              <SheetHeader className="border-b border-border px-6 py-5">
+                <SheetTitle>{m("Navegación principal")}</SheetTitle>
+              </SheetHeader>
+              <nav
+                aria-label={m("Navegación principal")}
+                className="flex flex-col gap-1 px-6 py-5"
+              >
+                <a
+                  href="#como-funciona"
+                  onClick={closeMenu}
+                  className="flex min-h-11 items-center rounded-sm text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-2 focus-visible:outline-ring"
+                >
+                  {m("Cómo funciona")}
+                </a>
+                <a
+                  href="#docentes"
+                  onClick={closeMenu}
+                  className="flex min-h-11 items-center rounded-sm text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-2 focus-visible:outline-ring"
+                >
+                  {m("Para docentes")}
+                </a>
+                <a
+                  href="#familias"
+                  onClick={closeMenu}
+                  className="flex min-h-11 items-center rounded-sm text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-2 focus-visible:outline-ring"
+                >
+                  {m("Para familias")}
+                </a>
+                <Link
+                  to="/lista-de-espera"
+                  onClick={closeMenu}
+                  className="flex min-h-11 items-center rounded-sm text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-2 focus-visible:outline-ring"
+                >
+                  {m("Lista de espera")}
+                </Link>
+              </nav>
+              <div className="mt-auto flex flex-col gap-4 border-t border-border px-6 py-5">
+                <div className="flex items-center gap-2">
+                  <ThemeToggle className="size-11" />
+                  <LanguageSelector compact touchTarget wide />
+                </div>
+                <div className="flex flex-col gap-2">
+                  <Button
+                    nativeButton={false}
+                    variant="outline"
+                    render={
+                      <Link to="/iniciar-sesion" onClick={closeMenu} />
+                    }
+                  >
+                    {m("Iniciar sesión")}
+                  </Button>
+                  <Button
+                    nativeButton={false}
+                    render={<Link to="/crear-cuenta" onClick={closeMenu} />}
+                  >
+                    {m("Crear cuenta")}
+                  </Button>
+                </div>
+              </div>
+            </SheetContent>
+          </Sheet>
         </div>
       </header>
       <main id="contenido">

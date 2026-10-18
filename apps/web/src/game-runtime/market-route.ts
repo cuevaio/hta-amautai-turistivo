@@ -14,7 +14,6 @@ export type MarketFrame = {
   task: number
   operation: "+" | "−"
   remaining: number
-  action: string
   enabled: boolean
   cargo: string
   source: string
@@ -26,7 +25,6 @@ export type MarketFrame = {
   feedbackText: string
   feedbackVersion: number
   feedbackKind: string
-  instruction: string
 }
 export type MarketRuntime = {
   sync: (frame: MarketFrame) => void
@@ -63,7 +61,6 @@ export function createMarketGame(
       operation: "+",
       enabled: false,
       remaining: 0,
-      action: "",
       cargo: "",
       source: "",
       destination: "",
@@ -74,7 +71,6 @@ export function createMarketGame(
       feedbackText: "",
       feedbackVersion: 0,
       feedbackKind: "",
-      instruction: "",
     },
     dead = false,
     failed = false
@@ -142,7 +138,6 @@ export function createMarketGame(
     cargoText?: Phaser.GameObjects.Text
     sourceText?: Phaser.GameObjects.Text
     destinationText?: Phaser.GameObjects.Text
-    instructionText?: Phaser.GameObjects.Text
     sourcePlate?: Phaser.GameObjects.Rectangle
     cargoPlate?: Phaser.GameObjects.Rectangle
     supply: Phaser.GameObjects.Image[] = []
@@ -352,7 +347,6 @@ export function createMarketGame(
         this.zone = interactionZone
         options.zone(interactionZone)
       }
-      this.instructionText?.setText(ready ? latest.action : latest.instruction)
       this.sourcePlate?.setStrokeStyle(
         4,
         zone === "source" ? 0x2d9f74 : 0x7b694e
@@ -401,7 +395,6 @@ export function createMarketGame(
       this.cargoText?.setText(data.cargo)
       this.sourceText?.setText("1 · " + data.source)
       this.destinationText?.setText("2 · " + data.destination)
-      this.instructionText?.setText(data.instruction)
       this.sourcePlate?.setStrokeStyle(
         4,
         data.operation === "+" ? 0x2d9f74 : 0x7b694e

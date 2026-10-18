@@ -1,4 +1,4 @@
-// Draft translations for review, not approved legal versions.
+// Legal text is published in Spanish; other-language legal translations need human review.
 export const legalRows: readonly (readonly [string, string, string])[] = [
   [
     "Política de privacidad",
@@ -7,38 +7,22 @@ export const legalRows: readonly (readonly [string, string, string])[] = [
   ],
   ["Términos de uso", "Llamkachinapaq kamachikuna", "Apnaqañataki kamachinaka"],
   [
-    "Borrador para revisión",
-    "Qawanapaq ñawpaq qillqa",
-    "Uñakipañataki nayrïr qillqata",
+    "Vigente desde el 18 de octubre de 2026.",
+    "Vigente desde el 18 de octubre de 2026.",
+    "Vigente desde el 18 de octubre de 2026.",
   ],
   [
-    "Preparado el 18 de octubre de 2026. Sin vigencia: pendiente de aprobación y publicación.",
-    "2026 watapa octubre killanpi 18 punchaw allichasqa. Manaraq llamkanchu: chaskinapaq hinaspa lluqsichinapaq suyan.",
-    "18 uru octubre phaxsi 2026 marana wakichata. Janïra chʼamanïkiti: iyawsaña ukhamaraki uñtʼayaña suyaski.",
-  ],
-  ["Datos por confirmar", "Taqyanan willakuykuna", "Chiqachañ yatiyawinaka"],
-  [
-    "Responsable propuesto: Diego Urday, como persona natural. Nombre legal completo y domicilio pendientes de confirmación.",
-    "Yuyaychasqa kamachiq: Diego Urday, runa hina. Kamachipi huntan sutin hinaspa tiyananraq taqyanan.",
-    "Amtata uñjiri: Diego Urday, jaqi ukhama. Phuqata sutipa ukhamaraki utjawipa chiqachañawa.",
+    "Amautai es operado por Diego Urday como persona natural.",
+    "Amautai es operado por Diego Urday como persona natural.",
+    "Amautai es operado por Diego Urday como persona natural.",
   ],
   [
-    "Contacto: soporte@amautai.turistivo.com. Los plazos de atención y conservación siguen pendientes de aprobación.",
-    "Rimanapaq: soporte@amautai.turistivo.com. Kutichinapaq hinaspa waqaychanapaq pachakunaqa manaraq chaskisqachu.",
-    "Aruskipañataki: soporte@amautai.turistivo.com. Jaysañataki ukhamaraki imañataki pachanakaxa iyawsaña suyaskiwa.",
+    "Contacto: amautai@turistivo.com.",
+    "Contacto: amautai@turistivo.com.",
+    "Contacto: amautai@turistivo.com.",
   ],
   ["Contenido del documento", "Qillqapa ukun", "Qillqatana utjirinaka"],
   ["Volver al inicio", "Qallariyman kutiy", "Qalltawiru kuttʼaña"],
-  [
-    "Privacidad (borrador)",
-    "Sapanchasqa willakuykuna (ñawpaq qillqa)",
-    "Yatiyawi uñjaña (nayrïr qillqata)",
-  ],
-  [
-    "Términos (borrador)",
-    "Kamachikuna (ñawpaq qillqa)",
-    "Kamachinaka (nayrïr qillqata)",
-  ],
   ["Datos de cuenta", "Yaykunapa willakuyninkuna", "Mantawina yatiyawinakapa"],
   [
     "Datos que introduces",
@@ -88,9 +72,9 @@ export const legalRows: readonly (readonly [string, string, string])[] = [
     "Chaninaka ukhamaraki mantawi jistʼantaña",
   ],
   [
-    "Condiciones pendientes de aprobación",
-    "Chaskinaraq kamachikuna",
-    "Iyawsaña suyasiri kamachinaka",
+    "Responsable y contacto",
+    "Responsable y contacto",
+    "Responsable y contacto",
   ],
   [
     "Tratamos tu nombre, correo, identificador de cuenta y, si el proveedor lo facilita, imagen de perfil. WorkOS gestiona el acceso con contraseña o con Google y GitHub; Amautai no recibe tu contraseña de Google o GitHub.",
@@ -124,7 +108,7 @@ export const legalRows: readonly (readonly [string, string, string])[] = [
     "Mantañataki ukhamaraki mantaña chiqachañataki wakiskir cookies apnaqtanxa. Navegador ukaxa aru ukhamaraki uñnaqa local imañana imi. Aka versión ukaru publicidad ni jaqina lurawipa uñakipiri herramientas janiwa yapxatktanti.",
   ],
   [
-    "No existe un borrado automático general de cuentas, borradores o historial. Proponemos conservarlos mientras uses la cuenta y atender solicitudes de acceso, corrección o eliminación por el canal de contacto. Deben confirmarse los plazos, las copias de seguridad y las excepciones antes de publicar esta política.",
+    "Conservamos los datos mientras la cuenta permanezca activa o sean necesarios para prestar, proteger y mantener el servicio. No hay un borrado automático general de cuentas, borradores o historial. Puedes solicitar acceso, corrección o eliminación escribiendo a amautai@turistivo.com. Los registros técnicos y las copias de seguridad pueden conservarse durante el tiempo necesario para la seguridad y recuperación del servicio.",
     "Yaykunakuna, ñawpaq qillqakuna utaq puriy willakuykuna mana llapanta kikinllanmanta pichakunraqchu. Yaykunaykita llamkachisqaykikama waqaychayta yuyaychanchik hinaspa rimanapaq kananpi qaway, allichay utaq pichay mañakuykunata chaskiyta. Kay kamachita lluqsichinapaq pachakuna, waqaychaypa copian hinaspa hukniraq kasqankuna taqyananku.",
     "Mantawinaka, nayrïr qillqatanaka jan ukaxa sarnaqawi taqpach automático chhaqtayaña janïra utjkiti. Mantawi apnaqkäta ukjakama imaña ukhamaraki contacto tuqi uñjaña, askichaña jan ukaxa chhaqtayaña mayiwinaka katuqaña amtapxtanxa. Aka kamachi uñtʼayañataki pachanaka, seguridad copias ukhamaraki excepciones chiqachañawa.",
   ],
@@ -134,7 +118,7 @@ export const legalRows: readonly (readonly [string, string, string])[] = [
     "Aka versión ukaxa jilïr yatichirinakatakiwa. Yatiqirinakaru uñtʼayiri sutinaka, contactos, fotos ni yaqha yatiyawinaka jan qillqtʼamti. Yatiqirinakana perfiles ukhamaraki wila masinakataki lurawinaka janïra utjkiti.",
   ],
   [
-    "La versión final indicará su fecha de vigencia y un canal de contacto operativo. Los cambios relevantes se comunicarán por medios adecuados antes de aplicarse cuando corresponda.",
+    "Esta política rige desde el 18 de octubre de 2026. Publicaremos aquí los cambios relevantes y, cuando corresponda, los comunicaremos antes de aplicarlos.",
     "Tukusqa qillqaqa haykapmanta llamkananta hinaspa llamkaq rimanapaq kitita qawachinqa. Hatun tikraykunaqa allin ñanninta willakunqa, kasqanmanhina manaraq llamkachispa.",
     "Tukuya versión ukaxa kunüruta chʼamanïni ukhamaraki irnaqiri contacto tuqi yatiyani. Wakiskir mayjtʼawinakaxa wakisiri tuqinakata yatiyatäni, wakischi ukhaxa janïra apnaqkasa.",
   ],
@@ -144,7 +128,7 @@ export const legalRows: readonly (readonly [string, string, string])[] = [
     "Amautaixa jilïr yatichirinakaru qallta yatiqawina 2 tʼaqapa jakhu tantachawinakana nayrïr qillqatanaka wakichaña ukhamaraki imaña saqi, amtawinaka ukhamaraki yatiyawinaka apnaqañampi. IA anatawinaka, yatiqiri perfiles, lurañanaka ukhamaraki yatiqawi luratanaka jutïr lurawinakawa, janïra utjkiti.",
   ],
   [
-    "Proporciona información de cuenta correcta, protege tus credenciales y no compartas el acceso. Si detectas un uso no autorizado, comunícalo mediante el canal de soporte que se confirme en la versión final.",
+    "Proporciona información de cuenta correcta, protege tus credenciales y no compartas el acceso. Si detectas un uso no autorizado, comunícalo a amautai@turistivo.com.",
     "Yaykunaykipa chiqap willakuyninkunata quy, pakasqa yaykuna willakuyniykikunata waqaychay hinaspa ama yaykunaykita rakiychu. Mana saqisqa llamkachiyta tarispaqa, tukusqa qillqapi taqyasqa yanapay ñanninta willay.",
     "Mantawina chiqapa yatiyawipa churam, credenciales jarkʼaqam ukhamaraki mantaña jan yaqharu churamti. Jan iyawsata apnaqawi uñjsta ukhaxa tukuya versión ukana chiqachata yanaptʼawi tuqita yatiyam.",
   ],
@@ -159,7 +143,7 @@ export const legalRows: readonly (readonly [string, string, string])[] = [
     "Nayrïr qillqatanaka ukhamaraki uñachtʼawinaka janiwa profesional amuyuma lantïkiti ni currículo chiqachawi ukhamäkiti. Janïra apnaqkasa chiqapätapa, sarnaqawiru wakiskirïtapa ukhamaraki tamamaru askïtapa uñakipam. Quechua ukhamaraki aimara jaqukipawinakaxa qalltakïskiwa, aru parlirinakana uñakipañapawa; yatiqawi luratanaka janiwa garantizatäkiti.",
   ],
   [
-    "No uses Amautai para actividades ilícitas, vulnerar derechos, enviar mensajes no solicitados, acceder a información ajena o atacar el servicio. El acceso podrá restringirse ante abuso o riesgos de seguridad; la versión final definirá el contacto para solicitar una revisión.",
+    "No uses Amautai para actividades ilícitas, vulnerar derechos, enviar mensajes no solicitados, acceder a información ajena o atacar el servicio. El acceso podrá restringirse ante abuso o riesgos de seguridad. Puedes solicitar una revisión escribiendo a amautai@turistivo.com.",
     "Ama Amautaita mana kamachiman hina ruwaykunapaq, derechokunata pakiypaq, mana mañakusqa willakuykunata apachiypaq, hukpa willakuyninman yaykuypaq utaq serviciota maqaypaq llamkachiychu. Manaallin llamkachiy utaq waqaychaypa manchay kaptin yaykuyta harkakunman; tukusqa qillqaqa qawayta mañakunapaq rimanata qawachinqa.",
     "Amautai jan kamachiru phuqiri lurawinakataki, derechos pʼakintañataki, jan mayita yatiyawinaka apayañataki, yaqhana yatiyawiparu mantañataki jan ukaxa servicio nuwjañataki jan apnaqamti. Jan wali apnaqawi jan ukaxa seguridad jan waltʼawi utjasaxa mantaña jarkʼataspawa; tukuya versión ukaxa uñakipaña mayiñataki contacto chiqachani.",
   ],
@@ -169,12 +153,12 @@ export const legalRows: readonly (readonly [string, string, string])[] = [
     "Servicio ukaxa luraskiwa ukhamaraki saytʼawinaka jan ukaxa mayjtʼawinaka utjaspa. Sapa kuti utjaña ni jankʼaki yatiyawi puriyaña janiwa garantizatäkiti. Yatiyawi ajllitanakama mayjtʼayasma; mantawi chiqachaña jan ukaxa wasitata apsuña wakiskir yatiyawinaka yaqha tuqita apnaqasi.",
   ],
   [
-    "La versión actual no incluye cobros ni suscripciones de pago. Cualquier oferta comercial futura deberá informar sus condiciones antes de contratar. El cierre de cuenta y la eliminación de datos se solicitarán mediante el canal que se confirme; no hay un botón de eliminación automática en esta versión.",
+    "La versión actual no incluye cobros ni suscripciones de pago. Cualquier oferta comercial futura deberá informar sus condiciones antes de contratar. Puedes solicitar el cierre de tu cuenta y la eliminación de datos escribiendo a amautai@turistivo.com; no hay un botón de eliminación automática en esta versión.",
     "Kunan rikchaqpiqa mana qullqi mañakuychu nitaq qullqiyuq sapa kuti qillqakuychu kan. Hamuq rantiy quyqa manaraq chaskichispa kamachinkunata willanan. Yaykunata wichqayta hinaspa willakuykunata pichayta taqyasqa ñanninta mañakuna; kay rikchaqpiqa kikinllanmanta pichana ñitina mana kanchu.",
     "Jichha versión ukaxa janiwa qullqi mayiña ni qullqimpi suscripción utjaykiti. Jutïr aljañ amtaxa janïra contratañkasa kamachinakap yatiyañapawa. Mantawi jistʼantaña ukhamaraki datos chhaqtayaña chiqachata tuqita mayitäni; aka versión ukana automático chhaqtayaña botón janiwa utjkiti.",
   ],
   [
-    "Antes de publicar deben confirmarse el nombre legal y domicilio del responsable, el correo operativo, los plazos de atención y conservación, y la ley y jurisdicción aplicables. Este borrador no fija renuncias generales de derechos ni limita derechos que la normativa aplicable considere irrenunciables.",
+    "Amautai es operado por Diego Urday como persona natural. Para consultas sobre estas condiciones, reportar usos no autorizados, presentar reclamos o solicitar el cierre de una cuenta, escribe a amautai@turistivo.com.",
     "Manaraq lluqsichispa kamachiqpa kamachipi sutinta hinaspa tiyananta, llamkaq chaski qillqata, kutichiy hinaspa waqaychay pachakunata hinaspa kamachita maypi llamkanantawan taqyana. Kay ñawpaq qillqaqa mana llapan derechokunata saqiyta kamachinchu nitaq mana saqina derechokunata harkanchu.",
     "Janïra uñtʼaykasa uñjirina kamachirjama sutipa ukhamaraki utjawipa, irnaqiri correo, jaysaña ukhamaraki imaña pachanaka ukhamaraki wakiskir ley ukhamaraki jurisdicción chiqachañawa. Aka nayrïr qillqataxa derechos taqpach jaytaña janiwa amtkiti ni kamachina jan jaytañjam derechos jarkʼkiti.",
   ],

@@ -32,7 +32,7 @@ const privacy = [
   ],
   [
     "Conservación y solicitudes",
-    "No existe un borrado automático general de cuentas, borradores o historial. Proponemos conservarlos mientras uses la cuenta y atender solicitudes de acceso, corrección o eliminación por el canal de contacto. Deben confirmarse los plazos, las copias de seguridad y las excepciones antes de publicar esta política.",
+    "Conservamos los datos mientras la cuenta permanezca activa o sean necesarios para prestar, proteger y mantener el servicio. No hay un borrado automático general de cuentas, borradores o historial. Puedes solicitar acceso, corrección o eliminación escribiendo a amautai@turistivo.com. Los registros técnicos y las copias de seguridad pueden conservarse durante el tiempo necesario para la seguridad y recuperación del servicio.",
   ],
   [
     "Datos de estudiantes",
@@ -40,7 +40,7 @@ const privacy = [
   ],
   [
     "Cambios de esta política",
-    "La versión final indicará su fecha de vigencia y un canal de contacto operativo. Los cambios relevantes se comunicarán por medios adecuados antes de aplicarse cuando corresponda.",
+    "Esta política rige desde el 18 de octubre de 2026. Publicaremos aquí los cambios relevantes y, cuando corresponda, los comunicaremos antes de aplicarlos.",
   ],
 ] as const
 
@@ -51,7 +51,7 @@ const terms = [
   ],
   [
     "Tu cuenta",
-    "Proporciona información de cuenta correcta, protege tus credenciales y no compartas el acceso. Si detectas un uso no autorizado, comunícalo mediante el canal de soporte que se confirme en la versión final.",
+    "Proporciona información de cuenta correcta, protege tus credenciales y no compartas el acceso. Si detectas un uso no autorizado, comunícalo a amautai@turistivo.com.",
   ],
   [
     "Tu contenido",
@@ -63,7 +63,7 @@ const terms = [
   ],
   [
     "Uso permitido",
-    "No uses Amautai para actividades ilícitas, vulnerar derechos, enviar mensajes no solicitados, acceder a información ajena o atacar el servicio. El acceso podrá restringirse ante abuso o riesgos de seguridad; la versión final definirá el contacto para solicitar una revisión.",
+    "No uses Amautai para actividades ilícitas, vulnerar derechos, enviar mensajes no solicitados, acceder a información ajena o atacar el servicio. El acceso podrá restringirse ante abuso o riesgos de seguridad. Puedes solicitar una revisión escribiendo a amautai@turistivo.com.",
   ],
   [
     "Disponibilidad y notificaciones",
@@ -71,11 +71,11 @@ const terms = [
   ],
   [
     "Costos y cierre de cuenta",
-    "La versión actual no incluye cobros ni suscripciones de pago. Cualquier oferta comercial futura deberá informar sus condiciones antes de contratar. El cierre de cuenta y la eliminación de datos se solicitarán mediante el canal que se confirme; no hay un botón de eliminación automática en esta versión.",
+    "La versión actual no incluye cobros ni suscripciones de pago. Cualquier oferta comercial futura deberá informar sus condiciones antes de contratar. Puedes solicitar el cierre de tu cuenta y la eliminación de datos escribiendo a amautai@turistivo.com; no hay un botón de eliminación automática en esta versión.",
   ],
   [
-    "Condiciones pendientes de aprobación",
-    "Antes de publicar deben confirmarse el nombre legal y domicilio del responsable, el correo operativo, los plazos de atención y conservación, y la ley y jurisdicción aplicables. Este borrador no fija renuncias generales de derechos ni limita derechos que la normativa aplicable considere irrenunciables.",
+    "Responsable y contacto",
+    "Amautai es operado por Diego Urday como persona natural. Para consultas sobre estas condiciones, reportar usos no autorizados, presentar reclamos o solicitar el cierre de una cuenta, escribe a amautai@turistivo.com.",
   ],
 ] as const
 
@@ -87,7 +87,6 @@ export function LegalPage({ document }: { document: "privacy" | "terms" }) {
   return (
     <div className="min-h-svh bg-background text-foreground">
       <title>{[m(title), "Amautai"].join(" · ")}</title>
-      <meta name="robots" content="noindex,nofollow" />
       <header className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-4 px-6 py-6">
         <Link to="/" aria-label={m("Amautai")}>
           <BrandLogo />
@@ -98,28 +97,27 @@ export function LegalPage({ document }: { document: "privacy" | "terms" }) {
         </div>
       </header>
       <main className="mx-auto max-w-3xl px-6 pt-8 pb-16 break-words">
-        <p className="text-sm font-medium">{m("Borrador para revisión")}</p>
         <h1 className="mt-3 text-3xl leading-tight font-semibold sm:text-4xl">
           {m(title)}
         </h1>
         <p className="mt-4 text-sm text-muted-foreground">
           {m(
-            "Preparado el 18 de octubre de 2026. Sin vigencia: pendiente de aprobación y publicación."
+            "Vigente desde el 18 de octubre de 2026."
           )}
         </p>
         <aside
           className="my-8 rounded-lg border border-border p-5"
-          aria-label={m("Datos por confirmar")}
+          aria-label={m("Responsable y contacto")}
         >
-          <h2 className="font-medium">{m("Datos por confirmar")}</h2>
+          <h2 className="font-medium">{m("Responsable y contacto")}</h2>
           <p className="mt-3 text-sm leading-relaxed">
             {m(
-              "Responsable propuesto: Diego Urday, como persona natural. Nombre legal completo y domicilio pendientes de confirmación."
+              "Amautai es operado por Diego Urday como persona natural."
             )}
           </p>
           <p className="mt-3 text-sm leading-relaxed">
             {m(
-              "Contacto: soporte@amautai.turistivo.com. Los plazos de atención y conservación siguen pendientes de aprobación."
+              "Contacto: amautai@turistivo.com."
             )}
           </p>
         </aside>

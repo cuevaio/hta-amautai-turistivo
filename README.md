@@ -2,7 +2,7 @@
 
 Mail transition (October 18, 2026): Stalwart domain `amautai.turistivo.com` and mailbox `notificaciones@amautai.turistivo.com` is created and authenticates Stalwart. The active sender is `amautai@turistivo.com`, an alias on the existing `turistivo.com` mail domain; `soporte@amautai.turistivo.com` and `postmaster@amautai.turistivo.com` remain aliases on the new domain. MX, SPF and DMARC for `turistivo.com` are published. The Worker uses the sender through four EMAIL_* secrets; a generic sender test and a real WorkOS password-reset email were delivered to the owner’s Outlook inbox from `amautai@turistivo.com`. The Worker JMAP secrets were corrected and the recovery flow now succeeds. The previous mailbox is retained. WorkOS Admin Portal invitations now use this address as their reply-to; Amautai verification/reset emails use it as the sender. WorkOS-hosted Magic Auth emails still use WorkOS delivery.
 
-Local `/privacy` and `/terms` pages are review drafts, not effective or published policies. They propose Diego Urday as the individual operator; full legal identity/address, retention/response periods and governing law remain unconfirmed. Spanish, Chanka Quechua and Peruvian Aymara text is draft content requiring legal and bilingual review. Google OAuth developer notifications now include `amautai@turistivo.com`; its user-support selector still requires an eligible Google account or managed Google Group. Public Google own-brand activation remains pending approval and publication of these pages.
+The public `/privacy` and `/terms` pages took effect on October 18, 2026. Amautai is operated by Diego Urday as an individual; privacy and account requests go to `amautai@turistivo.com`. The published legal text is Spanish; Quechua and Aymara legal translations still need human review. Google OAuth uses Amautai's own client credentials in WorkOS Andes Staging. Google consent-screen publishing and WorkOS Production are still pending; WorkOS requires billing information to enable Production, and Google currently labels the app Testing.
 
 Development handoff: [messaging architecture, WhatsApp and email](docs/MESSAGING_HANDOFF.md).
 
@@ -10,7 +10,7 @@ Development handoff: [messaging architecture, WhatsApp and email](docs/MESSAGING
 
 Amautai is a multilingual math-learning platform for primary-school teachers and families. It includes WorkOS authentication, a localized public landing page, teacher onboarding, persisted learning-session drafts for second-grade Mathematics, a tenant-scoped project workspace, and email/WhatsApp notification settings. Interactive learning games and measured learning outcomes remain future work.
 
-The public Worker is `acee3d1e-c003-4b50-96ab-9d7839802dd8` (October 18, 2026; mail-secret update only), with D1 migration `0006`. The domain entry Worker is `610d9376-2822-41fe-8d2e-e0a1910cab66`. See [project status](PROJECT_STATUS.md) for verified behavior and remaining work.
+The public Worker is `30bc1389-aa25-4c4a-8817-1f4aa2514ead` (October 18, 2026; legal pages published), with D1 migration `0006`. The domain entry Worker is `610d9376-2822-41fe-8d2e-e0a1910cab66`. See [project status](PROJECT_STATUS.md) for verified behavior and remaining work.
 
 The public code includes teacher onboarding and persisted learning-session drafts for second-grade primary Mathematics, the localized landing page and static login artwork. See [teacher onboarding and session drafts](docs/TEACHER_ONBOARDING.md).
 
@@ -88,7 +88,7 @@ The previous local credentials are preserved in the ignored `.dev.vars.shared` f
 
 ## Authentication
 
-The login, signup, email verification, and password recovery screens live inside Amautai. Google and GitHub use direct OAuth provider authorization through WorkOS; after authorization the browser returns to the app. Both use demo provider credentials in Staging.
+The login, signup, email verification, and password recovery screens live inside Amautai. Google and GitHub use direct OAuth provider authorization through WorkOS; after authorization the browser returns to the app. Google uses Amautai's own OAuth client credentials in Andes Staging; GitHub still uses demo credentials. Google's consent screen remains in Testing, and WorkOS Production is not enabled.
 
 Email signup collects a name, email, and password of at least 12 characters. WorkOS enforces its password policy and issues verification challenges when required. With `AUTH_EMAIL_MODE=custom`, Amautai delivers verification codes through Stalwart; WorkOS still validates them. Both password authentication and OAuth callbacks handle these challenges inside the app. Pending verification tokens stay in encrypted HttpOnly cookies for ten minutes. Users enter the code at `/verify-email`.
 

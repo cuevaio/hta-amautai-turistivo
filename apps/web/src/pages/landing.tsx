@@ -212,10 +212,10 @@ export function LandingPage() {
           className="mx-auto flex max-w-7xl flex-wrap gap-x-6 gap-y-3 px-5 pt-6 text-sm sm:px-8 lg:px-12"
         >
           <Link to="/privacy" className="underline underline-offset-4">
-            {m("Privacidad (borrador)")}
+            {m("Política de privacidad")}
           </Link>
           <Link to="/terms" className="underline underline-offset-4">
-            {m("Términos (borrador)")}
+            {m("Términos de uso")}
           </Link>
         </nav>
         <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-x-8 gap-y-4 px-5 py-6 sm:px-8 lg:px-12">

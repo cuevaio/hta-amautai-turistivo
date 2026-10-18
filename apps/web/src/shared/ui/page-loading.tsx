@@ -1,13 +1,5 @@
+import { BrandLogo } from "@/shared/ui/brand-logo"
 import { Skeleton } from "@workspace/ui/components/skeleton"
-
-function Brand() {
-  return (
-    <div className="flex items-center gap-2 font-medium">
-      <img src="/favicon.svg" alt="" className="size-8" />
-      <span>Amautai</span>
-    </div>
-  )
-}
 
 export function PageLoading({
   layout = "auth",
@@ -30,7 +22,7 @@ export function PageLoading({
         <div className="grid min-h-svh lg:grid-cols-2">
           <div className="flex flex-col gap-4 p-6 md:p-10">
             <div className="flex justify-center md:justify-start">
-              <Brand />
+              <BrandLogo />
             </div>
             <div className="flex flex-1 items-center justify-center py-12">
               <div className="flex w-full max-w-xs flex-col gap-8">
@@ -61,9 +53,6 @@ export function PageLoading({
                 </div>
               </div>
             </div>
-            <p className="text-center text-xs text-muted-foreground">
-              Hack the Andes · 2026
-            </p>
           </div>
           <div aria-hidden="true" className="relative hidden bg-muted lg:block">
             <img
@@ -79,7 +68,7 @@ export function PageLoading({
             aria-hidden="true"
             className="hidden w-64 shrink-0 flex-col gap-8 p-4 md:flex"
           >
-            <Brand />
+            <BrandLogo />
             <div className="flex flex-col gap-3">
               {[0, 1, 2, 3].map((item) => (
                 <Skeleton key={item} className="h-8 w-full" />

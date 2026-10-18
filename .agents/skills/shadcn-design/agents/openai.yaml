@@ -1,0 +1,4 @@
+interface:
+  display_name: "shadcn Design"
+  short_description: "Consistent, compact shadcn interface design"
+  default_prompt: "Use $shadcn-design to improve this application's hierarchy, density, and visual polish while preserving its theme and functionality."

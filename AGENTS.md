@@ -10,3 +10,5 @@
 7. Before planning or implementing Amautai features, read [docs/HACKATHON_RUBRIC.md](docs/HACKATHON_RUBRIC.md) and consult its preserved source PDF for scoring or eligibility details.
 8. Keep native fetch and architecture boundaries enforced; run pnpm run check after architecture changes, and preserve the dependency gate in root lint and build.
 9. For survey links, question scope, and pitch evidence, read [docs/PROBLEM_VALIDATION_SURVEYS.md](docs/PROBLEM_VALIDATION_SURVEYS.md).
+
+10. For UI design changes, read and apply [.agents/skills/shadcn-design/SKILL.md](.agents/skills/shadcn-design/SKILL.md).

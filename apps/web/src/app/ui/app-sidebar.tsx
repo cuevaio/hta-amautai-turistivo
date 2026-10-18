@@ -1,3 +1,4 @@
+import { BrandLogo } from "@/shared/ui/brand-logo"
 import { useAuth } from "@/features/auth"
 import type { ComponentProps } from "react"
 import {
@@ -59,14 +60,19 @@ export function AppSidebar(props: ComponentProps<typeof Sidebar>) {
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton size="lg" render={<Link to="/dashboard" />}>
-              <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
-                <img src="/favicon.svg" alt="" className="size-8" />
-              </div>
-              <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-medium">Amautai</span>
-                <span className="truncate text-xs">Hack the Andes</span>
-              </div>
+            <SidebarMenuButton
+              size="lg"
+              aria-label="Amautai"
+              render={<Link to="/dashboard" />}
+            >
+              <BrandLogo className="group-data-[collapsible=icon]:hidden" />
+              <img
+                src="/brand/amautai-icon.svg"
+                alt=""
+                width={32}
+                height={32}
+                className="hidden size-8 shrink-0 group-data-[collapsible=icon]:block"
+              />
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>

@@ -1,3 +1,4 @@
+import { BrandLogo } from "@/shared/ui/brand-logo"
 import { PageLoading } from "@/shared/ui/page-loading"
 import { useAuth } from "@/features/auth"
 import { Navigate } from "react-router"
@@ -20,10 +21,7 @@ export function LoginPage({
       <div className="flex flex-col gap-4 p-6 md:p-10">
         <div className="flex justify-center gap-2 md:justify-start">
           <Link to="/login" className="flex items-center gap-2 font-medium">
-            <div className="flex size-6 items-center justify-center rounded-md bg-primary text-primary-foreground">
-              <img src="/favicon.svg" alt="" className="size-6" />
-            </div>
-            Amautai
+            <BrandLogo />
           </Link>
         </div>
         <div className="flex flex-1 items-center justify-center">
@@ -37,9 +35,6 @@ export function LoginPage({
             )}
           </div>
         </div>
-        <p className="text-center text-xs text-muted-foreground">
-          Hack the Andes · 2026
-        </p>
       </div>
       <div className="relative hidden bg-muted lg:block">
         <img

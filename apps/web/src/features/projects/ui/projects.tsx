@@ -83,7 +83,7 @@ export function Projects() {
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div className="flex flex-col gap-1">
           <p className="text-sm text-muted-foreground">{tenant?.name}</p>
-          <h1 className="text-2xl font-semibold tracking-tight">Proyectos</h1>
+          <h1 className="text-2xl font-semibold">Proyectos</h1>
           <p className="text-sm text-muted-foreground">
             De la primera idea a algo que puedas mostrar.
           </p>

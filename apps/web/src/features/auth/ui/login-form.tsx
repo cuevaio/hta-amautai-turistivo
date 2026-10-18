@@ -25,10 +25,10 @@ export function LoginForm({
     >
       <FieldGroup>
         <div className="flex flex-col gap-2">
-          <p className="text-xs font-medium tracking-widest text-muted-foreground uppercase">
+          <p className="text-xs font-medium text-muted-foreground">
             Construye desde aquí
           </p>
-          <h1 className="text-3xl font-semibold tracking-tight">
+          <h1 className="text-3xl font-semibold">
             {signup ? "Crea tu cuenta" : "Bienvenido a Amautai"}
           </h1>
           <p className="text-sm text-muted-foreground">
@@ -44,6 +44,14 @@ export function LoginForm({
             disabled={pending}
             onClick={() => oauth("google")}
           >
+            <img
+              src="/brand/providers/google.svg"
+              width={16}
+              height={16}
+              alt=""
+              aria-hidden="true"
+              data-icon="inline-start"
+            />
             Google
           </Button>
           <Button
@@ -52,6 +60,24 @@ export function LoginForm({
             disabled={pending}
             onClick={() => oauth("github")}
           >
+            <img
+              src="/brand/providers/github-light.svg"
+              width={16}
+              height={16}
+              alt=""
+              aria-hidden="true"
+              data-icon="inline-start"
+              className="dark:hidden"
+            />
+            <img
+              src="/brand/providers/github-dark.svg"
+              width={16}
+              height={16}
+              alt=""
+              aria-hidden="true"
+              data-icon="inline-start"
+              className="hidden dark:block"
+            />
             GitHub
           </Button>
         </Field>

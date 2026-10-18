@@ -12,3 +12,4 @@
 9. For survey links, question scope, and pitch evidence, read [docs/PROBLEM_VALIDATION_SURVEYS.md](docs/PROBLEM_VALIDATION_SURVEYS.md).
 
 10. For UI design changes, read and apply [.agents/skills/shadcn-design/SKILL.md](.agents/skills/shadcn-design/SKILL.md).
+11. After every documentation change, update the shared product Google Doc in Spanish with that change: https://docs.google.com/document/d/16DhBCPXhS6Wyuar9op7BviHpD2T06TSzRprB9iZlWjg/edit.

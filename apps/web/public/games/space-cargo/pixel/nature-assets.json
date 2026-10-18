@@ -1,0 +1,26 @@
+{
+  "description": "Pixel food assets for the regional multiplication game. Original generated PNGs preserved; atlases select nontransparent bounds.",
+  "assets": [
+    {
+      "name": "fish",
+      "prompt": "Use case: stylized-concept. Asset type: single production pixel art game collectible on genuinely transparent background. A small silver-blue anchovy fish for a Peruvian pelican to catch, side view, eye and fins, friendly readable silhouette, not smiling anthropomorphic. Authentic low-resolution 16-bit pixel art, bold dark pixel outline, restrained 12-color palette, deliberately chunky square pixels, crisp stepped edges, no antialiasing or gradients. Single item centered, entire object visible, wide transparent padding. Square image. No numbers, words, labels, UI, scenery, spaceship, energy crystals, watermark or ground shadow. Broad clean central shape readable at 50 pixels.",
+      "source": "OpenAI image generation",
+      "image": "fish.png",
+      "atlas": "fish-atlas.json"
+    },
+    {
+      "name": "food",
+      "prompt": "Use case: stylized-concept. Asset type: single production pixel art game collectible on genuinely transparent background. A small clean reddish-brown morsel of carrion food for an Andean condor, simple rounded chunk with cream highlight, no blood, no gore, no bone, no hunting depiction. Authentic low-resolution 16-bit pixel art, bold dark pixel outline, restrained 12-color palette, deliberately chunky square pixels, crisp stepped edges, no antialiasing or gradients. Single item centered, entire object visible, wide transparent padding. Square image. No numbers, words, labels, UI, scenery, spaceship, energy crystals, watermark or ground shadow. Broad clean central shape readable at 50 pixels.",
+      "source": "OpenAI image generation",
+      "image": "food.png",
+      "atlas": "food-atlas.json"
+    },
+    {
+      "name": "fruit",
+      "prompt": "Use case: stylized-concept. Asset type: single production pixel art game collectible on genuinely transparent background. A small cluster of three bright orange and red wild forest berries with a tiny green leaf, for a Peruvian Andean cock-of-the-rock to gather. Authentic low-resolution 16-bit pixel art, bold dark pixel outline, restrained 12-color palette, deliberately chunky square pixels, crisp stepped edges, no antialiasing or gradients. Single item centered, entire object visible, wide transparent padding. Square image. No numbers, words, labels, UI, scenery, spaceship, energy crystals, watermark or ground shadow. Broad clean central shape readable at 50 pixels.",
+      "source": "OpenAI image generation",
+      "image": "fruit.png",
+      "atlas": "fruit-atlas.json"
+    }
+  ]
+}

@@ -1,4 +1,7 @@
 import { authMailer } from "./modules/auth/infrastructure/auth-mailer.ts"
+import { roomService } from "./modules/rooms/application/service.ts"
+import { d1Rooms } from "./modules/rooms/infrastructure/d1-rooms.ts"
+import { registerRoomRoutes } from "./modules/rooms/http/routes.ts"
 import { educationService } from "./modules/education/application/service.ts"
 import { d1Education } from "./modules/education/infrastructure/d1-education.ts"
 import { registerEducationRoutes } from "./modules/education/http/routes.ts"
@@ -77,6 +80,10 @@ export function createApp(
   registerEducationRoutes(app, {
     service: (c) =>
       educationService(d1Education(c.env.DB), () => crypto.randomUUID()),
+    ensure: ensureTenant,
+  })
+  registerRoomRoutes(app, {
+    service: (c) => roomService(d1Rooms(c.env.DB), () => crypto.randomUUID()),
     ensure: ensureTenant,
   })
   registerNotificationRoutes(

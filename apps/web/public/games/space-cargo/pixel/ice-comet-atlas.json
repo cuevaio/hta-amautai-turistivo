@@ -1,0 +1,92 @@
+{
+  "frames": {
+    "0": {
+      "frame": {
+        "x": 121,
+        "y": 131,
+        "w": 428,
+        "h": 428
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 104,
+        "y": 103,
+        "w": 428,
+        "h": 428
+      },
+      "sourceSize": {
+        "w": 532,
+        "h": 531
+      }
+    },
+    "1": {
+      "frame": {
+        "x": 711,
+        "y": 90,
+        "w": 465,
+        "h": 469
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 67,
+        "y": 62,
+        "w": 465,
+        "h": 469
+      },
+      "sourceSize": {
+        "w": 532,
+        "h": 531
+      }
+    },
+    "2": {
+      "frame": {
+        "x": 17,
+        "y": 655,
+        "w": 532,
+        "h": 531
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 532,
+        "h": 531
+      },
+      "sourceSize": {
+        "w": 532,
+        "h": 531
+      }
+    },
+    "3": {
+      "frame": {
+        "x": 698,
+        "y": 718,
+        "w": 478,
+        "h": 468
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 54,
+        "y": 63,
+        "w": 478,
+        "h": 468
+      },
+      "sourceSize": {
+        "w": 532,
+        "h": 531
+      }
+    }
+  },
+  "meta": {
+    "image": "ice-comet-sheet.png",
+    "size": {
+      "w": 1254,
+      "h": 1254
+    },
+    "scale": "1"
+  }
+}

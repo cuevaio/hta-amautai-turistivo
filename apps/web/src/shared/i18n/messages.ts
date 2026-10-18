@@ -1,5 +1,6 @@
 // Initial AI-authored interface translations. No bilingual human review has been recorded.
 // Curriculum labels are localized for display; original sources and teacher content stay intact.
+import { gameRows } from "./messages-game.ts"
 import { additionalRows } from "./messages-extra.ts"
 import { landingRows } from "./messages-landing.ts"
 import { legalRows } from "./messages-legal.ts"
@@ -792,18 +793,17 @@ const rows: readonly (readonly [string, string, string])[] = [
   ["Datos pendientes", "Huntanapaq willakuykuna", "Phuqachañ yatiyawinaka"],
 ]
 export const spanishMessages: Record<string, string> = Object.fromEntries(
-  [...rows, ...additionalRows, ...landingRows, ...legalRows].map(([es]) => [
-    es,
-    es,
-  ])
+  [...rows, ...gameRows, ...additionalRows, ...landingRows, ...legalRows].map(
+    ([es]) => [es, es]
+  )
 )
 export const chankaMessages: Record<string, string> = Object.fromEntries(
-  [...rows, ...additionalRows, ...landingRows, ...legalRows].map(
+  [...rows, ...gameRows, ...additionalRows, ...landingRows, ...legalRows].map(
     ([es, quy]) => [es, quy]
   )
 )
 export const aymaraMessages: Record<string, string> = Object.fromEntries(
-  [...rows, ...additionalRows, ...landingRows, ...legalRows].map(
+  [...rows, ...gameRows, ...additionalRows, ...landingRows, ...legalRows].map(
     ([es, , ay]) => [es, ay]
   )
 )

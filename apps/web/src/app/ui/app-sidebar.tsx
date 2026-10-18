@@ -32,6 +32,7 @@ const navMain = [
     isActive: true,
     items: [
       { title: "Vista general", url: "/dashboard" },
+      { title: "Salas de juego", url: "/dashboard/rooms" },
       { title: "Sesiones de aprendizaje", url: "/dashboard/sessions" },
     ],
   },

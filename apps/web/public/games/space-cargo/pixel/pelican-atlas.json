@@ -1,0 +1,92 @@
+{
+  "frames": {
+    "0": {
+      "frame": {
+        "x": 84,
+        "y": 154,
+        "w": 458,
+        "h": 435
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 100,
+        "y": 31,
+        "w": 458,
+        "h": 435
+      },
+      "sourceSize": {
+        "w": 659,
+        "h": 466
+      }
+    },
+    "1": {
+      "frame": {
+        "x": 585,
+        "y": 154,
+        "w": 659,
+        "h": 343
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 123,
+        "w": 659,
+        "h": 343
+      },
+      "sourceSize": {
+        "w": 659,
+        "h": 466
+      }
+    },
+    "2": {
+      "frame": {
+        "x": 59,
+        "y": 650,
+        "w": 499,
+        "h": 466
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 80,
+        "y": 0,
+        "w": 499,
+        "h": 466
+      },
+      "sourceSize": {
+        "w": 659,
+        "h": 466
+      }
+    },
+    "3": {
+      "frame": {
+        "x": 585,
+        "y": 784,
+        "w": 658,
+        "h": 338
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 128,
+        "w": 658,
+        "h": 338
+      },
+      "sourceSize": {
+        "w": 659,
+        "h": 466
+      }
+    }
+  },
+  "meta": {
+    "image": "pelican-sheet.png",
+    "size": {
+      "w": 1254,
+      "h": 1254
+    },
+    "scale": "1"
+  }
+}

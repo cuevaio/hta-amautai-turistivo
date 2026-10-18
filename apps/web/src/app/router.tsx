@@ -99,6 +99,26 @@ export function App() {
                   </AuthGuard>
                 }
               />
+              <Route
+                path="/dashboard/rooms/:roomId"
+                element={
+                  <AuthGuard>
+                    <EducationGate>
+                      <DashboardPage sectionOverride="rooms" />
+                    </EducationGate>
+                  </AuthGuard>
+                }
+              />
+              <Route
+                path="/dashboard/rooms/:roomId/play/:participantId"
+                element={
+                  <AuthGuard>
+                    <EducationGate>
+                      <DashboardPage sectionOverride="rooms" />
+                    </EducationGate>
+                  </AuthGuard>
+                }
+              />
               <Route path="*" element={<NotFoundPage />} />
             </Routes>
           </Suspense>

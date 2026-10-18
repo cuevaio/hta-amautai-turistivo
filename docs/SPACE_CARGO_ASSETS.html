@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Amautai · Animated pixel art review</title>
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; padding: clamp(16px, 4vw, 56px); background: #f2efe6; color: #173e3b; font: 16px/1.5 system-ui, sans-serif; }
+  main { max-width: 1500px; margin: auto; }
+  h1 { font-size: clamp(28px, 4vw, 48px); line-height: 1.1; margin: 0 0 12px; }
+  p { max-width: 800px; }
+  .regions { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; margin: 32px 0; }
+  figure { margin: 0; min-width: 0; }
+  figcaption { margin-top: 12px; }
+  figcaption strong { display: block; font-size: 20px; }
+  .scene { position: relative; aspect-ratio: 3/4; overflow: hidden; border-radius: 16px; background: #c8e6ed; }
+  .backdrop { width: 100%; height: 100%; object-fit: cover; }
+  .ship { position: absolute; width: 28%; height: 38%; object-fit: contain; bottom: 3%; left: 36%; }
+  .bird { position: absolute; width: 43%; height: 30%; object-fit: contain; bottom: 4%; left: 1%; }
+  .crystal { position: absolute; top: 18%; left: 28%; width: 14%; height: 17%; object-fit: contain; }
+  .crystal.second { left: 61%; top: 37%; }
+  .comet { position: absolute; width: 20%; height: 14%; top: 13%; left: 65%; object-fit: contain; }
+  .task { position: absolute; top: 4%; left: 50%; transform: translateX(-50%); white-space: nowrap; background: #fff9e9; padding: 8px 18px; border-radius: 10px; font-size: 24px; font-weight: 750; box-shadow: 0 2px 8px #173e3b20; }
+  .objects { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 16px; }
+  .tile { aspect-ratio: 1; background-color: #fff; background-image: linear-gradient(45deg, #e1e9e7 25%, transparent 25%), linear-gradient(-45deg, #e1e9e7 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #e1e9e7 75%), linear-gradient(-45deg, transparent 75%, #e1e9e7 75%); background-size: 20px 20px; background-position: 0 0, 0 10px, 10px -10px, -10px 0; border-radius: 12px; padding: 8px; }
+  .tile img { width: 100%; height: 100%; object-fit: contain; }
+  .note { color: #45635d; }
+  a { color: #135f56; }
+  .backdrop, .sprite { image-rendering: pixelated; }
+  .sprite { display: block; aspect-ratio: 1; }
+  .sprite canvas { display: block; width: 100%; height: 100%; image-rendering: pixelated; }
+  .scene .sprite { height: auto; }
+  .scene .bird { width: 34%; bottom: 3%; left: 3%; }
+  .scene .ship { width: 29%; bottom: 3%; }
+  .scene .crystal { width: 18%; }
+  .scene .comet { width: 21%; }
+  .tile .sprite { width: 100%; height: 100%; }
+  .playback { display: inline-flex; align-items: center; gap: 8px; padding: 8px 0; cursor: pointer; }
+  @media (max-width: 850px) { .regions { grid-template-columns: 1fr; } .scene { aspect-ratio: 3/2; } .objects { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+</style>
+<main>
+  <h1>Pixel art. Ready to move.</h1>
+  <p>Space Cargo · Four-frame sprite animation review. Three Peruvian settings share one spaceship, energy crystal and correction comet.</p>
+  <p class="note">Birds flap, thrusters flicker, crystals sparkle and comet tails change. These are asset animations; the learning game is still pending. System reduced-motion preferences disable playback.</p>
+  <label class="playback"><input id="pause" type="checkbox"> Pause animations</label>
+  <div class="regions">
+    <figure>
+      <div class="scene">
+        <img class="backdrop" src="../apps/web/public/games/space-cargo/pixel/coast.png" alt="Illustrated Pacific coast">
+        <span class="task">3 × 4 = 12</span>
+        <span class="sprite energy-crystal crystal" role="img" aria-label="Energy crystal"></span>
+        <span class="sprite energy-crystal crystal second" aria-hidden="true"></span>
+        <span class="sprite ice-comet comet" role="img" aria-label="Correction comet"></span>
+        <span class="sprite spaceship ship" role="img" aria-label="Spaceship"></span>
+        <span class="sprite pelican bird" role="img" aria-label="Pelican companion"></span>
+      </div>
+      <figcaption><strong>Coast · Pelican</strong>Sand, Pacific water and coastal rocks.</figcaption>
+    </figure>
+    <figure>
+      <div class="scene">
+        <img class="backdrop" src="../apps/web/public/games/space-cargo/pixel/highlands.png" alt="Illustrated Andes">
+        <span class="task">3 × 4 = 12</span>
+        <span class="sprite energy-crystal crystal" role="img" aria-label="Energy crystal"></span>
+        <span class="sprite energy-crystal crystal second" aria-hidden="true"></span>
+        <span class="sprite ice-comet comet" role="img" aria-label="Correction comet"></span>
+        <span class="sprite spaceship ship" role="img" aria-label="Spaceship"></span>
+        <span class="sprite condor bird" role="img" aria-label="Condor companion"></span>
+      </div>
+      <figcaption><strong>Highlands · Condor</strong>Terraces, Andean slopes and distant peaks.</figcaption>
+    </figure>
+    <figure>
+      <div class="scene">
+        <img class="backdrop" src="../apps/web/public/games/space-cargo/pixel/cloud-forest.png" alt="Illustrated cloud forest">
+        <span class="task">3 × 4 = 12</span>
+        <span class="sprite energy-crystal crystal" role="img" aria-label="Energy crystal"></span>
+        <span class="sprite energy-crystal crystal second" aria-hidden="true"></span>
+        <span class="sprite ice-comet comet" role="img" aria-label="Correction comet"></span>
+        <span class="sprite spaceship ship" role="img" aria-label="Spaceship"></span>
+        <span class="sprite cock-of-the-rock bird" role="img" aria-label="Cock-of-the-rock companion"></span>
+      </div>
+      <figcaption><strong>Jungle · Cock-of-the-rock</strong>Peruvian cloud forest, mist and foliage.</figcaption>
+    </figure>
+  </div>
+  <h2>Animated transparent sprites</h2>
+  <div class="objects">
+    <figure><div class="tile"><span class="sprite pelican" role="img" aria-label="Pelican"></span></div><figcaption>Pelican</figcaption></figure>
+    <figure><div class="tile"><span class="sprite condor" role="img" aria-label="Condor"></span></div><figcaption>Condor</figcaption></figure>
+    <figure><div class="tile"><span class="sprite cock-of-the-rock" role="img" aria-label="Cock-of-the-rock"></span></div><figcaption>Cock-of-the-rock</figcaption></figure>
+    <figure><div class="tile"><span class="sprite spaceship" role="img" aria-label="Spaceship"></span></div><figcaption>Spaceship</figcaption></figure>
+    <figure><div class="tile"><span class="sprite energy-crystal" role="img" aria-label="Crystal"></span></div><figcaption>Energy crystal</figcaption></figure>
+    <figure><div class="tile"><span class="sprite ice-comet" role="img" aria-label="Ice comet"></span></div><figcaption>Correction comet</figcaption></figure>
+  </div>
+  <p class="note">Numbers, dot groups, instructions and scoring will be rendered at runtime. Images contain no language-dependent text.</p>
+  <p><a href="SPACE_CARGO_DESIGN.md">Gameplay and LLM specification</a> · <a href="../apps/web/public/games/space-cargo/pixel/manifest.json">Animation metadata and exact prompts</a></p>
+</main>
+<script type="application/json" id="animation-data">[{"key": "spaceship", "file": "spaceship-sheet.png", "frames": {"0": {"frame": {"x": 45, "y": 65, "w": 538, "h": 474}, "rotated": false, "trimmed": true, "spriteSourceSize": {"x": 0, "y": 0, "w": 538, "h": 474}, "sourceSize": {"w": 538, "h": 534}}, "1": {"frame": {"x": 672, "y": 65, "w": 537, "h": 496}, "rotated": false, "trimmed": true, "spriteSourceSize": {"x": 0, "y": 0, "w": 537, "h": 496}, "sourceSize": {"w": 538, "h": 534}}, "2": {"frame": {"x": 45, "y": 692, "w": 538, "h": 534}, "rotated": false, "trimmed": true, "spriteSourceSize": {"x": 0, "y": 0, "w": 538, "h": 534}, "sourceSize": {"w": 538, "h": 534}}, "3": {"frame": {"x": 672, "y": 692, "w": 537, "h": 499}, "rotated": false, "trimmed": true, "spriteSourceSize": {"x": 0, "y": 0, "w": 537, "h": 499}, "sourceSize": {"w": 538, "h": 534}}}, "durationMs": 480}, {"key": "energy-crystal", "file": "energy-crystal-sheet.png", "frames": {"0": {"frame": {"x": 128, "y": 52, "w": 371, "h": 536}, "rotated": false, "trimmed": true, "spriteSourceSize": {"x": 12, "y": 0, "w": 371, "h": 536}, "sourceSize": {"w": 395, "h": 536}}, "1": {"frame": {"x": 755, "y": 52, "w": 395, "h": 536}, "rotated": false, "trimmed": true, "spriteSourceSize": {"x": 0, "y": 0, "w": 395, "h": 536}, "sourceSize": {"w": 395, "h": 536}}, "2": {"frame": {"x": 128, "y": 681, "w": 371, "h": 534}, "rotated": false, "trimmed": true, "spriteSourceSize": {"x": 12, "y": 1, "w": 371, "h": 534}, "sourceSize": {"w": 395, "h": 536}}, "3": {"frame": {"x": 755, "y": 680, "w": 371, "h": 535}, "rotated": false, "trimmed": true, "spriteSourceSize": {"x": 12, "y": 0, "w": 371, "h": 535}, "sourceSize": {"w": 395, "h": 536}}}, "durationMs": 960}, {"key": "ice-comet", "file": "ice-comet-sheet.png", "frames": {"0": {"frame": {"x": 121, "y": 131, "w": 428, "h": 428}, "rotated": false, "trimmed": true, "spriteSourceSize": {"x": 104, "y": 103, "w": 428, "h": 428}, "sourceSize": {"w": 532, "h": 531}}, "1": {"frame": {"x": 711, "y": 90, "w": 465, "h": 469}, "rotated": false, "trimmed": true, "spriteSourceSize": {"x": 67, "y": 62, "w": 465, "h": 469}, "sourceSize": {"w": 532, "h": 531}}, "2": {"frame": {"x": 17, "y": 655, "w": 532, "h": 531}, "rotated": false, "trimmed": true, "spriteSourceSize": {"x": 0, "y": 0, "w": 532, "h": 531}, "sourceSize": {"w": 532, "h": 531}}, "3": {"frame": {"x": 698, "y": 718, "w": 478, "h": 468}, "rotated": false, "trimmed": true, "spriteSourceSize": {"x": 54, "y": 63, "w": 478, "h": 468}, "sourceSize": {"w": 532, "h": 531}}}, "durationMs": 560}, {"key": "pelican", "file": "pelican-sheet.png", "frames": {"0": {"frame": {"x": 84, "y": 154, "w": 458, "h": 435}, "rotated": false, "trimmed": true, "spriteSourceSize": {"x": 100, "y": 31, "w": 458, "h": 435}, "sourceSize": {"w": 659, "h": 466}}, "1": {"frame": {"x": 585, "y": 154, "w": 659, "h": 343}, "rotated": false, "trimmed": true, "spriteSourceSize": {"x": 0, "y": 123, "w": 659, "h": 343}, "sourceSize": {"w": 659, "h": 466}}, "2": {"frame": {"x": 59, "y": 650, "w": 499, "h": 466}, "rotated": false, "trimmed": true, "spriteSourceSize": {"x": 80, "y": 0, "w": 499, "h": 466}, "sourceSize": {"w": 659, "h": 466}}, "3": {"frame": {"x": 585, "y": 784, "w": 658, "h": 338}, "rotated": false, "trimmed": true, "spriteSourceSize": {"x": 0, "y": 128, "w": 658, "h": 338}, "sourceSize": {"w": 659, "h": 466}}}, "durationMs": 800}, {"key": "condor", "file": "condor-sheet.png", "frames": {"0": {"frame": {"x": 44, "y": 167, "w": 538, "h": 402}, "rotated": false, "trimmed": true, "spriteSourceSize": {"x": 43, "y": 130, "w": 538, "h": 402}, "sourceSize": {"w": 625, "h": 532}}, "1": {"frame": {"x": 616, "y": 180, "w": 625, "h": 323}, "rotated": false, "trimmed": true, "spriteSourceSize": {"x": 0, "y": 209, "w": 625, "h": 323}, "sourceSize": {"w": 625, "h": 532}}, "2": {"frame": {"x": 60, "y": 627, "w": 547, "h": 532}, "rotated": false, "trimmed": true, "spriteSourceSize": {"x": 39, "y": 0, "w": 547, "h": 532}, "sourceSize": {"w": 625, "h": 532}}, "3": {"frame": {"x": 616, "y": 809, "w": 625, "h": 331}, "rotated": false, "trimmed": true, "spriteSourceSize": {"x": 0, "y": 201, "w": 625, "h": 331}, "sourceSize": {"w": 625, "h": 532}}}, "durationMs": 1000}, {"key": "cock-of-the-rock", "file": "cock-of-the-rock-sheet.png", "frames": {"0": {"frame": {"x": 46, "y": 112, "w": 492, "h": 450}, "rotated": false, "trimmed": true, "spriteSourceSize": {"x": 57, "y": 106, "w": 492, "h": 450}, "sourceSize": {"w": 607, "h": 556}}, "1": {"frame": {"x": 631, "y": 116, "w": 594, "h": 460}, "rotated": false, "trimmed": true, "spriteSourceSize": {"x": 6, "y": 96, "w": 594, "h": 460}, "sourceSize": {"w": 607, "h": 556}}, "2": {"frame": {"x": 52, "y": 649, "w": 544, "h": 556}, "rotated": false, "trimmed": true, "spriteSourceSize": {"x": 31, "y": 0, "w": 544, "h": 556}, "sourceSize": {"w": 607, "h": 556}}, "3": {"frame": {"x": 633, "y": 755, "w": 607, "h": 450}, "rotated": false, "trimmed": true, "spriteSourceSize": {"x": 0, "y": 106, "w": 607, "h": 450}, "sourceSize": {"w": 607, "h": 556}}}, "durationMs": 640}]</script>
+<script src="SPACE_CARGO_ANIMATION.js" defer></script>
+</html>

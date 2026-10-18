@@ -1,0 +1,92 @@
+{
+  "frames": {
+    "0": {
+      "frame": {
+        "x": 44,
+        "y": 167,
+        "w": 538,
+        "h": 402
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 43,
+        "y": 130,
+        "w": 538,
+        "h": 402
+      },
+      "sourceSize": {
+        "w": 625,
+        "h": 532
+      }
+    },
+    "1": {
+      "frame": {
+        "x": 616,
+        "y": 180,
+        "w": 625,
+        "h": 323
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 209,
+        "w": 625,
+        "h": 323
+      },
+      "sourceSize": {
+        "w": 625,
+        "h": 532
+      }
+    },
+    "2": {
+      "frame": {
+        "x": 60,
+        "y": 627,
+        "w": 547,
+        "h": 532
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 39,
+        "y": 0,
+        "w": 547,
+        "h": 532
+      },
+      "sourceSize": {
+        "w": 625,
+        "h": 532
+      }
+    },
+    "3": {
+      "frame": {
+        "x": 616,
+        "y": 809,
+        "w": 625,
+        "h": 331
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 201,
+        "w": 625,
+        "h": 331
+      },
+      "sourceSize": {
+        "w": 625,
+        "h": 532
+      }
+    }
+  },
+  "meta": {
+    "image": "condor-sheet.png",
+    "size": {
+      "w": 1254,
+      "h": 1254
+    },
+    "scale": "1"
+  }
+}

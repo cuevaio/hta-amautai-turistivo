@@ -5,6 +5,7 @@ import { LearningSessions, TeacherProfileForm } from "@/features/education"
 import { WorkspaceSettings } from "@/features/settings"
 import { NotFoundPage } from "@/pages/not-found"
 import { Projects } from "@/features/projects"
+import { Rooms } from "@/features/rooms"
 import { MoonIcon, SunIcon } from "lucide-react"
 import { motion } from "motion/react"
 import { Link, useParams } from "react-router"
@@ -30,6 +31,7 @@ const sections: Record<string, string> = {
   overview: "Inicio",
   projects: "Proyectos",
   sessions: "Sesiones de aprendizaje",
+  rooms: "Salas de juego",
   settings: "Configuración",
   notifications: "Notificaciones",
   account: "Mi cuenta",
@@ -38,7 +40,7 @@ const sections: Record<string, string> = {
 export function DashboardPage({
   sectionOverride,
 }: {
-  sectionOverride?: "sessions"
+  sectionOverride?: "sessions" | "rooms"
 }) {
   const { m } = useMessages()
 
@@ -104,7 +106,9 @@ export function DashboardPage({
             </>
           ) : section === "account" ? (
             <WorkspaceSettings account />
-          ) : section === "overview" || section === "sessions" ? (
+          ) : section === "overview" || section === "rooms" ? (
+            <Rooms />
+          ) : section === "sessions" ? (
             <LearningSessions sessionId={sessionId} />
           ) : section === "projects" && !sessionId ? (
             <Projects />

@@ -1,0 +1,92 @@
+{
+  "frames": {
+    "0": {
+      "frame": {
+        "x": 46,
+        "y": 112,
+        "w": 492,
+        "h": 450
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 57,
+        "y": 106,
+        "w": 492,
+        "h": 450
+      },
+      "sourceSize": {
+        "w": 607,
+        "h": 556
+      }
+    },
+    "1": {
+      "frame": {
+        "x": 631,
+        "y": 116,
+        "w": 594,
+        "h": 460
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 6,
+        "y": 96,
+        "w": 594,
+        "h": 460
+      },
+      "sourceSize": {
+        "w": 607,
+        "h": 556
+      }
+    },
+    "2": {
+      "frame": {
+        "x": 52,
+        "y": 649,
+        "w": 544,
+        "h": 556
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 31,
+        "y": 0,
+        "w": 544,
+        "h": 556
+      },
+      "sourceSize": {
+        "w": 607,
+        "h": 556
+      }
+    },
+    "3": {
+      "frame": {
+        "x": 633,
+        "y": 755,
+        "w": 607,
+        "h": 450
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 106,
+        "w": 607,
+        "h": 450
+      },
+      "sourceSize": {
+        "w": 607,
+        "h": 556
+      }
+    }
+  },
+  "meta": {
+    "image": "cock-of-the-rock-sheet.png",
+    "size": {
+      "w": 1254,
+      "h": 1254
+    },
+    "scale": "1"
+  }
+}

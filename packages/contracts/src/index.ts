@@ -1,5 +1,6 @@
 import { z } from "zod"
 export * from "./education.ts"
+export * from "./rooms.ts"
 
 export const projectInput = z
   .object({

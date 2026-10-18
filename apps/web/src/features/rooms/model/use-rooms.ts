@@ -1,0 +1,115 @@
+import { useEffect, useRef, useState } from "react"
+import type {
+  CargoRoom,
+  CargoParticipant,
+  CargoRegion,
+} from "@amautai/contracts"
+import { ApiError } from "@/shared/api/client"
+import { roomsApi } from "../api/rooms-api"
+export function roomError(e: unknown) {
+  const messages: Record<string, string> = {
+    duplicate_participant:
+      "Ya hay un participante con ese nombre en esta sala.",
+    room_not_found: "No encontramos la sala o no tienes acceso.",
+    participant_not_found:
+      "Esta participación fue eliminada. Vuelve a la sala.",
+    room_conflict:
+      "La prueba cambió. Recarga para continuar con el progreso guardado.",
+    teacher_required: "Completa tu perfil docente para crear una sala.",
+    room_full: "La sala admite hasta 100 participantes.",
+    invalid_room_input: "Escribe un nombre válido de hasta 80 caracteres.",
+  }
+  return (
+    (e instanceof ApiError && e.code && messages[e.code]) ||
+    "No pudimos completar la solicitud. Inténtalo de nuevo."
+  )
+}
+export function useRooms(roomId?: string) {
+  const [revision, setRevision] = useState(0)
+  const key = (roomId ?? "") + ":" + revision
+  const [resource, setResource] = useState<{
+    key: string
+    rooms: CargoRoom[]
+    room: CargoRoom | null
+    participants: CargoParticipant[]
+    error: string
+  }>({ key: "", rooms: [], room: null, participants: [], error: "" })
+  const [error, setError] = useState("")
+  const [busy, setBusy] = useState(false)
+  const lock = useRef(false)
+  const alive = useRef(true)
+  useEffect(() => {
+    alive.current = true
+    return () => {
+      alive.current = false
+    }
+  }, [])
+  useEffect(() => {
+    const controller = new AbortController()
+    const request = roomId
+      ? roomsApi
+          .detail(roomId, controller.signal)
+          .then((d) => ({ rooms: [], ...d }))
+      : roomsApi
+          .list(controller.signal)
+          .then((d) => ({ ...d, room: null, participants: [] }))
+    request
+      .then((d) => {
+        if (!controller.signal.aborted) setResource({ key, ...d, error: "" })
+      })
+      .catch((e) => {
+        if (!controller.signal.aborted)
+          setResource({
+            key,
+            rooms: [],
+            room: null,
+            participants: [],
+            error: roomError(e),
+          })
+      })
+    return () => controller.abort()
+  }, [roomId, key])
+  async function action(run: () => Promise<void>) {
+    if (lock.current) return false
+    lock.current = true
+    setBusy(true)
+    setError("")
+    try {
+      await run()
+      return true
+    } catch (e) {
+      if (alive.current) setError(roomError(e))
+      return false
+    } finally {
+      lock.current = false
+      if (alive.current) setBusy(false)
+    }
+  }
+  return {
+    rooms: resource.rooms,
+    room: resource.room?.id === roomId ? resource.room : null,
+    participants: resource.room?.id === roomId ? resource.participants : [],
+    loading: resource.key !== key,
+    loadError: resource.key === key ? resource.error : "",
+    error,
+    busy,
+    refresh: () => setRevision((n) => n + 1),
+    create: (region: CargoRegion, onCreated: (room: CargoRoom) => void) =>
+      action(async () => {
+        const { room } = await roomsApi.create(region)
+        if (alive.current) onCreated(room)
+      }),
+    add: (name: string) =>
+      action(async () => {
+        if (!roomId) return
+        await roomsApi.add(roomId, name)
+        if (alive.current) setRevision((n) => n + 1)
+      }),
+    remove: (id: string) =>
+      action(async () => {
+        if (!roomId) return
+        await roomsApi.remove(roomId, id)
+        if (alive.current) setRevision((n) => n + 1)
+      }),
+  }
+}

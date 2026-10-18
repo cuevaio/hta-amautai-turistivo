@@ -1,0 +1,92 @@
+[
+  {
+    "file": "pelican.png",
+    "size": [
+      1312,
+      1199
+    ],
+    "bytes": 1410013,
+    "alpha": true,
+    "sha256": "3eafa26e98711446596a9d4149bfe23a24b7cbb300a02a2079e12462bded56ac"
+  },
+  {
+    "file": "condor.png",
+    "size": [
+      1536,
+      1024
+    ],
+    "bytes": 1918282,
+    "alpha": true,
+    "sha256": "5d9d8ff0de8694d78e3d61efe54a249c954f45410adf54672724ba2531192cda"
+  },
+  {
+    "file": "cock-of-the-rock.png",
+    "size": [
+      1312,
+      1199
+    ],
+    "bytes": 1405824,
+    "alpha": true,
+    "sha256": "a0a2156747504aa6fa2d00f5d0f19ac63f4317a22e5959295ea4d4ccec30622b"
+  },
+  {
+    "file": "coast.png",
+    "size": [
+      1536,
+      1024
+    ],
+    "bytes": 2073791,
+    "alpha": false,
+    "sha256": "9542963dc7e14ede196e2bd25d4a7bf4238b42912f6393847a2e9bd433066f53"
+  },
+  {
+    "file": "highlands.png",
+    "size": [
+      1536,
+      1024
+    ],
+    "bytes": 2260669,
+    "alpha": false,
+    "sha256": "0e192b4ee61faf4cab8ba9703b5ce830db71790ba05db52599e742d5338b69c3"
+  },
+  {
+    "file": "cloud-forest.png",
+    "size": [
+      1536,
+      1024
+    ],
+    "bytes": 2450259,
+    "alpha": false,
+    "sha256": "e66deec17e3b18f1da7ffe5d9b4e98fd9c2dc62f5b67f09026b38bcd6225216b"
+  },
+  {
+    "file": "spaceship.png",
+    "size": [
+      1024,
+      1536
+    ],
+    "bytes": 2132551,
+    "alpha": true,
+    "sha256": "798d5947c61635662a5370fa99321e0b61c921f70dfdb7ea0ca77b6f8f553a70"
+  },
+  {
+    "file": "energy-crystal.png",
+    "size": [
+      1024,
+      1536
+    ],
+    "bytes": 2042474,
+    "alpha": true,
+    "sha256": "659731ec67121980f8190424dd4b6eb1952757406369f3381f3d0b7152f582de"
+  },
+  {
+    "file": "ice-comet.png",
+    "size": [
+      1536,
+      1024
+    ],
+    "bytes": 1738390,
+    "alpha": true,
+    "sha256": "b508524994591f9e425817084d6dcf2691c20e93e3226416aedd5cde36e41782"
+  }
+]

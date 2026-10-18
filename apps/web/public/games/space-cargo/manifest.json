@@ -1,0 +1,98 @@
+{
+  "version": 1,
+  "tool": "image_gen built-in",
+  "date": "2026-10-18",
+  "status": "static-assets",
+  "assets": [
+    {
+      "key": "pelican",
+      "file": "pelican.png",
+      "url": "/games/space-cargo/pelican.png",
+      "role": "companion",
+      "region": "coast",
+      "transparent": true,
+      "sourceFile": "exec-e30b2b72-bf57-4a79-aba2-41b2ce90afca.png",
+      "prompt": "Use case: stylized-concept. Production 2D game character asset for Amautai, a Peruvian second-grade mathematics game inspired by exact-energy spaceship loading. Friendly hand-painted cut-paper children's adventure aesthetic, crisp bold silhouettes, subtle soft shading, readable at 100px, no text, no digits, no watermark, no shadows outside the character. Single character centered, entire body and wings visible with generous transparent padding. Bird is a companion guiding a spaceship, retain recognizable bird anatomy, no clothing or helmet. Three-quarter view facing right, wings slightly raised, friendly attentive expression. Subject: a Peruvian pelican for the Pacific coast, long distinctive pale yellow bill with throat pouch, gray brown plumage with white head and neck, dark wing tips, short feet. Palette warm sand and blue-gray."
+    },
+    {
+      "key": "condor",
+      "file": "condor.png",
+      "url": "/games/space-cargo/condor.png",
+      "role": "companion",
+      "region": "highlands",
+      "transparent": true,
+      "sourceFile": "exec-d92206bc-06af-44d0-b62d-95465420cee5.png",
+      "prompt": "Use case: stylized-concept. Production 2D game character asset for Amautai, a Peruvian second-grade mathematics game inspired by exact-energy spaceship loading. Friendly hand-painted cut-paper children's adventure aesthetic, crisp bold silhouettes, subtle soft shading, readable at 100px, no text, no digits, no watermark, no shadows outside the character. Single character centered, entire body and wings visible with generous transparent padding. Bird is a companion guiding a spaceship, retain recognizable bird anatomy, no clothing or helmet. Three-quarter view facing right, wings slightly raised, friendly attentive expression. Subject: an Andean condor for Peru's highlands, charcoal-black body and broad wings, clear white fluffy neck ruff and white shoulder patches, small bald muted red head, subtle crest, short gray legs, friendly rather than fierce. Palette charcoal, ivory and terracotta. Transparent background, illustrated cartoon game sprite, not a photo, no landscape."
+    },
+    {
+      "key": "cock-of-the-rock",
+      "file": "cock-of-the-rock.png",
+      "url": "/games/space-cargo/cock-of-the-rock.png",
+      "role": "companion",
+      "region": "jungle",
+      "transparent": true,
+      "sourceFile": "exec-db0694dc-2c8a-43fb-b0ed-f8f29594a2fd.png",
+      "prompt": "Use case: stylized-concept. Production 2D game character asset for Amautai, a Peruvian second-grade mathematics game inspired by exact-energy spaceship loading. Friendly hand-painted cut-paper children's adventure aesthetic, crisp bold silhouettes, subtle soft shading, readable at 100px, no text, no digits, no watermark, no shadows outside the character. Single character centered, entire body and wings visible with generous transparent padding. Bird is a companion guiding a spaceship, retain recognizable bird anatomy, no clothing or helmet. Three-quarter view facing right, wings slightly raised, friendly attentive expression. Subject: a male Andean cock-of-the-rock (Rupicola peruvianus) for Peru's cloud forest, brilliant orange-red body and large rounded fan crest covering upper beak, black wings and tail with silver-gray wing patch, tiny yellow eye, short orange legs. Anatomically recognizable distinctive semicircular crest. Transparent background, illustrated cartoon game sprite, not a photo, no landscape."
+    },
+    {
+      "key": "coast",
+      "file": "coast.png",
+      "url": "/games/space-cargo/coast.png",
+      "role": "background",
+      "region": "coast",
+      "transparent": false,
+      "sourceFile": "exec-de6fc7cb-2302-46d1-86ef-f74a058fc97d.png",
+      "prompt": "Use case: stylized-concept. Asset type: production 2D landscape game background, wide 3:2 composition, for a Peruvian second-grade educational game with falling energy crystals and a spaceship launching. Hand-painted cut-paper children's adventure aesthetic, matte gouache textures, large simple shapes, soft atmospheric depth. Keep the central 60 percent of the image uncluttered with pale open sky so falling numerical objects are readable; landscape details confined to the bottom quarter and edges. Horizon at bottom quarter. Daytime hopeful mood. No characters, no animals, no spacecraft, no crystals, no text, no digits, no UI, no logos, no watermark. Not a mockup. Scene: Peru's Pacific coast, muted turquoise ocean and gentle waves, warm sandy dunes, coastal rock formations at the sides, soft pale blue sky, dry coastal vegetation only at bottom corners. Palette turquoise, sandy ochre, cream."
+    },
+    {
+      "key": "highlands",
+      "file": "highlands.png",
+      "url": "/games/space-cargo/highlands.png",
+      "role": "background",
+      "region": "highlands",
+      "transparent": false,
+      "sourceFile": "exec-5b383740-b80f-44a9-ab30-5c43a96be98a.png",
+      "prompt": "Use case: stylized-concept. Asset type: production 2D landscape game background, wide 3:2 composition, for a Peruvian second-grade educational game with falling energy crystals and a spaceship launching. Hand-painted cut-paper children's adventure aesthetic, matte gouache textures, large simple shapes, soft atmospheric depth. Keep the central 60 percent of the image uncluttered with pale open sky so falling numerical objects are readable; landscape details confined to the bottom quarter and edges. Horizon at bottom quarter. Daytime hopeful mood. No characters, no animals, no spacecraft, no crystals, no text, no digits, no UI, no logos, no watermark. Not a mockup. Scene: Peru's Andean highlands, distant snowcapped peaks, ochre and terracotta mountains to either side, green high-altitude slopes, small terraces at bottom edges, soft pale blue sky. Palette sage green, warm ochre, lavender distant mountains."
+    },
+    {
+      "key": "cloud-forest",
+      "file": "cloud-forest.png",
+      "url": "/games/space-cargo/cloud-forest.png",
+      "role": "background",
+      "region": "jungle",
+      "transparent": false,
+      "sourceFile": "exec-b2491986-bba6-44ea-b367-9397779ccf79.png",
+      "prompt": "Use case: stylized-concept. Asset type: production 2D landscape game background, wide 3:2 composition, for a Peruvian second-grade educational game with falling energy crystals and a spaceship launching. Hand-painted cut-paper children's adventure aesthetic, matte gouache textures, large simple shapes, soft atmospheric depth. Keep the central 60 percent of the image uncluttered with pale open sky so falling numerical objects are readable; landscape details confined to the bottom quarter and edges. Horizon at bottom quarter. Daytime hopeful mood. No characters, no animals, no spacecraft, no crystals, no text, no digits, no UI, no logos, no watermark. Not a mockup. Scene: Peruvian eastern Andean cloud forest, layered emerald misty mountain slopes, lush ferns and broad leaves at the extreme side edges and bottom corners, distant waterfall at far right bottom, pale mint-blue atmospheric sky opening in the center. Palette deep teal, emerald, jade and misty mint. No generic flat tropical beach."
+    },
+    {
+      "key": "spaceship",
+      "file": "spaceship.png",
+      "url": "/games/space-cargo/spaceship.png",
+      "role": "shared",
+      "region": null,
+      "transparent": true,
+      "sourceFile": "exec-597c8874-a2af-493c-87ee-2d62861ea827.png",
+      "prompt": "Use case: stylized-concept. Asset type: single production 2D spaceship sprite on genuinely transparent background for a children's Peruvian math game. Match a matte gouache cut-paper illustrated adventure aesthetic, warm cream fuselage, teal fins, small terracotta accents, big round blue cockpit, friendly rounded proportions. Front view, upright nose pointing up, symmetrical entire craft visible, blank broad lower fuselage area for runtime number overlay. Small empty mounting platform below cockpit for a bird companion overlay. No pilot, no animals, no digits, no words, no logo, no exhaust trail, no background, no ground shadow. Generous transparent padding. Readable silhouette at 160 pixels."
+    },
+    {
+      "key": "energy-crystal",
+      "file": "energy-crystal.png",
+      "url": "/games/space-cargo/energy-crystal.png",
+      "role": "shared",
+      "region": null,
+      "transparent": true,
+      "sourceFile": "exec-5f1f001e-4af3-4e3d-86fd-bffbb35357df.png",
+      "prompt": "Use case: stylized-concept. Asset type: single collectible 2D energy crystal sprite on genuinely transparent background, matching matte gouache cut-paper illustrated children's adventure game. Large faceted turquoise and jade hexagonal crystal, pointed top and bottom, broad pale mint central face intentionally blank for a runtime numerical label. Strong dark teal edge for contrast. Soft inner glow contained inside crystal. Entire object visible with generous transparent margin. No digits, text, particles outside crystal, scenery, watermark, or ground shadow."
+    },
+    {
+      "key": "ice-comet",
+      "file": "ice-comet.png",
+      "url": "/games/space-cargo/ice-comet.png",
+      "role": "shared",
+      "region": null,
+      "transparent": true,
+      "sourceFile": "exec-45790781-8f55-4c2b-8c3a-1010378c260b.png",
+      "prompt": "Use case: stylized-concept. Asset type: single 2D ice comet collectible sprite on genuinely transparent background, matching matte gouache cut-paper illustrated children's adventure game. A rounded faceted pale ice-blue stone with short curved icy tail sweeping upper left, broad very light central face intentionally blank for runtime negative number overlay. Dark blue edge for contrast. Friendly soft geometry. Entire object visible, generous transparent margin. No numbers, text, scenery, watermark, or ground shadow."
+    }
+  ]
+}

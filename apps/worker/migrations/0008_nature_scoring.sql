@@ -1,0 +1,7 @@
+ALTER TABLE game_participants ADD COLUMN score INTEGER NOT NULL DEFAULT 0;
+ALTER TABLE game_participants ADD COLUMN caught INTEGER NOT NULL DEFAULT 0;
+ALTER TABLE game_participants ADD COLUMN mistakes INTEGER NOT NULL DEFAULT 0;
+ALTER TABLE game_participants ADD COLUMN paused INTEGER NOT NULL DEFAULT 0;
+ALTER TABLE game_participants ADD COLUMN active_ms INTEGER NOT NULL DEFAULT 0;
+ALTER TABLE game_participants ADD COLUMN last_event_at INTEGER NOT NULL DEFAULT 0;
+UPDATE game_participants SET score=solved*100;

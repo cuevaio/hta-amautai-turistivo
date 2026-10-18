@@ -42,6 +42,8 @@ function kind(file) {
     if (rest.startsWith("pages/")) return { side: "frontend", layer: "page" }
     if (rest.startsWith("shared/"))
       return { side: "frontend", layer: "shared", area: rest.split("/")[1] }
+    if (rest.startsWith("game-runtime/"))
+      return { side: "frontend", layer: "game-runtime" }
     return { side: "frontend", layer: "unknown" }
   }
   if (file.startsWith("apps/whatsapp-gateway/src/"))
@@ -186,6 +188,15 @@ export function checkArchitecture(files, manifests = []) {
           fail(file, "Shared code cannot depend on feature internals")
       }
       if (from.side === "frontend") {
+        if (
+          from.layer === "game-runtime" &&
+          to.side === "frontend" &&
+          to.layer !== "game-runtime"
+        )
+          fail(
+            file,
+            "Game runtime may only depend on its own modules and shared contracts"
+          )
         if (!["frontend", "ui", "contracts"].includes(to.side))
           fail(file, "Browser code cannot depend on Worker implementation")
         if (

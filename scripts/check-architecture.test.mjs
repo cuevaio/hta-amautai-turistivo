@@ -139,3 +139,20 @@ test("shared mail infrastructure stays inward and shared application cannot fetc
     ).some((error) => error.includes("Shared code cannot"))
   )
 })
+
+test("Phaser runtime boundary permits contracts and rejects feature dependencies", () => {
+  const runtime = "apps/web/src/game-runtime/space-cargo.ts"
+  assert.deepEqual(
+    checkArchitecture(
+      new Map([[runtime, 'import Phaser from "phaser"; export {}']])
+    ),
+    []
+  )
+  const errors = checkArchitecture(
+    new Map([
+      [runtime, 'import "@/features/rooms/model/private"'],
+      ["apps/web/src/features/rooms/model/private.ts", "export {}"],
+    ])
+  )
+  assert.ok(errors.some((e) => e.includes("Game runtime may only depend")))
+})

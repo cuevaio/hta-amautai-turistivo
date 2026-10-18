@@ -1,0 +1,92 @@
+{
+  "frames": {
+    "0": {
+      "frame": {
+        "x": 128,
+        "y": 52,
+        "w": 371,
+        "h": 536
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 12,
+        "y": 0,
+        "w": 371,
+        "h": 536
+      },
+      "sourceSize": {
+        "w": 395,
+        "h": 536
+      }
+    },
+    "1": {
+      "frame": {
+        "x": 755,
+        "y": 52,
+        "w": 395,
+        "h": 536
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 395,
+        "h": 536
+      },
+      "sourceSize": {
+        "w": 395,
+        "h": 536
+      }
+    },
+    "2": {
+      "frame": {
+        "x": 128,
+        "y": 681,
+        "w": 371,
+        "h": 534
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 12,
+        "y": 1,
+        "w": 371,
+        "h": 534
+      },
+      "sourceSize": {
+        "w": 395,
+        "h": 536
+      }
+    },
+    "3": {
+      "frame": {
+        "x": 755,
+        "y": 680,
+        "w": 371,
+        "h": 535
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 12,
+        "y": 0,
+        "w": 371,
+        "h": 535
+      },
+      "sourceSize": {
+        "w": 395,
+        "h": 536
+      }
+    }
+  },
+  "meta": {
+    "image": "energy-crystal-sheet.png",
+    "size": {
+      "w": 1254,
+      "h": 1254
+    },
+    "scale": "1"
+  }
+}

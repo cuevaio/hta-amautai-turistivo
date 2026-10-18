@@ -1,0 +1,677 @@
+{
+  "version": 2,
+  "style": "pixel-art",
+  "tool": "image_gen built-in",
+  "date": "2026-10-18",
+  "assets": [
+    {
+      "key": "coast",
+      "file": "coast.png",
+      "prompt": "Use case: stylized-concept. Asset type: production retro PIXEL ART game background for Peruvian children's math spaceship game. Wide landscape 1536x1024 image, draw as a true 384x256 low-resolution pixel canvas enlarged exactly 4x nearest neighbor: visible crisp square pixels, hard stepped diagonals, 24-color harmonious 16-bit palette. No antialiasing, no smooth brush strokes, no gouache, no photorealism, no smooth gradients, no 3D rendering, no text, no UI, no characters, no spacecraft, no collectibles. Bottom quarter contains landscape, side edges contain framing terrain, central 60% is pale clear sky for falling number crystals. Cheerful daytime exploration mood, not cosmic outer space. Scene: Peru Pacific coast with turquoise water, sand, small stepped rock cliffs at lower side edges, simple white wave pixels, clear pale blue sky. Colors sand cream, ochre, teal.",
+      "width": 1536,
+      "height": 1024,
+      "sha256": "b6fe36c929bf53af9870dfcc373833e2f067356a14c335694d5978251d61c53b",
+      "bytes": 1335337,
+      "url": "/games/space-cargo/pixel/coast.png",
+      "role": "background"
+    },
+    {
+      "key": "highlands",
+      "file": "highlands.png",
+      "prompt": "Use case: stylized-concept. Asset type: production retro PIXEL ART game background for Peruvian children's math spaceship game. Wide landscape 1536x1024 image, draw as a true 384x256 low-resolution pixel canvas enlarged exactly 4x nearest neighbor: visible crisp square pixels, hard stepped diagonals, 24-color harmonious 16-bit palette. No antialiasing, no smooth brush strokes, no gouache, no photorealism, no smooth gradients, no 3D rendering, no text, no UI, no characters, no spacecraft, no collectibles. Bottom quarter contains landscape, side edges contain framing terrain, central 60% is pale clear sky for falling number crystals. Cheerful daytime exploration mood, not cosmic outer space. Scene: Peruvian Andes with green lower slopes, stone terraces at lower edges, ochre hills and distant snow-capped peaks below the open central sky. Colors sage green, warm ochre, lavender.",
+      "width": 1536,
+      "height": 1024,
+      "sha256": "5510ab7495ae8d2358118fe3e4207fbc7869f805f1dcff87562f29a6c899db72",
+      "bytes": 1564616,
+      "url": "/games/space-cargo/pixel/highlands.png",
+      "role": "background"
+    },
+    {
+      "key": "cloud-forest",
+      "file": "cloud-forest.png",
+      "prompt": "Use case: stylized-concept. Asset type: production retro PIXEL ART game background for Peruvian children's math spaceship game. Wide landscape 1536x1024 image, draw as a true 384x256 low-resolution pixel canvas enlarged exactly 4x nearest neighbor: visible crisp square pixels, hard stepped diagonals, 24-color harmonious 16-bit palette. No antialiasing, no smooth brush strokes, no gouache, no photorealism, no smooth gradients, no 3D rendering, no text, no UI, no characters, no spacecraft, no collectibles. Bottom quarter contains landscape, side edges contain framing terrain, central 60% is pale clear sky for falling number crystals. Cheerful daytime exploration mood, not cosmic outer space. Scene: Peruvian eastern Andean cloud forest with emerald misty mountain layers, pixel ferns and broad leaves at bottom corners and side edges, a small waterfall lower right. Large open pale mint blue sky central area. Colors deep teal, jade, mint.",
+      "width": 1536,
+      "height": 1024,
+      "sha256": "d8fc0d112a739e0e3742390ea85fa925d093319b3a33cf5a4201c84bfa199c5a",
+      "bytes": 1646453,
+      "url": "/games/space-cargo/pixel/cloud-forest.png",
+      "role": "background"
+    },
+    {
+      "key": "spaceship",
+      "file": "spaceship-sheet.png",
+      "prompt": "Use case: stylized-concept. Asset type: ONE production PIXEL ART animation sprite sheet. Exactly FOUR different sequential frames in a regular TWO COLUMN by TWO ROW grid on a square 1024x1024 canvas; each cell exactly 512x512. Transparent background and transparent gutters. Same subject centered identically and at identical scale in every cell, complete silhouette fits each cell with generous padding. Authentic 16-bit retro game art drawn at 64x64 logical pixels per frame then nearest-neighbor enlarged 8x, visibly square pixels, hard pixel edges, limited 16-color palette. No antialiasing, no painterly textures, no 3D, no soft glow, no text, no numbers, no grid lines, no borders, no labels. Reading order top-left, top-right, bottom-left, bottom-right. Subject: friendly small upright spaceship with cream fuselage, teal fins, orange nose, round blue cockpit, broad blank lower hull for runtime number overlay, front view. Four-frame engine ignition loop, ship stays fixed: frame 1 small orange exhaust flame, frame 2 medium flame, frame 3 long yellow-orange flame, frame 4 medium flame with tiny pixel sparks. All flame pixels stay within each cell. No birds or pilots.",
+      "width": 1254,
+      "height": 1254,
+      "sha256": "a9bb56a9e6064536dd5dee5f9c785bd6f863dc1dbe9428db8e7015768d41b3ec",
+      "bytes": 868850,
+      "url": "/games/space-cargo/pixel/spaceship-sheet.png",
+      "role": "animated-sprite",
+      "transparent": true,
+      "atlas": "spaceship-atlas.json",
+      "frames": {
+        "0": {
+          "frame": {
+            "x": 45,
+            "y": 65,
+            "w": 538,
+            "h": 474
+          },
+          "rotated": false,
+          "trimmed": true,
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 538,
+            "h": 474
+          },
+          "sourceSize": {
+            "w": 538,
+            "h": 534
+          }
+        },
+        "1": {
+          "frame": {
+            "x": 672,
+            "y": 65,
+            "w": 537,
+            "h": 496
+          },
+          "rotated": false,
+          "trimmed": true,
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 537,
+            "h": 496
+          },
+          "sourceSize": {
+            "w": 538,
+            "h": 534
+          }
+        },
+        "2": {
+          "frame": {
+            "x": 45,
+            "y": 692,
+            "w": 538,
+            "h": 534
+          },
+          "rotated": false,
+          "trimmed": true,
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 538,
+            "h": 534
+          },
+          "sourceSize": {
+            "w": 538,
+            "h": 534
+          }
+        },
+        "3": {
+          "frame": {
+            "x": 672,
+            "y": 692,
+            "w": 537,
+            "h": 499
+          },
+          "rotated": false,
+          "trimmed": true,
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 537,
+            "h": 499
+          },
+          "sourceSize": {
+            "w": 538,
+            "h": 534
+          }
+        }
+      },
+      "animation": {
+        "key": "spaceship-loop",
+        "frameOrder": [
+          "0",
+          "1",
+          "2",
+          "3"
+        ],
+        "durationMs": 480,
+        "repeat": -1
+      }
+    },
+    {
+      "key": "energy-crystal",
+      "file": "energy-crystal-sheet.png",
+      "prompt": "Use case: stylized-concept. Asset type: ONE production PIXEL ART animation sprite sheet. Exactly FOUR different sequential frames in a regular TWO COLUMN by TWO ROW grid on a square 1024x1024 canvas; each cell exactly 512x512. Transparent background and transparent gutters. Same subject centered identically and at identical scale in every cell, complete silhouette fits each cell with generous padding. Authentic 16-bit retro game art drawn at 64x64 logical pixels per frame then nearest-neighbor enlarged 8x, visibly square pixels, hard pixel edges, limited 16-color palette. No antialiasing, no painterly textures, no 3D, no soft glow, no text, no numbers, no grid lines, no borders, no labels. Reading order top-left, top-right, bottom-left, bottom-right. Subject: faceted jade/turquoise energy crystal with dark teal outline and broad pale mint blank front face for runtime number label. Four-frame sparkle animation loop: same crystal orientation and silhouette every frame, highlights move clockwise over facets, tiny star sparkle moves top-right to right to bottom-right to absent. No motion blur. Keep center face clear.",
+      "width": 1254,
+      "height": 1254,
+      "sha256": "59ef2fca644e0ec218e1bf886410b9fc2a75b96d26797de53f1af4d5e11f03e3",
+      "bytes": 729040,
+      "url": "/games/space-cargo/pixel/energy-crystal-sheet.png",
+      "role": "animated-sprite",
+      "transparent": true,
+      "atlas": "energy-crystal-atlas.json",
+      "frames": {
+        "0": {
+          "frame": {
+            "x": 128,
+            "y": 52,
+            "w": 371,
+            "h": 536
+          },
+          "rotated": false,
+          "trimmed": true,
+          "spriteSourceSize": {
+            "x": 12,
+            "y": 0,
+            "w": 371,
+            "h": 536
+          },
+          "sourceSize": {
+            "w": 395,
+            "h": 536
+          }
+        },
+        "1": {
+          "frame": {
+            "x": 755,
+            "y": 52,
+            "w": 395,
+            "h": 536
+          },
+          "rotated": false,
+          "trimmed": true,
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 395,
+            "h": 536
+          },
+          "sourceSize": {
+            "w": 395,
+            "h": 536
+          }
+        },
+        "2": {
+          "frame": {
+            "x": 128,
+            "y": 681,
+            "w": 371,
+            "h": 534
+          },
+          "rotated": false,
+          "trimmed": true,
+          "spriteSourceSize": {
+            "x": 12,
+            "y": 1,
+            "w": 371,
+            "h": 534
+          },
+          "sourceSize": {
+            "w": 395,
+            "h": 536
+          }
+        },
+        "3": {
+          "frame": {
+            "x": 755,
+            "y": 680,
+            "w": 371,
+            "h": 535
+          },
+          "rotated": false,
+          "trimmed": true,
+          "spriteSourceSize": {
+            "x": 12,
+            "y": 0,
+            "w": 371,
+            "h": 535
+          },
+          "sourceSize": {
+            "w": 395,
+            "h": 536
+          }
+        }
+      },
+      "animation": {
+        "key": "energy-crystal-loop",
+        "frameOrder": [
+          "0",
+          "1",
+          "2",
+          "3"
+        ],
+        "durationMs": 960,
+        "repeat": -1
+      }
+    },
+    {
+      "key": "ice-comet",
+      "file": "ice-comet-sheet.png",
+      "prompt": "Use case: stylized-concept. Asset type: ONE production PIXEL ART animation sprite sheet. Exactly FOUR different sequential frames in a regular TWO COLUMN by TWO ROW grid on a square 1024x1024 canvas; each cell exactly 512x512. Transparent background and transparent gutters. Same subject centered identically and at identical scale in every cell, complete silhouette fits each cell with generous padding. Authentic 16-bit retro game art drawn at 64x64 logical pixels per frame then nearest-neighbor enlarged 8x, visibly square pixels, hard pixel edges, limited 16-color palette. No antialiasing, no painterly textures, no 3D, no soft glow, no text, no numbers, no grid lines, no borders, no labels. Reading order top-left, top-right, bottom-left, bottom-right. Subject: round pale blue ice comet, dark blue pixel outline, large nearly white blank front face for runtime negative number. Short blue icy tail sweeping upper left. Four-frame tail flicker animation loop: icy tail changes small/medium/long/medium while round comet head remains fixed, tiny few pixel chips at tail. No motion blur, no soft glow.",
+      "width": 1254,
+      "height": 1254,
+      "sha256": "85a49be7565c841e313237cca07c6446baf3a1dacc6956bee3a10434211c9a0b",
+      "bytes": 728650,
+      "url": "/games/space-cargo/pixel/ice-comet-sheet.png",
+      "role": "animated-sprite",
+      "transparent": true,
+      "atlas": "ice-comet-atlas.json",
+      "frames": {
+        "0": {
+          "frame": {
+            "x": 121,
+            "y": 131,
+            "w": 428,
+            "h": 428
+          },
+          "rotated": false,
+          "trimmed": true,
+          "spriteSourceSize": {
+            "x": 104,
+            "y": 103,
+            "w": 428,
+            "h": 428
+          },
+          "sourceSize": {
+            "w": 532,
+            "h": 531
+          }
+        },
+        "1": {
+          "frame": {
+            "x": 711,
+            "y": 90,
+            "w": 465,
+            "h": 469
+          },
+          "rotated": false,
+          "trimmed": true,
+          "spriteSourceSize": {
+            "x": 67,
+            "y": 62,
+            "w": 465,
+            "h": 469
+          },
+          "sourceSize": {
+            "w": 532,
+            "h": 531
+          }
+        },
+        "2": {
+          "frame": {
+            "x": 17,
+            "y": 655,
+            "w": 532,
+            "h": 531
+          },
+          "rotated": false,
+          "trimmed": true,
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 532,
+            "h": 531
+          },
+          "sourceSize": {
+            "w": 532,
+            "h": 531
+          }
+        },
+        "3": {
+          "frame": {
+            "x": 698,
+            "y": 718,
+            "w": 478,
+            "h": 468
+          },
+          "rotated": false,
+          "trimmed": true,
+          "spriteSourceSize": {
+            "x": 54,
+            "y": 63,
+            "w": 478,
+            "h": 468
+          },
+          "sourceSize": {
+            "w": 532,
+            "h": 531
+          }
+        }
+      },
+      "animation": {
+        "key": "ice-comet-loop",
+        "frameOrder": [
+          "0",
+          "1",
+          "2",
+          "3"
+        ],
+        "durationMs": 560,
+        "repeat": -1
+      }
+    },
+    {
+      "key": "pelican",
+      "file": "pelican-sheet.png",
+      "prompt": "Use case: stylized-concept. Asset type: ONE production PIXEL ART animation sprite sheet, not a poster. Exactly FOUR frames in a perfectly regular TWO COLUMN by TWO ROW grid, square 1024x1024 canvas, each cell exactly 512x512. Each sprite fully contained in its own cell, identical scale, aligned center and ground baseline. All space outside sprites genuinely transparent. Authentic low-resolution 16-bit game art, each frame drawn as if on a 64x64 logical grid enlarged 8x with nearest-neighbor crisp square pixels, restrained 16-color palette, hard pixel edges, no antialiasing, NO smooth painting, NO photographic detail, NO text, NO frame numbers, NO grid lines, NO labels, NO cast shadows. Cute and readable for age 7-8. Frame order: top-left, top-right, bottom-left, bottom-right. Keep body/head positions nearly unchanged while wings flap; all four frames are distinct sequential flight poses, anatomically coherent. Three-quarter bird facing right, friendly expression, recognizable species, full body visible with padding in every frame. Subject: Peruvian pelican, white head, long yellow-orange bill and pouch, gray brown body, dark wing tips, short webbed feet. Frame 1 wings down, frame 2 wings horizontal, frame 3 wings raised, frame 4 wings horizontal on return. Same single bird each frame, no accessories.",
+      "width": 1254,
+      "height": 1254,
+      "sha256": "bcc6a209681b79de5ff20f033b6d846f2d3669933c7e3ecfb7fdc2f6750bd0f2",
+      "bytes": 873964,
+      "url": "/games/space-cargo/pixel/pelican-sheet.png",
+      "role": "animated-sprite",
+      "transparent": true,
+      "atlas": "pelican-atlas.json",
+      "frames": {
+        "0": {
+          "frame": {
+            "x": 84,
+            "y": 154,
+            "w": 458,
+            "h": 435
+          },
+          "rotated": false,
+          "trimmed": true,
+          "spriteSourceSize": {
+            "x": 100,
+            "y": 31,
+            "w": 458,
+            "h": 435
+          },
+          "sourceSize": {
+            "w": 659,
+            "h": 466
+          }
+        },
+        "1": {
+          "frame": {
+            "x": 585,
+            "y": 154,
+            "w": 659,
+            "h": 343
+          },
+          "rotated": false,
+          "trimmed": true,
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 123,
+            "w": 659,
+            "h": 343
+          },
+          "sourceSize": {
+            "w": 659,
+            "h": 466
+          }
+        },
+        "2": {
+          "frame": {
+            "x": 59,
+            "y": 650,
+            "w": 499,
+            "h": 466
+          },
+          "rotated": false,
+          "trimmed": true,
+          "spriteSourceSize": {
+            "x": 80,
+            "y": 0,
+            "w": 499,
+            "h": 466
+          },
+          "sourceSize": {
+            "w": 659,
+            "h": 466
+          }
+        },
+        "3": {
+          "frame": {
+            "x": 585,
+            "y": 784,
+            "w": 658,
+            "h": 338
+          },
+          "rotated": false,
+          "trimmed": true,
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 128,
+            "w": 658,
+            "h": 338
+          },
+          "sourceSize": {
+            "w": 659,
+            "h": 466
+          }
+        }
+      },
+      "animation": {
+        "key": "pelican-loop",
+        "frameOrder": [
+          "0",
+          "1",
+          "2",
+          "3"
+        ],
+        "durationMs": 800,
+        "repeat": -1
+      }
+    },
+    {
+      "key": "condor",
+      "file": "condor-sheet.png",
+      "prompt": "Use case: stylized-concept. Asset type: ONE production PIXEL ART animation sprite sheet, not a poster. Exactly FOUR frames in a perfectly regular TWO COLUMN by TWO ROW grid, square 1024x1024 canvas, each cell exactly 512x512. Each sprite fully contained in its own cell, identical scale, aligned center and ground baseline. All space outside sprites genuinely transparent. Authentic low-resolution 16-bit game art, each frame drawn as if on a 64x64 logical grid enlarged 8x with nearest-neighbor crisp square pixels, restrained 16-color palette, hard pixel edges, no antialiasing, NO smooth painting, NO photographic detail, NO text, NO frame numbers, NO grid lines, NO labels, NO cast shadows. Cute and readable for age 7-8. Frame order: top-left, top-right, bottom-left, bottom-right. Keep body/head positions nearly unchanged while wings flap; all four frames are distinct sequential flight poses, anatomically coherent. Three-quarter bird facing right, friendly expression, recognizable species, full body visible with padding in every frame. Subject: Andean condor, black broad wings with white shoulder patches, ivory neck ruff, small red bald head and subtle crest, gray feet. Frame 1 wings down, frame 2 wings horizontal, frame 3 wings raised, frame 4 wings horizontal on return. Same single bird each frame, no accessories.",
+      "width": 1254,
+      "height": 1254,
+      "sha256": "848839becb6304d9b9bf3d5ec106c22f8b63989566749f5af42a77cd87176a67",
+      "bytes": 864412,
+      "url": "/games/space-cargo/pixel/condor-sheet.png",
+      "role": "animated-sprite",
+      "transparent": true,
+      "atlas": "condor-atlas.json",
+      "frames": {
+        "0": {
+          "frame": {
+            "x": 44,
+            "y": 167,
+            "w": 538,
+            "h": 402
+          },
+          "rotated": false,
+          "trimmed": true,
+          "spriteSourceSize": {
+            "x": 43,
+            "y": 130,
+            "w": 538,
+            "h": 402
+          },
+          "sourceSize": {
+            "w": 625,
+            "h": 532
+          }
+        },
+        "1": {
+          "frame": {
+            "x": 616,
+            "y": 180,
+            "w": 625,
+            "h": 323
+          },
+          "rotated": false,
+          "trimmed": true,
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 209,
+            "w": 625,
+            "h": 323
+          },
+          "sourceSize": {
+            "w": 625,
+            "h": 532
+          }
+        },
+        "2": {
+          "frame": {
+            "x": 60,
+            "y": 627,
+            "w": 547,
+            "h": 532
+          },
+          "rotated": false,
+          "trimmed": true,
+          "spriteSourceSize": {
+            "x": 39,
+            "y": 0,
+            "w": 547,
+            "h": 532
+          },
+          "sourceSize": {
+            "w": 625,
+            "h": 532
+          }
+        },
+        "3": {
+          "frame": {
+            "x": 616,
+            "y": 809,
+            "w": 625,
+            "h": 331
+          },
+          "rotated": false,
+          "trimmed": true,
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 201,
+            "w": 625,
+            "h": 331
+          },
+          "sourceSize": {
+            "w": 625,
+            "h": 532
+          }
+        }
+      },
+      "animation": {
+        "key": "condor-loop",
+        "frameOrder": [
+          "0",
+          "1",
+          "2",
+          "3"
+        ],
+        "durationMs": 1000,
+        "repeat": -1
+      }
+    },
+    {
+      "key": "cock-of-the-rock",
+      "file": "cock-of-the-rock-sheet.png",
+      "prompt": "Use case: stylized-concept. Asset type: ONE production PIXEL ART animation sprite sheet, not a poster. Exactly FOUR frames in a perfectly regular TWO COLUMN by TWO ROW grid, square 1024x1024 canvas, each cell exactly 512x512. Each sprite fully contained in its own cell, identical scale, aligned center and ground baseline. All space outside sprites genuinely transparent. Authentic low-resolution 16-bit game art, each frame drawn as if on a 64x64 logical grid enlarged 8x with nearest-neighbor crisp square pixels, restrained 16-color palette, hard pixel edges, no antialiasing, NO smooth painting, NO photographic detail, NO text, NO frame numbers, NO grid lines, NO labels, NO cast shadows. Cute and readable for age 7-8. Frame order: top-left, top-right, bottom-left, bottom-right. Keep body/head positions nearly unchanged while wings flap; all four frames are distinct sequential flight poses, anatomically coherent. Three-quarter bird facing right, friendly expression, recognizable species, full body visible with padding in every frame. Subject: male Andean cock-of-the-rock, bright orange-red body, distinctive huge round semicircular crest, small yellow eye, black wings and tail, silver-gray wing patches, orange feet. Frame 1 wings down, frame 2 wings horizontal, frame 3 wings raised, frame 4 wings horizontal on return. Same single bird each frame, no accessories.",
+      "width": 1254,
+      "height": 1254,
+      "sha256": "cdfe77e6590e3ab72ff96d7464d0767d5245b63a6ddd36288e2d06ce5694dd78",
+      "bytes": 857173,
+      "url": "/games/space-cargo/pixel/cock-of-the-rock-sheet.png",
+      "role": "animated-sprite",
+      "transparent": true,
+      "atlas": "cock-of-the-rock-atlas.json",
+      "frames": {
+        "0": {
+          "frame": {
+            "x": 46,
+            "y": 112,
+            "w": 492,
+            "h": 450
+          },
+          "rotated": false,
+          "trimmed": true,
+          "spriteSourceSize": {
+            "x": 57,
+            "y": 106,
+            "w": 492,
+            "h": 450
+          },
+          "sourceSize": {
+            "w": 607,
+            "h": 556
+          }
+        },
+        "1": {
+          "frame": {
+            "x": 631,
+            "y": 116,
+            "w": 594,
+            "h": 460
+          },
+          "rotated": false,
+          "trimmed": true,
+          "spriteSourceSize": {
+            "x": 6,
+            "y": 96,
+            "w": 594,
+            "h": 460
+          },
+          "sourceSize": {
+            "w": 607,
+            "h": 556
+          }
+        },
+        "2": {
+          "frame": {
+            "x": 52,
+            "y": 649,
+            "w": 544,
+            "h": 556
+          },
+          "rotated": false,
+          "trimmed": true,
+          "spriteSourceSize": {
+            "x": 31,
+            "y": 0,
+            "w": 544,
+            "h": 556
+          },
+          "sourceSize": {
+            "w": 607,
+            "h": 556
+          }
+        },
+        "3": {
+          "frame": {
+            "x": 633,
+            "y": 755,
+            "w": 607,
+            "h": 450
+          },
+          "rotated": false,
+          "trimmed": true,
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 106,
+            "w": 607,
+            "h": 450
+          },
+          "sourceSize": {
+            "w": 607,
+            "h": 556
+          }
+        }
+      },
+      "animation": {
+        "key": "cock-of-the-rock-loop",
+        "frameOrder": [
+          "0",
+          "1",
+          "2",
+          "3"
+        ],
+        "durationMs": 640,
+        "repeat": -1
+      }
+    }
+  ]
+}

@@ -1,0 +1,92 @@
+{
+  "frames": {
+    "0": {
+      "frame": {
+        "x": 45,
+        "y": 65,
+        "w": 538,
+        "h": 474
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 538,
+        "h": 474
+      },
+      "sourceSize": {
+        "w": 538,
+        "h": 534
+      }
+    },
+    "1": {
+      "frame": {
+        "x": 672,
+        "y": 65,
+        "w": 537,
+        "h": 496
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 537,
+        "h": 496
+      },
+      "sourceSize": {
+        "w": 538,
+        "h": 534
+      }
+    },
+    "2": {
+      "frame": {
+        "x": 45,
+        "y": 692,
+        "w": 538,
+        "h": 534
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 538,
+        "h": 534
+      },
+      "sourceSize": {
+        "w": 538,
+        "h": 534
+      }
+    },
+    "3": {
+      "frame": {
+        "x": 672,
+        "y": 692,
+        "w": 537,
+        "h": 499
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 537,
+        "h": 499
+      },
+      "sourceSize": {
+        "w": 538,
+        "h": 534
+      }
+    }
+  },
+  "meta": {
+    "image": "spaceship-sheet.png",
+    "size": {
+      "w": 1254,
+      "h": 1254
+    },
+    "scale": "1"
+  }
+}

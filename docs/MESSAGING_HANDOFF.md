@@ -24,7 +24,7 @@ React dashboard -> authenticated Hono API on Cloudflare Workers -> D1 outbox -> 
 
 ## Current user flow
 
-WhatsApp: save an international phone number with consent to activate immediately. No recipient OTP or QR; only the shared sender is linked once by an administrator. Country-code digits are accepted without a leading plus.
+WhatsApp: save a nine-digit Peruvian mobile number with consent to activate immediately. All phone controls display a fixed `+51` prefix; pasted Peruvian prefixes are recognized without silently truncating recipients. No recipient OTP or QR; only the shared sender is linked once by an administrator. Profile registration immediately starts a role-specific welcome send, with durable scheduled retries on failure.
 
 Email: recipient and emailVerified come from the trusted WorkOS identity. No duplicate notification OTP or activation step. Explicit opt-outs persist. Callers cannot select arbitrary email recipients.
 

@@ -22,7 +22,7 @@ cd /opt/amautai-whatsapp
 sudo docker compose -f apps/whatsapp-gateway/compose.yaml up -d --build
 ~~~
 
-The file-provider configuration in traefik.yaml routes only /amautai-whatsapp/ on the existing notify.urday.dev host. Other notification service paths retain their existing routes. The Worker base URL is https://notify.urday.dev/amautai-whatsapp.
+The file-provider configuration in traefik.yaml routes wts.urday.dev directly to the gateway API. Its DNS-only A record points to the VPS at 13.140.160.86; Traefik obtains the HTTPS certificate. The Worker base URL is https://wts.urday.dev. The existing notify.urday.dev record and routes are separate and remain unchanged.
 
 ## Link the sender
 

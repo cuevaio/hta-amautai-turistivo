@@ -194,7 +194,7 @@ The notification settings at /dashboard/notifications list automatic task-assign
 - UI dates identify the browser input timezone and history display timezone; persistence uses UTC epoch milliseconds.
 - Full validation: pnpm run check, including the gateway tests. A passing mock does not establish real WhatsApp delivery.
 
-The WhatsApp deployment uses D1 migrations 0002-0005, the Amautai Worker and the Docker service at /opt/amautai-whatsapp. The gateway's authenticated HTTPS connection endpoint and sender reconnection after restart were verified. Pairing requires the sender's phone. Baileys is unofficial and sessions may be disconnected or restricted.
+The WhatsApp deployment uses D1 migrations 0002-0005, the Amautai Worker and the Docker service at /opt/amautai-whatsapp. Its dedicated gateway API is https://wts.urday.dev; the DNS-only A record points to the VPS, and Traefik serves the host directly. The unrelated notify.urday.dev record and routes are left unchanged. The gateway's authenticated HTTPS connection endpoint and sender reconnection after restart were verified. Pairing requires the sender's phone. Baileys is unofficial and sessions may be disconnected or restricted.
 
 ## Email notifications
 

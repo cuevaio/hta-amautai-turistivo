@@ -32,7 +32,7 @@
     "WORKOS_CLIENT_ID": "client_01M55794X1B33VNMX8PW0JEYQ9",
     "WORKOS_TOKEN_ISSUER": "https://api.workos.com/user_management/client_01M55794X1B33VNMX8PW0JEYQ9",
     "APP_ORIGINS": "http://localhost:5173,https://amautai.turistivo.com",
-    "WHATSAPP_GATEWAY_URL": "https://notify.urday.dev/amautai-whatsapp"
+    "WHATSAPP_GATEWAY_URL": "https://wts.urday.dev"
   },
   "d1_databases": [
     {

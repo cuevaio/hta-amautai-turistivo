@@ -44,7 +44,7 @@ WhatsApp reconciles accepted/sent/delivered/read through gateway polling; UI upd
 | D1 | andes-app-db, binding DB; migrations 0001-0005 applied locally/remotely |
 | WhatsApp source / deployment | apps/whatsapp-gateway / VPS /opt/amautai-whatsapp |
 | Docker container | amautai-whatsapp |
-| Gateway API | https://notify.urday.dev/amautai-whatsapp |
+| Gateway API | https://wts.urday.dev |
 | Private admin | WSL localhost:8790 -> SSH -> VPS loopback:8791 |
 | Email JMAP | https://mail.urday.dev/jmap/session |
 | Email sender | notificaciones@amautai.urday.dev |

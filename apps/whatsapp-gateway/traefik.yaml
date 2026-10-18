@@ -2,26 +2,13 @@
   "http": {
     "routers": {
       "amautai-whatsapp": {
-        "rule": "Host(`notify.urday.dev`) && PathPrefix(`/amautai-whatsapp/`)",
-        "priority": 350,
+        "rule": "Host(`wts.urday.dev`)",
         "entryPoints": [
           "websecure"
         ],
         "service": "amautai-whatsapp",
-        "middlewares": [
-          "amautai-whatsapp-strip"
-        ],
         "tls": {
           "certResolver": "letsencrypt"
-        }
-      }
-    },
-    "middlewares": {
-      "amautai-whatsapp-strip": {
-        "stripPrefix": {
-          "prefixes": [
-            "/amautai-whatsapp"
-          ]
         }
       }
     },

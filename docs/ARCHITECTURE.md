@@ -1,6 +1,6 @@
 # Amautai architecture
 
-The existing authentication, projects, and workspace scaffold has been migrated locally. Public deployment still runs the previous version until deployment is explicitly requested. The learning-game product and Phaser runtime are not implemented by this refactor.
+Authentication, projects, architecture boundaries and both notification channels are deployed. Learning-game and Phaser implementation remain pending. See [messaging architecture and handoff](MESSAGING_HANDOFF.md) for the final integrations.
 
 ## Backend
 
@@ -41,4 +41,4 @@ The static checker does not prove business correctness, complete authorization, 
 
 ## Scope and rollout
 
-No database schema, WorkOS configuration, domain, API route, or external environment is changed by the migration. Existing local data and secrets are preserved. Tests use in-memory data or synthetic ports. No production deployment, Git commit, or push is included.
+The architecture migration was subsequently published with notifications. See the messaging handoff for D1 migrations, VPS services and real delivery evidence. Preserve WorkOS configuration and secrets.

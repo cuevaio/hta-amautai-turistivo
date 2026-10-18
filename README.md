@@ -1,17 +1,21 @@
 # Amautai
 
+Development handoff: [messaging architecture, WhatsApp and email](docs/MESSAGING_HANDOFF.md).
+
 <img src="apps/web/public/favicon.svg" alt="Amautai" width="48" />
 
-A Hack the Andes starter with in-app authentication and a tenant-scoped project workspace.
+An Amautai scaffold for Hack the Andes with in-app authentication, a tenant-scoped project workspace, and email/WhatsApp notification settings. Learning-game flows are not yet implemented.
+
+The latest recorded public Worker is `b438d08f-2d46-4063-967c-d9f3608fc5bd` (October 17, 2026). It includes D1 migration `0005`, automatic notification preferences and custom authentication mail. See [project status](PROJECT_STATUS.md) for verified behavior and remaining work.
 
 ## Stack
 
 React, Vite, TypeScript, shadcn/ui (Base UI), Tailwind CSS, Motion, native fetch, Hono, Cloudflare Workers, D1, WorkOS, and Zod. pnpm workspaces and Turborepo manage the monorepo.
 
 - `apps/web`: React routes, authentication screens, and project CRUD.
-- `apps/worker`: Hono API, WorkOS integration, session validation, and D1 migrations.
+- `apps/worker`: Hono API, WorkOS integration, session validation, notifications, and D1 migrations.
 - `packages/ui`: shared components and theme.
-- `packages/contracts`: shared Zod project schema and TypeScript contracts used by the web app and API.
+- `packages/contracts`: shared Zod schemas and TypeScript contracts used by the web app and API.
 
 ## Current environment
 
@@ -61,7 +65,7 @@ Stop the service before running `pnpm run dev` manually. It is not enabled at bo
 
 ### Server configuration
 
-Public server configuration is in `apps/worker/wrangler.jsonc`: WorkOS Client ID, exact token issuer, allowed app origins, and the D1 binding. An optional `WORKOS_TOKEN_AUDIENCE` must be validated independently from the Client ID when the environment uses a custom audience.
+Public server configuration is in `apps/worker/wrangler.jsonc`: WorkOS Client ID, exact token issuer, `AUTH_EMAIL_MODE=custom`, allowed app origins, and the D1 binding. An optional `WORKOS_TOKEN_AUDIENCE` must be validated independently from the Client ID when the environment uses a custom audience. Local development needs protected `EMAIL_*` configuration for authentication mail because WorkOS verification and reset delivery are disabled in this environment.
 
 Server secrets belong only in the Git-ignored `apps/worker/.dev.vars`:
 
@@ -78,7 +82,7 @@ The previous local credentials are preserved in the ignored `.dev.vars.shared` f
 
 The login, signup, email verification, and password recovery screens live inside Amautai. Google and GitHub use direct OAuth provider authorization through WorkOS; after authorization the browser returns to the app. Both use demo provider credentials in Staging.
 
-Email signup collects a name, email, and password of at least 12 characters. WorkOS enforces its password policy and sends verification when required. Both password authentication and OAuth callbacks handle WorkOS email verification challenges inside the app. Pending verification tokens stay in encrypted HttpOnly cookies for ten minutes. Users enter the code at `/verify-email`.
+Email signup collects a name, email, and password of at least 12 characters. WorkOS enforces its password policy and issues verification challenges when required. With `AUTH_EMAIL_MODE=custom`, Amautai delivers verification codes through Stalwart; WorkOS still validates them. Both password authentication and OAuth callbacks handle these challenges inside the app. Pending verification tokens stay in encrypted HttpOnly cookies for ten minutes. Users enter the code at `/verify-email`.
 
 Password recovery starts at `/forgot-password`. The email link enters a server endpoint that exchanges the URL token for an encrypted HttpOnly cookie and opens a clean `/reset-password` URL. Successful password changes return to login. WorkOS revokes the account's existing sessions. Unknown and registered email addresses receive the same request confirmation; configuration and network failures are not reported as successful sends.
 
@@ -168,27 +172,27 @@ Read [PROJECT_STATUS.md](PROJECT_STATUS.md) for the latest handoff, verified beh
 
 ## WhatsApp notifications
 
-The notification module adds /dashboard/notifications, direct E.164 phone registration, explicit consent, opt-out, personal scheduled reminders, test messages and a 50-item status history. Educational assignments are not implemented yet; reminders currently belong to the signed-in adult and do not claim task integration.
+The notification settings at /dashboard/notifications list automatic task-assignment, deadline and new-message alerts. Each type independently selects email, WhatsApp, both or none. The selection persists per tenant and user. Task and messaging producers will be connected when those modules exist; no synthetic events are generated. The public page has no test-send buttons or manual reminder forms. WhatsApp still uses direct E.164 phone registration with consent.
 
 - Worker: modules/notifications follows the existing domain/application/infrastructure/HTTP boundaries. D1 migration 0002_notifications.sql adds contact verification and a durable outbox.
 - A scheduled handler runs every minute, leases due rows, checks current consent, retries gateway failures with stable IDs, and polls delivery states. Accepted, sent and delivered are distinct; uncertain sends are not automatically replayed.
 - apps/whatsapp-gateway runs separately on the VPS with encrypted SQLite auth, one sender session and an SSH-only admin page. See its README for deployment, pairing, retention and tests.
 - WHATSAPP_GATEWAY_URL is server configuration. WHATSAPP_GATEWAY_TOKEN is a Worker secret; no gateway credential enters browser code.
 - Saving a phone with consent immediately activates WhatsApp notifications. No recipient verification code or QR is required. Only the shared sender session is linked once by an administrator. Registration accepts international numbers with or without a leading + and normalizes spaces/hyphens.
-- Personal reminders/test messages are limited to 20 per account and recipient phone per day, scheduled at most 30 days ahead and expire one hour after the chosen time. Sender outages do not block registration; the outbox retains pending notifications.
+- Legacy scheduling APIs remain for existing clients, with a limit of 20 messages per account and recipient phone per day and a 30-day scheduling window. The public UI no longer offers manual reminders or test sends; `/test` returns 410. Sender outages do not block phone registration.
 - Changing the phone or disabling notifications cancels pending messages. Already accepted/in-flight messages cannot be recalled.
 - UI dates identify the browser input timezone and history display timezone; persistence uses UTC epoch milliseconds.
 - Full validation: pnpm run check, including the gateway tests. A passing mock does not establish real WhatsApp delivery.
 
-The WhatsApp deployment uses D1 migrations 0002 and 0003 (the email channel is configured separately), the Amautai Worker and the Docker service at /opt/amautai-whatsapp. The gateway is installed and its authenticated HTTPS connection endpoint was verified. Pairing requires the sender's phone. The deployment includes the previously local architecture refactor. Baileys is unofficial and sessions may be disconnected or restricted.
+The WhatsApp deployment uses D1 migrations 0002-0005, the Amautai Worker and the Docker service at /opt/amautai-whatsapp. The gateway's authenticated HTTPS connection endpoint and sender reconnection after restart were verified. Pairing requires the sender's phone. Baileys is unofficial and sessions may be disconnected or restricted.
 
 ## Email notifications
 
-Email is an independent notification channel beside WhatsApp on Dashboard → Notifications. The recipient is always the authenticated account email; callers cannot supply arbitrary recipients. Email verification belongs to the WorkOS sign-in flow. The server carries WorkOS emailVerified into its trusted identity; a verified account can send a test or schedule reminders immediately, without a second code or activation step. Users can opt out and explicitly re-enable notifications. Preferences, history, cancellation, and daily limits are scoped to both tenant and user. Requests support stable idempotency keys. The UI preserves drafts after failures.
+Email is an independent notification channel beside WhatsApp on Dashboard → Notifications. Automatic alert preferences use GET/PUT /api/notifications/settings; PUT accepts one strict {type,channel} row. Types: task_assigned, task_due, new_message. Channels: email, whatsapp, both, none. Email is the default unless the account previously opted out. WhatsApp selection requires a registered recipient. Each pending automatic delivery rechecks its type preference before dispatch; changing a selection cancels excluded pending deliveries. The internal notifications entrypoint accepts authorized domain events, preserves per-channel idempotency and isolates channel failures. It has no public event-injection API. The recipient is always the authenticated account email; callers cannot supply arbitrary recipients. Email verification belongs to the WorkOS sign-in flow. The server carries WorkOS emailVerified into its trusted identity; a verified account can receive automatic notifications without a second code or activation step. Users can opt out and explicitly re-enable notifications. Preferences, history, cancellation, and daily limits are scoped to both tenant and user. Requests support stable idempotency keys. The UI preserves drafts after failures.
 
 The existing minute cron dispatches each configured channel independently. Email uses HTTPS JMAP with the existing Stalwart server; no SMTP password reaches the browser and no additional VPS service is needed. Submission acceptance is not proof of inbox delivery. Network failures before submission retry at most five times; timeouts during submission and expired dispatch leases become uncertain and are never automatically resent. Disabling a channel cancels queued messages. A message already accepted by the server cannot be recalled.
 
-Apply migrations 0003 and 0004 locally and remotely before publishing this version. Migration 0004 preserves legacy verified opt-outs, retires pending notification OTPs, and records explicit opt-out independently of account verification. Email dispatch skips its database entirely when configuration is missing, so a disabled channel does not block the existing WhatsApp scheduler.
+Apply migrations 0003, 0004 and 0005 locally and remotely before publishing this version. Migration 0004 preserves legacy verified opt-outs, retires pending notification OTPs, and records explicit opt-out independently of account verification. Email dispatch skips its database entirely when configuration is missing, so a disabled channel does not block the existing WhatsApp scheduler.
 
 Server-side configuration (use Wrangler secrets or ignored local `.dev.vars`, never frontend variables):
 
@@ -199,19 +203,17 @@ Server-side configuration (use Wrangler secrets or ignored local `.dev.vars`, ne
 
 The sender account must have JMAP mail/submission access, a matching Identity, and a drafts mailbox. The adapter discovers the account and mailbox, validates that the API stays on the configured HTTPS origin, and submits plain-text templates. There is no delivery/bounce tracking yet. Automatic educational task events remain future work.
 
-API under `/api/notifications/email`: GET overview; POST schedule; PUT `/preferences` with `{enabled}`; POST `/test` with `{requestKey}`; DELETE `/:id`. Mutations retain same-origin and `X-Amautai-Request: 1` protections. Scheduling uses `{title,scheduledAt,requestKey}`.
+API under `/api/notifications/email`: GET overview; legacy POST schedule; PUT `/preferences` with `{enabled}`; DELETE `/:id`. Both channel `/test` endpoints return 410. Legacy scheduling endpoints remain for compatibility but have no public UI. Mutations retain same-origin and `X-Amautai-Request: 1` protections. Scheduling uses `{title,scheduledAt,requestKey}`.
 
-### VPS and sender-domain inspection — October 17, 2026
+### Historical VPS and sender-domain inspection — October 17, 2026
 
-Read-only inspection confirmed a healthy Stalwart container, public SMTP submission ports 465/587, and JMAP mail/submission discovery at `https://mail.urday.dev/jmap/session` (HTTP 200). Authentication and sending with a new account have not been tested. No mail accounts, server settings, or DNS records were changed in this work.
+An initial read-only inspection confirmed a healthy Stalwart container, public SMTP submission ports 465/587, and JMAP mail/submission discovery at `https://mail.urday.dev/jmap/session` (HTTP 200). At that point, a sender account and DNS records had not yet been configured. The later activation and delivery results are recorded below.
 
-`urday.dev` already uses `MX 10 mail.urday.dev`. At inspection, `amautai.urday.dev` had no explicit MX, TXT/SPF, or `_dmarc` TXT records. A parent DMARC reject policy exists. Creating the subdomain sender is feasible but still requires:
+`urday.dev` already used `MX 10 mail.urday.dev`. At inspection, `amautai.urday.dev` had no explicit MX, TXT/SPF, or `_dmarc` TXT records. The subsequent activation completed these steps:
 
-1. Add `amautai.urday.dev` as a mail domain in Stalwart and create the dedicated sender identity/account.
-2. Publish `MX 10 mail.urday.dev` at `amautai.urday.dev`; preserve the existing web routing records.
-3. Publish SPF authorizing the actual outbound route, and Stalwart-generated DKIM records for this subdomain. Do not invent selector/key values.
-4. Review the inherited DMARC policy and publish an explicit policy/reporting address if appropriate; verify alignment before activation.
-5. Configure backend secrets, then perform an authorized real send and inspect SPF/DKIM/DMARC headers in the recipient inbox.
+1. Added `amautai.urday.dev` as a Stalwart mail domain and created the dedicated sender account.
+2. Published `MX 10 mail.urday.dev`, SPF, Stalwart-generated DKIM, and an explicit DMARC policy for the subdomain.
+3. Configured backend secrets and verified real receipt and SPF/DKIM/DMARC alignment in Outlook.
 
 References: [Stalwart domains](https://stalw.art/docs/domains/), [JMAP mail and submission specification](https://www.rfc-editor.org/rfc/rfc8621.html).
 
@@ -235,7 +237,7 @@ The first production dispatch exposed the same Workers redirect-mode incompatibi
 
 WhatsApp sender pairing succeeded with the recognized Chrome identity. The authenticated gateway reports connected after a container restart, verifying persistent session recovery. Actual recipient delivery is verified separately from sender connectivity.
 
-Latest validation before GitHub backup: 60 backend tests, 3 frontend transport tests, 4 gateway tests and 9 architecture tests passed, along with lint, types and build. Both notification channels are deployed; WhatsApp sender connectivity survives a container restart. Recipient verification and delivery outcomes are recorded in PROJECT_STATUS.md.
+Earlier validation before GitHub backup: 60 backend tests, 3 frontend transport tests, 4 gateway tests and 9 architecture tests passed, along with lint, types and build. The current release gate and delivery evidence are recorded in [PROJECT_STATUS.md](PROJECT_STATUS.md).
 
 Initial validation before direct registration: a real verification message sent through the public application to a separate recipient received a WhatsApp delivery acknowledgment. Diego completed recipient verification in the public application. A subsequent test notification requested through that UI was dispatched by production cron and received a WhatsApp delivery acknowledgment.
 
@@ -246,3 +248,11 @@ Direct WhatsApp registration replaces the former recipient OTP flow at POST /api
 Notification-specific verification endpoints now return 410 and point to sign-in verification; no new notification OTP is generated. Email destinations and verification state come exclusively from the authenticated server identity. Opt-outs persist across requests and verified address changes; a changed address cancels queued messages to the old address. No marketing subscription or additional consent event is fabricated. Existing login/signup/OAuth verification flows are preserved.
 
 The direct-registration version was published as Worker 34ccf34a-4f96-44ba-9a6c-3685ebeaece2 after migration 0004 and the full gate (64 backend, 3 web, 4 gateway, 9 architecture tests; lint/types/build). Automated browser interaction saved the previously authorized recipient using country-code digits without a leading +, confirmed immediate activation with no OTP controls, and requested a test notification. The production gateway recorded delivered.
+
+### Automatic preferences and authentication mail
+
+Authentication mail is separate from activity preferences and opt-out: verification and password recovery remain required account workflows. With AUTH_EMAIL_MODE=custom, WorkOS creates and validates codes/reset tokens, while Amautai sends Spanish plain-text mail through the protected Stalwart sender. The adapter retrieves email_verification_id from password/signup/OAuth challenges; recovery uses the recipient and reset URL returned by WorkOS. Codes/tokens are never returned to the browser API or stored in the notification outbox. Recovery links must target the approved Amautai reset endpoint. Delivery failures return a service error; no silent provider fallback or uncertain replay occurs.
+
+Activation order: deploy the custom mail implementation and AUTH_EMAIL_MODE=custom, then disable only Email verification and Password reset in WorkOS Andes Staging → Emails → Configuration. Other environment emails remain unchanged. Local development must explicitly use AUTH_EMAIL_MODE=custom and protected EMAIL_* variables once WorkOS default delivery is disabled. Keep the WorkOS-issued verification and reset flows; changing the transport does not replace authentication.
+
+The custom-mail release was published as Worker b438d08f-2d46-4063-967c-d9f3608fc5bd with migration 0005 on October 17, 2026. WorkOS delivery for verification/reset is disabled in the isolated environment. A real public recovery request arrived in Outlook Inbox from the Amautai sender at 16:41:02 Lima. No password was changed. Verification challenge delivery is covered by automated password/signup/OAuth tests; a fresh real signup remains untested in this release.

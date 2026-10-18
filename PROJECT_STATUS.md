@@ -1,8 +1,10 @@
 # Amautai project status
 
-Current delivery: public notifications module and VPS Baileys gateway deployed. WhatsApp sender is linked and reconnects after restart. The coordinated email channel is active. Private GitHub backup target: https://github.com/diegourday/amautai. Latest full gate: 60 backend, 3 web, 4 gateway, 9 architecture tests; lint/types/build passed. Recipient verification and final delivery tests are recorded below.
+Current delivery: Worker b438d08f-2d46-4063-967c-d9f3608fc5bd with migration 0005, automatic notification preferences, and custom authentication email. The VPS Baileys sender is linked and reconnects after restart. Private GitHub repository: https://github.com/diegourday/amautai. Latest full gate: 72 backend, 3 web, 4 gateway, 10 architecture tests; lint/types/build passed. Learning-task and messaging event producers remain pending.
 
 Snapshot: 2026-10-17. Read this file when resuming; verify runtime and external state again.
+
+Current handoff: [Messaging architecture and integrations](docs/MESSAGING_HANDOFF.md). Sections below the latest release update preserve earlier checkpoints; their pending deployment, GitHub creation, recipient OTP, manual-send, and test-send statements describe historical states. A repeat WhatsApp test was read; an earlier notification email reached Outlook junk. The later authentication recovery email reached Inbox.
 
 ## Implemented
 
@@ -15,7 +17,7 @@ Snapshot: 2026-10-17. Read this file when resuming; verify runtime and external 
 - Static dependency gates reject forbidden layer imports, private feature imports, cycles, misplaced SQL and network calls. Root lint/build run the gate.
 - Project skills, architecture guide, stack checklist, preserved hackathon rubric and curriculum reference PDFs.
 
-## Latest verification
+## Earlier architecture verification
 
 - Full pnpm run check passed: 7 architecture tests, 41 backend tests, 3 frontend transport tests, lint, types and build. Worker build uses Wrangler dry-run.
 - Browser on localhost:5173: existing real WorkOS session resolved; created/read/edited/reloaded/deleted a temporary project; settings reported database available.
@@ -23,22 +25,22 @@ Snapshot: 2026-10-17. Read this file when resuming; verify runtime and external 
 - The temporary project was soft-deleted. Existing data/secrets were preserved.
 - Skills validated and git diff --check passed.
 
-## Local versus public
+## Earlier local versus public snapshot
 
 - Local URL: http://localhost:5173 (Vite), Worker backend on port 8787. Recheck amautai-dev.service and ports before starting another instance.
 - Public URL: https://amautai.urday.dev. Deployment predates the architecture migration; latest known deployed version: 7dc1712b-286e-48f6-8ddc-400f4b334933. Public state was not rechecked during this migration.
 - Local/public use the same isolated WorkOS Staging environment; local and remote D1 data are separate. Turistivo users were not deleted.
-- No deployment, commit or push was performed for the architecture migration. Changes remain local; no remote/upstream was configured at the last check. The owner declined GitHub publishing. Do not infer permission from rubric requirements.
+- At this earlier checkpoint, no deployment, commit or push had been performed for the architecture migration, and no remote/upstream was configured. Later sections record deployment and the private GitHub repository.
 - Secrets stay in ignored local configuration/server bindings; never include them in status notes or commits.
 
-## Next work
+## Earlier product roadmap
 
 1. Choose the first second-grade math demo topic, real teaching session and supported devices/connectivity with Diego and Erik.
 2. Implement student profiles and teacher/family roles with server-side authorization and tenant-scoped relationships.
 3. Build one complete learning-game slice: context/theme -> AI proposal -> validated configuration -> review/playtest -> playable Phaser template -> assignment/share and observable results.
 4. Add AI providers only when implementing that slice; provider choice/integration and generation failure handling remain pending.
 5. Verify pedagogy and language adaptations with teachers. A validated multilingual catalog and offline play remain future work.
-6. When requested, deploy the local architecture changes and verify public auth/CRUD. Back up to Git only with explicit authorization.
+6. Architecture deployment and public auth/CRUD verification were completed in later checkpoints below.
 
 ## Resume instructions
 
@@ -46,7 +48,7 @@ Read AGENTS.md, this file, README.md, docs/ARCHITECTURE.md, both .agents/skills/
 
 Run pnpm run check after relevant changes. Keep working locally unless deployment is explicitly requested. Update this file with actual outcomes and remaining work before the next handoff. Do not treat a passing static dependency checker as proof of authorization or product completeness.
 
-## Email channel — October 17, 2026
+## Earlier email preparation — October 17, 2026
 
 Prepared locally: independent email API, D1 migration 0003, verification/consent/preferences, scheduled/test messages, history/cancellation UI, and Stalwart JMAP adapter. No mail server or DNS writes and no real email sent. Configuration and sender-domain setup remain pending; see README. Public status must be verified separately after any coordinated deployment.
 
@@ -120,3 +122,19 @@ Automated interaction with the actual signed-in public UI saved the authorized r
 ### Email without duplicate verification publicly verified
 
 Published Worker 34ccf34a-4f96-44ba-9a6c-3685ebeaece2 recognizes the existing verified WorkOS session. The actual signed-in public UI shows email notifications active with no notification OTP or activation form. Clicking Enviar email de prueba queued one test; production accepted it on the first attempt (provider submission c). Connected Outlook confirms receipt from notificaciones@amautai.urday.dev at 16:16:19 Lima on October 17, 2026, with subject Mensaje de prueba de Amautai. A folder-scoped mailbox read confirms Outlook classified this test as junk; delivery is verified, inbox placement is not. No mailbox rule or safe-sender change was made.
+
+## Automatic notification preferences and own authentication sender — October 17, 2026
+
+At Diego's request, removed notification test-send buttons and manual reminder forms; both test APIs return 410. Added persistent per-type email/WhatsApp/both/none settings for task assignment, deadlines and new messages. Migration 0005 retires pending legacy manual sends and adds event metadata. Settings are scoped to the trusted tenant/user and cancellation/dispatch honor current type preferences.
+
+Diego explicitly chose to connect task/messaging event producers when those modules exist. The internal event entrypoint is prepared and covered with actual SQL/idempotency/dispatch tests; no live task or messaging automation is claimed.
+
+Custom authentication email uses Stalwart with the existing protected sender. WorkOS remains responsible for issuing and validating verification/reset credentials. The application retrieves verification details server-side for password/signup/OAuth challenges and sends recovery links only to the WorkOS-returned recipient. Publication and live recovery delivery verification follow the full gate.
+
+Published Worker b438d08f-2d46-4063-967c-d9f3608fc5bd after migration 0005 locally/remotely. Full gate passed: 72 backend, 10 architecture, 3 web transport and 4 gateway tests, lint/types/build. The real signed-in public UI exposed the three automatic settings with all four channel options and no test/manual forms; selecting both for deadlines persisted through a full reload. A later optional selector check was blocked by Edge because another extension UI was open.
+
+In the isolated WorkOS Andes Staging environment, disabled only WorkOS delivery for Email verification and Password reset after deploying custom delivery. Other email categories remain enabled. A request through the real public forgot-password page returned success; connected Outlook confirms Recupera tu contraseña de Amautai from notificaciones@amautai.urday.dev at 16:41:02 Lima, specifically in Inbox. No password was changed and reset credentials were not exposed. Custom verification for password/signup/OAuth is covered by automated challenge/continuation tests; a new real signup verification has not been exercised in this deployment.
+
+GitHub origin exists and its PRIVATE visibility/description were verified. Existing commits have no divergence from upstream, but this release and concurrent work remain uncommitted. Diego explicitly declined commit/push for this turn; do not treat deployment as a remote backup.
+
+After Diego dismissed the extension UI, the final public screen was visually verified. The temporary deadline selection was restored to the original email default; all three selectors show email. Screenshot: ignored .artifacts/automatic-notifications.png. No commit or push was performed.

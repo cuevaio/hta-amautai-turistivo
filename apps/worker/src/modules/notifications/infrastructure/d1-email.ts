@@ -26,10 +26,18 @@ export function d1Email(db: D1Database): EmailRepository {
           .all<EmailNotification>()
       ).results
     },
-    async syncAccount(a,email,now) {
+    async syncAccount(a, email, now) {
       await db.batch([
-        db.prepare("UPDATE email_notifications SET status='cancelled',body='' WHERE tenant_id=? AND user_id=? AND status IN ('pending','dispatching') AND (kind='verification' OR email<>?)").bind(a.tenantId,a.userId,email),
-        db.prepare("INSERT INTO email_contacts(tenant_id,user_id,email,enabled,verified_at,consent_at,requested_at) VALUES(?,?,?,1,?,0,0) ON CONFLICT(tenant_id,user_id) DO UPDATE SET email=excluded.email,verified_at=CASE WHEN email_contacts.email=excluded.email AND email_contacts.verified_at IS NOT NULL THEN email_contacts.verified_at ELSE excluded.verified_at END,enabled=CASE WHEN email_contacts.opted_out=1 THEN 0 ELSE 1 END,challenge_id=NULL,challenge_hash=NULL,challenge_expires=NULL").bind(a.tenantId,a.userId,email,now),
+        db
+          .prepare(
+            "UPDATE email_notifications SET status='cancelled',body='' WHERE tenant_id=? AND user_id=? AND status IN ('pending','dispatching') AND (kind='verification' OR email<>?)"
+          )
+          .bind(a.tenantId, a.userId, email),
+        db
+          .prepare(
+            "INSERT INTO email_contacts(tenant_id,user_id,email,enabled,verified_at,consent_at,requested_at) VALUES(?,?,?,1,?,0,0) ON CONFLICT(tenant_id,user_id) DO UPDATE SET email=excluded.email,verified_at=CASE WHEN email_contacts.email=excluded.email AND email_contacts.verified_at IS NOT NULL THEN email_contacts.verified_at ELSE excluded.verified_at END,enabled=CASE WHEN email_contacts.opted_out=1 THEN 0 ELSE 1 END,challenge_id=NULL,challenge_hash=NULL,challenge_expires=NULL"
+          )
+          .bind(a.tenantId, a.userId, email, now),
       ])
     },
     async preferences(a, email, enabled) {
@@ -38,7 +46,14 @@ export function d1Email(db: D1Database): EmailRepository {
           .prepare(
             "UPDATE email_contacts SET enabled=?,opted_out=? WHERE tenant_id=? AND user_id=? AND (?=0 OR (email=? AND verified_at IS NOT NULL))"
           )
-          .bind(enabled ? 1 : 0, enabled ? 0 : 1, a.tenantId, a.userId, enabled ? 1 : 0, email),
+          .bind(
+            enabled ? 1 : 0,
+            enabled ? 0 : 1,
+            a.tenantId,
+            a.userId,
+            enabled ? 1 : 0,
+            email
+          ),
         db
           .prepare(
             "UPDATE email_notifications SET status='cancelled',body='' WHERE tenant_id=? AND user_id=? AND status IN ('pending','dispatching') AND ?=0"
@@ -49,7 +64,7 @@ export function d1Email(db: D1Database): EmailRepository {
     async enqueue(n) {
       await db
         .prepare(
-          "INSERT OR IGNORE INTO email_notifications(id,tenant_id,user_id,email,kind,title,body,scheduled_at,expires_at,created_at,next_attempt,request_key) SELECT ?,?,?,?,?,?,?,?,?,?,?,? WHERE EXISTS(SELECT 1 FROM email_contacts WHERE tenant_id=? AND user_id=? AND email=? AND enabled=1 AND verified_at IS NOT NULL) AND (SELECT COUNT(*) FROM email_notifications WHERE tenant_id=? AND user_id=? AND kind!='verification' AND created_at>?)<20"
+          "INSERT OR IGNORE INTO email_notifications(id,tenant_id,user_id,email,kind,title,body,scheduled_at,expires_at,created_at,next_attempt,request_key,event_type) SELECT ?,?,?,?,?,?,?,?,?,?,?,?,? WHERE EXISTS(SELECT 1 FROM email_contacts WHERE tenant_id=? AND user_id=? AND email=? AND enabled=1 AND verified_at IS NOT NULL) AND (SELECT COUNT(*) FROM email_notifications WHERE tenant_id=? AND user_id=? AND kind!='verification' AND created_at>?)<20"
         )
         .bind(
           n.id,
@@ -64,6 +79,7 @@ export function d1Email(db: D1Database): EmailRepository {
           n.created_at,
           n.scheduled_at,
           n.request_key,
+          n.event_type || null,
           n.tenantId,
           n.userId,
           n.email,
@@ -136,7 +152,7 @@ export function d1Email(db: D1Database): EmailRepository {
         n.expires_at > now &&
         !!(await db
           .prepare(
-            "SELECT n.id FROM email_notifications n JOIN email_contacts c ON c.tenant_id=n.tenant_id AND c.user_id=n.user_id WHERE n.id=? AND n.tenant_id=? AND n.user_id=? AND n.status='dispatching' AND c.email=n.email AND n.kind!='verification' AND c.enabled=1 AND c.opted_out=0 AND c.verified_at IS NOT NULL"
+            "SELECT n.id FROM email_notifications n JOIN email_contacts c ON c.tenant_id=n.tenant_id AND c.user_id=n.user_id WHERE n.id=? AND n.tenant_id=? AND n.user_id=? AND n.status='dispatching' AND c.email=n.email AND n.kind!='verification' AND (n.event_type IS NULL OR COALESCE((SELECT p.channel FROM notification_preferences p WHERE p.tenant_id=n.tenant_id AND p.user_id=n.user_id AND p.event_type=n.event_type),'email') IN ('email','both')) AND c.enabled=1 AND c.opted_out=0 AND c.verified_at IS NOT NULL"
           )
           .bind(n.id, n.tenantId, n.userId)
           .first())

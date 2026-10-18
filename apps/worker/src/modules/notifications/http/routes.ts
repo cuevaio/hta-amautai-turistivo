@@ -71,18 +71,7 @@ export function registerNotificationRoutes(
     })
   )
   app.post("/api/notifications/test", (c) =>
-    action(c, async () => {
-      const data = z
-        .object({ requestKey: z.uuid() })
-        .strict()
-        .parse(await input(c))
-      const item = await service(c).schedule(
-        actor(c),
-        { title: "Mensaje de prueba", scheduledAt: Date.now(), ...data },
-        true
-      )
-      return { id: item.id, status: item.status }
-    })
+    c.json({ error: "notification_test_removed" }, 410)
   )
   app.delete("/api/notifications/:id", (c) =>
     action(c, async () => {

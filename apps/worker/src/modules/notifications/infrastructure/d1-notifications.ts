@@ -68,7 +68,7 @@ export function d1Notifications(db: D1Database): NotificationRepository {
     async enqueue(n) {
       await db
         .prepare(
-          "INSERT OR IGNORE INTO notifications(id,tenant_id,user_id,kind,phone,title,body,scheduled_at,expires_at,created_at,next_attempt,request_key) SELECT ?,?,?,?,?,?,?,?,?,?,?,? WHERE (SELECT COUNT(*) FROM notifications WHERE tenant_id=? AND user_id=? AND kind!='verification' AND created_at>?)<20 AND (SELECT COUNT(*) FROM notifications WHERE phone=? AND kind!='verification' AND created_at>?)<20 AND EXISTS(SELECT 1 FROM notification_contacts WHERE tenant_id=? AND user_id=? AND enabled=1 AND consent_at IS NOT NULL AND phone=?)"
+          "INSERT OR IGNORE INTO notifications(id,tenant_id,user_id,kind,phone,title,body,scheduled_at,expires_at,created_at,next_attempt,request_key,event_type) SELECT ?,?,?,?,?,?,?,?,?,?,?,?,? WHERE (SELECT COUNT(*) FROM notifications WHERE tenant_id=? AND user_id=? AND kind!='verification' AND created_at>?)<20 AND (SELECT COUNT(*) FROM notifications WHERE phone=? AND kind!='verification' AND created_at>?)<20 AND EXISTS(SELECT 1 FROM notification_contacts WHERE tenant_id=? AND user_id=? AND enabled=1 AND consent_at IS NOT NULL AND phone=?)"
         )
         .bind(
           n.id,
@@ -83,6 +83,7 @@ export function d1Notifications(db: D1Database): NotificationRepository {
           n.created_at,
           n.scheduled_at,
           n.request_key,
+          n.event_type || null,
           n.tenantId,
           n.userId,
           n.created_at - 86400000,
@@ -160,7 +161,7 @@ export function d1Notifications(db: D1Database): NotificationRepository {
       if (n.expires_at <= now) return false
       const row = await db
         .prepare(
-          "SELECT n.id FROM notifications n JOIN notification_contacts c ON c.tenant_id=n.tenant_id AND c.user_id=n.user_id WHERE n.id=? AND n.tenant_id=? AND n.user_id=? AND n.status='dispatching' AND c.phone=n.phone AND n.kind!='verification' AND c.enabled=1 AND c.consent_at IS NOT NULL"
+          "SELECT n.id FROM notifications n JOIN notification_contacts c ON c.tenant_id=n.tenant_id AND c.user_id=n.user_id WHERE n.id=? AND n.tenant_id=? AND n.user_id=? AND n.status='dispatching' AND c.phone=n.phone AND n.kind!='verification' AND (n.event_type IS NULL OR COALESCE((SELECT p.channel FROM notification_preferences p WHERE p.tenant_id=n.tenant_id AND p.user_id=n.user_id AND p.event_type=n.event_type),'email') IN ('whatsapp','both')) AND c.enabled=1 AND c.consent_at IS NOT NULL"
         )
         .bind(n.id, n.tenantId, n.userId)
         .first()

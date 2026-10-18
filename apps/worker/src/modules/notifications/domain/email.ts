@@ -15,6 +15,7 @@ export type EmailContact = {
   opted_out: number
 }
 export type EmailNotification = Actor & {
+  event_type?: string | null
   id: string
   email: string
   kind: "verification" | "test" | "reminder"
@@ -40,6 +41,8 @@ export function requireEmail(
   contact: EmailContact | null,
   email: string
 ): asserts contact is EmailContact {
-  if (!contact?.verified_at || contact.email !== email) throw new EmailError("email_verification_required")
-  if (!contact.enabled || contact.opted_out) throw new EmailError("email_disabled")
+  if (!contact?.verified_at || contact.email !== email)
+    throw new EmailError("email_verification_required")
+  if (!contact.enabled || contact.opted_out)
+    throw new EmailError("email_disabled")
 }

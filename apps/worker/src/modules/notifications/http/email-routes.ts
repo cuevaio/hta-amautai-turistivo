@@ -3,7 +3,6 @@ import { z } from "zod"
 import {
   notificationScheduleInput,
   emailPreferencesInput,
-  emailTestInput,
 } from "@amautai/contracts"
 import type { AppContext, AppEnv } from "../../../shared/http/context.ts"
 import type { emailService } from "../application/email-service.ts"
@@ -35,8 +34,8 @@ export function registerEmailRoutes(
               : e.code === "email_verification_required"
                 ? 403
                 : e.code === "email_request_conflict"
-                ? 409
-                : 400
+                  ? 409
+                  : 400
         )
       if (e instanceof z.ZodError)
         return c.json({ error: "invalid_email_input" }, 400)
@@ -48,8 +47,11 @@ export function registerEmailRoutes(
     action(c, () => service(c).overview(actor(c), account(c)))
   )
   // Old clients cannot start a second verification flow.
-  for (const path of ["/api/notifications/email/verify/request","/api/notifications/email/verify"]) {
-    app.post(path,c=>c.json({error:"email_verification_in_login"},410))
+  for (const path of [
+    "/api/notifications/email/verify/request",
+    "/api/notifications/email/verify",
+  ]) {
+    app.post(path, (c) => c.json({ error: "email_verification_in_login" }, 410))
   }
   app.put("/api/notifications/email/preferences", (c) =>
     action(c, async () => {
@@ -69,16 +71,7 @@ export function registerEmailRoutes(
     })
   )
   app.post("/api/notifications/email/test", (c) =>
-    action(c, async () => {
-      const data = emailTestInput.parse(await input(c))
-      const n = await service(c).schedule(
-        actor(c),
-        account(c),
-        { ...data, title: "Mensaje de prueba", scheduledAt: Date.now() },
-        true
-      )
-      return { id: n.id, status: n.status }
-    })
+    c.json({ error: "notification_test_removed" }, 410)
   )
   app.delete("/api/notifications/email/:id", (c) =>
     action(c, async () => {

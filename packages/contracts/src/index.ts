@@ -126,3 +126,6 @@ export type EmailNotificationOverview = {
     error: string | null
   }[]
 }
+
+export { activityPreferenceInput } from "./activity.ts"
+export type { ActivityPreference, ActivitySettings } from "./activity.ts"

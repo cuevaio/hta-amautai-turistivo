@@ -1,4 +1,7 @@
 import { authMailer } from "./modules/auth/infrastructure/auth-mailer.ts"
+import { activityPreferences } from "./modules/notifications/application/activity-service.ts"
+import { d1Activity } from "./modules/notifications/infrastructure/d1-activity.ts"
+import { registerActivityRoutes } from "./modules/notifications/http/activity-routes.ts"
 import { emailService } from "./modules/notifications/application/email-service.ts"
 import { d1Email } from "./modules/notifications/infrastructure/d1-email.ts"
 import { stalwartEmail } from "./modules/notifications/infrastructure/stalwart-email.ts"
@@ -92,6 +95,27 @@ export function createApp(
       verificationCrypto(c.env.WORKOS_COOKIE_PASSWORD)
     )
   )
+  registerActivityRoutes(app, {
+    service: (c) => activityPreferences(d1Activity(c.env.DB)),
+    channels: async (c) => {
+      const actor = {
+        tenantId: c.get("tenant").id,
+        userId: c.get("identity").user.id,
+      }
+      const [email, whatsapp] = await Promise.all([
+        d1Email(c.env.DB).contact(actor),
+        d1Notifications(c.env.DB).contact(actor),
+      ])
+      return {
+        email: {
+          configured: !!c.env.EMAIL_FROM,
+          verified: c.get("identity").user.emailVerified,
+          optedOut: !!email?.opted_out,
+        },
+        whatsapp: { registered: !!whatsapp?.phone && !!whatsapp.consent_at },
+      }
+    },
+  })
   app.onError(handleApiError)
   app.notFound((c) => c.json({ error: "not_found" }, 404))
   return app

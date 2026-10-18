@@ -66,7 +66,12 @@ export function notificationService(
     },
     async schedule(
       actor: Actor,
-      input: { title: string; scheduledAt: number; requestKey: string },
+      input: {
+        title: string
+        scheduledAt: number
+        requestKey: string
+        eventType?: string
+      },
       test = false
     ) {
       const contact = await repo.contact(actor)
@@ -80,10 +85,11 @@ export function notificationService(
         id: secure.id(),
         phone: contact.phone,
         kind: test ? "test" : "reminder",
+        event_type: input.eventType || null,
         title,
         body: test
           ? "Amautai: tus notificaciones por WhatsApp están activas."
-          : "Amautai · Recordatorio: " +
+          : (input.eventType ? "Amautai · " : "Amautai · Recordatorio: ") +
             title +
             String.fromCharCode(10) +
             "Revisa tus actividades en https://amautai.urday.dev/dashboard/notifications",

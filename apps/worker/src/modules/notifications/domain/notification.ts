@@ -19,6 +19,7 @@ export type Contact = {
   challenge_expires: number | null
 }
 export type Notification = Actor & {
+  event_type?: string | null
   id: string
   kind: "verification" | "reminder" | "test"
   phone: string

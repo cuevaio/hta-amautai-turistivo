@@ -14,7 +14,13 @@ import { verificationCrypto } from "../src/modules/notifications/infrastructure/
 import { createApp } from "../src/app.ts"
 function setup() {
   const db = new DatabaseSync(":memory:")
-  for (const name of ["0001_projects.sql", "0002_notifications.sql"])
+  for (const name of [
+    "0001_projects.sql",
+    "0002_notifications.sql",
+    "0003_email_notifications.sql",
+    "0004_email_account_preferences.sql",
+    "0005_activity_preferences.sql",
+  ])
     db.exec(
       readFileSync(new URL("../migrations/" + name, import.meta.url), "utf8")
     )
@@ -384,14 +390,12 @@ test("HTTP enforces authenticated ownership, browser origin and strict contracts
         requestKey: crypto.randomUUID(),
       })
     ).status,
-    200
+    410
   )
-  await dispatchNotifications(s.repo, s.gateway, Date.now() + 1000)
-  await dispatchNotifications(s.repo, s.gateway, Date.now() + 2000)
-  const delivered = await (await request("/api/notifications")).json()
-  assert.equal(delivered.notifications.length, 1)
-  assert.equal(delivered.notifications[0].kind, "test")
-  assert.equal(delivered.notifications[0].status, "delivered")
+  assert.equal(
+    (await (await request("/api/notifications")).json()).notifications.length,
+    0
+  )
   user = null
   assert.equal((await request("/api/notifications")).status, 401)
 })

@@ -148,7 +148,7 @@ The project folder, package names, app branding, authentication cookie names, re
 
 Hack the Andes remains the event name. The existing D1 database name is an infrastructure reference and remains unchanged to preserve data. Amautai uses its new domain and separate Worker; the old domain and Worker are retained. Worker secrets are configured separately.
 
-The owner later authorized a private GitHub backup at https://github.com/diegourday/amautai. The repository description and privacy were verified. Check Git status and upstream parity separately from deployment.
+The private repository now belongs to the Turistivo organization: https://github.com/turistivo/amautai. Organization members have read access by default; Diego and Erik are organization admins. Check Git status and upstream parity separately from deployment.
 
 ## Project architecture skills
 

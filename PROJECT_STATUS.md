@@ -1,8 +1,10 @@
 # Amautai project status
 
-Current delivery: Worker b438d08f-2d46-4063-967c-d9f3608fc5bd with migration 0005, automatic notification preferences, and custom authentication email. The VPS Baileys sender is linked and reconnects after restart. Private GitHub repository: https://github.com/diegourday/amautai. Latest full gate: 72 backend, 3 web, 4 gateway, 10 architecture tests; lint/types/build passed. Learning-task and messaging event producers remain pending.
+Current delivery: Worker b438d08f-2d46-4063-967c-d9f3608fc5bd with migration 0005, automatic notification preferences, and custom authentication email. The VPS Baileys sender is linked and reconnects after restart. Private GitHub repository: https://github.com/turistivo/amautai. Latest full gate: 72 backend, 3 web, 4 gateway, 10 architecture tests; lint/types/build passed. Learning-task and messaging event producers remain pending.
 
 Snapshot: 2026-10-17. Read this file when resuming; verify runtime and external state again.
+
+Repository transfer: Amautai moved from diegourday to the Turistivo organization and was set to private. Origin uses git@github.com:turistivo/amautai.git. ErikJhonatan has admin access through active organization membership; the earlier personal collaborator invitation was withdrawn. Historical notes below retain the original repository URL as a record of its creation.
 
 Current handoff: [Messaging architecture and integrations](docs/MESSAGING_HANDOFF.md). Sections below the latest release update preserve earlier checkpoints; their pending deployment, GitHub creation, recipient OTP, manual-send, and test-send statements describe historical states. A repeat WhatsApp test was read; an earlier notification email reached Outlook junk. The later authentication recovery email reached Inbox.
 

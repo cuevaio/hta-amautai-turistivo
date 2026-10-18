@@ -72,7 +72,7 @@ Actual public UI registered a phone without OTP and sent a real test. The repeat
 
 Email test received in Outlook at 16:16:19 Lima. Inspected production mail headers passed SPF, DKIM and DMARC. Latest test was classified as junk: receipt is confirmed; inbox placement needs attention.
 
-Private repository: https://github.com/diegourday/amautai. Check Git status and the upstream commit to determine what is backed up.
+Private repository: https://github.com/turistivo/amautai. Check Git status and the upstream commit to determine what is backed up.
 
 ## Continue
 

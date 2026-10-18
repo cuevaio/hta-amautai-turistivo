@@ -2,7 +2,7 @@
 
 <img src="apps/web/public/favicon.svg" alt="Amautai" width="48" />
 
-Amautai is a multilingual math-learning platform for primary-school teachers and families. The repository includes WorkOS authentication, teacher/parent onboarding, persisted second-grade Mathematics session drafts, three learning games, named game rooms, a tenant-scoped project workspace, and email/WhatsApp notification settings. The interface supports Spanish, Chanka Quechua, and Peruvian Aymara; linguistic review and measured learning outcomes remain pending.
+Amautai is a multilingual math-learning platform for primary-school teachers and families. The repository includes WorkOS authentication, teacher/parent onboarding, persisted second-grade Mathematics session drafts, five learning games, named game rooms, a tenant-scoped project workspace, and email/WhatsApp notification settings. The interface supports Spanish, Chanka Quechua, and Peruvian Aymara; linguistic review and measured learning outcomes remain pending.
 
 Mail transition (October 18, 2026): Stalwart domain `amautai.turistivo.com` and mailbox `notificaciones@amautai.turistivo.com` is created and authenticates Stalwart. The active sender is `amautai@turistivo.com`, an alias on the existing `turistivo.com` mail domain; `soporte@amautai.turistivo.com` and `postmaster@amautai.turistivo.com` remain aliases on the new domain. MX, SPF and DMARC for `turistivo.com` are published. The Worker uses the sender through four EMAIL_* secrets; a generic sender test and a real WorkOS password-reset email were delivered to the owner’s Outlook inbox from `amautai@turistivo.com`. The Worker JMAP secrets were corrected and the recovery flow now succeeds. The previous mailbox is retained. WorkOS Admin Portal invitations now use this address as their reply-to; Amautai verification/reset emails use it as the sender. WorkOS-hosted Magic Auth emails still use WorkOS delivery.
 
@@ -25,6 +25,17 @@ Teachers can now register a student's name with their **father, mother, or guard
 - Teacher rooms at `/panel/salas` support names, participant scores, deletion, and five games: food-group multiplication, [market addition/subtraction](docs/MARKET_GAME.md) with always-visible direction controls above the collect/deliver actions, [nursery units/tens](docs/NURSERY_GAME.md), [equality fair](docs/FAIR_GAME.md), and [builders geometry](docs/BUILDER_GAME.md).
 - Parents use `/panel` to manage multiple child aliases and create private practice sessions using the same five teacher games. Each child has an explicit regional context, saved scores and resumable sessions. See [family games](docs/FAMILY_GAMES.md).
 - Existing profile and game migration filenames are retained, including their shared numeric prefixes. Wrangler tracks full filenames; the standard migration command below applies only pending files.
+
+## Hack the Andes submission
+
+- [Live application](https://amautai.turistivo.com/)
+- [Presentation](https://docs.google.com/presentation/d/1TMAc5OI7j3k6nmsJtoPF6GwafxPQO7O2moXpUfIuFiM/edit?usp=sharing)
+- [Public GitHub repository](https://github.com/turistivo/amautai)
+- [Project description](HACKATHON_SUBMISSION.md): problem, audience, implementation, survey evidence, and current limitations, written in English.
+
+The [official submission guide](https://hacktheandes.com/guide) accepts the Markdown description through the Andes CLI's `--file` option, alongside the deployment, presentation, and GitHub URLs. Submit from WSL with `andes project submit` and those four inputs; inspect the saved submission with `andes project`.
+
+The latest documented public release supports teacher onboarding and Grade 2 session drafts. Integrated games, family practice, and student WhatsApp assignments have local implementation evidence; verify the deployed flows before claiming production availability. Survey responses document the problem, not product adoption or learning gains.
 
 ## Stack
 
@@ -173,7 +184,7 @@ The project folder, package names, app branding, authentication cookie names, re
 
 Hack the Andes remains the event name. The existing D1 database name is an infrastructure reference and remains unchanged to preserve data. Amautai uses its new domain and separate Worker; the old domain and Worker are retained. Worker secrets are configured separately.
 
-The private repository now belongs to the Turistivo organization: https://github.com/turistivo/amautai. Organization members have read access by default; Diego and Erik are organization admins. Check Git status and upstream parity separately from deployment.
+The public repository belongs to the Turistivo organization: https://github.com/turistivo/amautai. Anyone can read the source; Diego and Erik are organization admins. Check Git status and upstream parity separately from deployment.
 
 ## Project architecture skills
 

@@ -18,7 +18,7 @@ import {
 
 export function VerifyEmailForm() {
   const { m, errorMessage } = useMessages()
-  const { pending, error, submit } = useEmailVerification()
+  const { pending, accepted, error, submit } = useEmailVerification()
   const [code, setCode] = useState("")
   return (
     <form noValidate onSubmit={submit} className="flex flex-col gap-6">
@@ -31,33 +31,33 @@ export function VerifyEmailForm() {
             )}
           </p>
         </div>
-        <Field data-invalid={!!error}>
+        <Field data-invalid={!!error && !accepted}>
           <FieldLabel htmlFor="code">{m("Código de verificación")}</FieldLabel>
           <InputOTP
             id="code"
             name="code"
             maxLength={6}
-            pattern="[0-9]*"
+            pattern="^[0-9]*$"
             autoComplete="one-time-code"
             inputMode="numeric"
             required
-            disabled={pending}
+            disabled={pending || accepted}
             value={code}
             onChange={setCode}
             aria-label={m("Código de verificación")}
-            aria-invalid={!!error}
+            aria-invalid={!!error && !accepted}
             aria-describedby="code-help"
           >
             <InputOTPGroup>
-              <InputOTPSlot index={0} aria-invalid={!!error} />
-              <InputOTPSlot index={1} aria-invalid={!!error} />
-              <InputOTPSlot index={2} aria-invalid={!!error} />
+              <InputOTPSlot index={0} aria-invalid={!!error && !accepted} />
+              <InputOTPSlot index={1} aria-invalid={!!error && !accepted} />
+              <InputOTPSlot index={2} aria-invalid={!!error && !accepted} />
             </InputOTPGroup>
             <InputOTPSeparator />
             <InputOTPGroup>
-              <InputOTPSlot index={3} aria-invalid={!!error} />
-              <InputOTPSlot index={4} aria-invalid={!!error} />
-              <InputOTPSlot index={5} aria-invalid={!!error} />
+              <InputOTPSlot index={3} aria-invalid={!!error && !accepted} />
+              <InputOTPSlot index={4} aria-invalid={!!error && !accepted} />
+              <InputOTPSlot index={5} aria-invalid={!!error && !accepted} />
             </InputOTPGroup>
           </InputOTP>
           <FieldDescription id="code-help">
@@ -71,7 +71,11 @@ export function VerifyEmailForm() {
         )}
         <Field>
           <Button type="submit" disabled={pending}>
-            {pending ? m("Verificando…") : m("Verificar y continuar")}
+            {pending
+              ? m("Verificando…")
+              : accepted
+                ? m("Reintentar acceso")
+                : m("Verificar y continuar")}
           </Button>
           <FieldDescription>
             {m("Si no llega, revisa spam o")}{" "}

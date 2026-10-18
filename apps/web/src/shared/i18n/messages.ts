@@ -229,6 +229,12 @@ const rows: readonly (readonly [string, string, string])[] = [
     "¿Janit mantawimax utjkiti?",
   ],
   ["Inicia sesión", "Yaykuy", "Mantam"],
+  ["Reintentar acceso", "Yapamanta yaykuy", "Wasitata mantaña"],
+  [
+    "Tu correo está verificado. Reintenta el acceso para abrir tu sesión.",
+    "Llikapi chaski qillqaykiqa chiqaqchasqañam. Yapamanta yaykuy.",
+    "Llikana qillqamax chiqanchataxiwa. Wasitata mantam.",
+  ],
   ["Reintentar cierre", "Yapamanta lluqsiy", "Wasitata mistuña"],
   ["Cerrando sesión…", "Lluqsichkan…", "Mistuskiwa…"],
   ["Cerrar sesión", "Lluqsiy", "Mistuña"],

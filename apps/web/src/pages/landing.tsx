@@ -45,7 +45,7 @@ export function LandingPage() {
           <ThemeToggle />
         </div>
         <div className="col-start-1 row-start-2">
-          <LanguageSelector compact touchTarget />
+          <LanguageSelector compact />
         </div>
         <Button
           nativeButton={false}

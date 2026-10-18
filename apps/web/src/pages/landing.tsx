@@ -4,11 +4,13 @@ import { BrandLogo } from "@/shared/ui/brand-logo"
 import { LanguageSelector } from "@/shared/ui/language-selector"
 import { ThemeToggle } from "@/shared/ui/theme-toggle"
 import { useMessages } from "@/shared/i18n/use-messages"
+import { LandingMetadata } from "@/shared/ui/landing-metadata"
 
 export function LandingPage() {
   const { m } = useMessages()
   return (
     <div className="min-h-svh bg-background text-foreground">
+      <LandingMetadata />
       <a
         href="#contenido"
         className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:rounded-lg focus:bg-background focus:p-3 focus:ring-2 focus:ring-ring"

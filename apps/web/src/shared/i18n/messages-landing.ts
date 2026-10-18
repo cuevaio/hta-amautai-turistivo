@@ -1,6 +1,11 @@
 // Initial interface translations; original curriculum and user content remain unchanged.
 export const landingRows: readonly (readonly [string, string, string])[] = [
   [
+    "Amautai: una docente y dos niños con una tableta en un paisaje andino.",
+    "Amautai: huk yachachiq iskay warmakunawan tabletata llamk'achichkanku, urqukunapa kawsayninpi.",
+    "Amautai: mä yatichiri ukhamaraki pä wawanaka mä tabletampi qullunakana.",
+  ],
+  [
     "Matemáticas · Primaria · Perú",
     "Yupay yachay · Qallariy yachay · Piruw",
     "Jakhu yatiqawi · Qallta yatiqawi · Perú",

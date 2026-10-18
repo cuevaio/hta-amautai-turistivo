@@ -1,19 +1,18 @@
 import type { Hono } from "hono"
 import {
-  nurseryAnswerInput,
-  marketAnswerInput,
-  marketVersionInput,
   roomInput,
   participantInput,
-  cargoCollectInput,
-  cargoPauseInput,
+  studentAssignmentInput,
 } from "@amautai/contracts"
 import type { AppContext, AppEnv } from "../../../shared/http/context.ts"
 import type { RoomService } from "../application/service.ts"
+import { registerRoomPlayRoutes } from "./play-routes.ts"
+import type { AssignmentService } from "../application/assignment-service.ts"
 import { RoomError } from "../domain/cargo.ts"
 export function registerRoomRoutes(
   app: Hono<AppEnv>,
   deps: {
+    assignments: (c: AppContext) => AssignmentService
     service: (c: AppContext) => RoomService
     ensure: (c: AppContext) => Promise<unknown>
   }
@@ -40,7 +39,7 @@ export function registerRoomRoutes(
           { error: e.code },
           e.code.endsWith("not_found")
             ? 404
-            : e.code === "invalid_room_input"
+            : e.code.startsWith("invalid_")
               ? 400
               : 409
         )
@@ -90,135 +89,43 @@ export function registerRoomRoutes(
       return { ok: true }
     })
   )
-  app.post("/api/game-rooms/:room/participants/:id/start", (c) =>
-    action(c, () =>
-      deps.service(c).start(actor(c), c.req.param("room"), c.req.param("id"))
-    )
-  )
-  app.post("/api/game-rooms/:room/participants/:id/collect", async (c) => {
-    const input = cargoCollectInput.safeParse(await body(c))
-    if (!input.success) return c.json({ error: "invalid_room_input" }, 400)
-    return action(c, () =>
-      deps
-        .service(c)
-        .collect(actor(c), c.req.param("room"), c.req.param("id"), input.data)
-    )
-  })
-  app.post("/api/game-rooms/:room/participants/:id/pause", async (c) => {
-    const input = cargoPauseInput.safeParse(await body(c))
-    if (!input.success) return c.json({ error: "invalid_room_input" }, 400)
-    return action(c, () =>
-      deps
-        .service(c)
-        .pause(actor(c), c.req.param("room"), c.req.param("id"), input.data)
-    )
-  })
-  app.post("/api/game-rooms/:room/participants/:id/retry", (c) =>
-    action(c, () =>
-      deps.service(c).retry(actor(c), c.req.param("room"), c.req.param("id"))
-    )
-  )
-  app.post("/api/game-rooms/:room/participants/:id/market/start", (c) =>
-    action(c, () =>
-      deps
-        .service(c)
-        .marketStart(actor(c), c.req.param("room"), c.req.param("id"))
-    )
-  )
-  app.post(
-    "/api/game-rooms/:room/participants/:id/market/answer",
-    async (c) => {
-      const input = marketAnswerInput.safeParse(await body(c))
-      if (!input.success) return c.json({ error: "invalid_room_input" }, 400)
-      return action(c, () =>
-        deps
-          .service(c)
-          .marketAction(
-            actor(c),
-            c.req.param("room"),
-            c.req.param("id"),
-            input.data
-          )
-      )
-    }
-  )
-  app.post("/api/game-rooms/:room/participants/:id/market/help", async (c) => {
-    const input = marketVersionInput.safeParse(await body(c))
-    if (!input.success) return c.json({ error: "invalid_room_input" }, 400)
-    return action(c, () =>
-      deps
-        .service(c)
-        .marketAction(actor(c), c.req.param("room"), c.req.param("id"), {
-          ...input.data,
-          help: true,
-        })
-    )
-  })
-  app.post("/api/game-rooms/:room/participants/:id/market/retry", async (c) => {
-    const input = marketVersionInput.safeParse(await body(c))
-    if (!input.success) return c.json({ error: "invalid_room_input" }, 400)
-    return action(c, () =>
-      deps
-        .service(c)
-        .marketRetry(
+  app.post("/api/game-rooms/:room/assignments", async (c) => {
+    const input = studentAssignmentInput.safeParse(await body(c))
+    if (!input.success)
+      return c.json({ error: "invalid_assignment_input" }, 400)
+    return action(c, async () => ({
+      assignment: await deps
+        .assignments(c)
+        .register(
           actor(c),
           c.req.param("room"),
-          c.req.param("id"),
-          input.data.version
-        )
-    )
+          input.data,
+          c.req.header("Origin") ?? new URL(c.req.url).origin
+        ),
+    }))
   })
-  app.post("/api/game-rooms/:room/participants/:id/nursery/start", (c) =>
-    action(c, () =>
-      deps
-        .service(c)
-        .nurseryStart(actor(c), c.req.param("room"), c.req.param("id"))
-    )
-  )
-  app.post(
-    "/api/game-rooms/:room/participants/:id/nursery/answer",
-    async (c) => {
-      const input = nurseryAnswerInput.safeParse(await body(c))
-      if (!input.success) return c.json({ error: "invalid_room_input" }, 400)
-      return action(c, () =>
-        deps
-          .service(c)
-          .nurseryAction(
-            actor(c),
-            c.req.param("room"),
-            c.req.param("id"),
-            input.data
-          )
-      )
-    }
-  )
-  app.post("/api/game-rooms/:room/participants/:id/nursery/help", async (c) => {
-    const input = marketVersionInput.safeParse(await body(c))
-    if (!input.success) return c.json({ error: "invalid_room_input" }, 400)
-    return action(c, () =>
-      deps
-        .service(c)
-        .nurseryAction(actor(c), c.req.param("room"), c.req.param("id"), {
-          ...input.data,
-          help: true,
-        })
-    )
+  app.post("/api/game-rooms/:room/participants/:id/assignment", async (c) => {
+    const input = studentAssignmentInput.safeParse(await body(c))
+    if (!input.success)
+      return c.json({ error: "invalid_assignment_input" }, 400)
+    return action(c, async () => ({
+      assignment: await deps
+        .assignments(c)
+        .register(
+          actor(c),
+          c.req.param("room"),
+          { ...input.data, participantId: c.req.param("id") },
+          c.req.header("Origin") ?? new URL(c.req.url).origin
+        ),
+    }))
   })
-  app.post(
-    "/api/game-rooms/:room/participants/:id/nursery/retry",
-    async (c) => {
-      const input = marketVersionInput.safeParse(await body(c))
-      if (!input.success) return c.json({ error: "invalid_room_input" }, 400)
-      return action(c, () =>
-        deps
-          .service(c)
-          .nurseryRetry(
-            actor(c),
-            c.req.param("room"),
-            c.req.param("id"),
-            input.data.version
-          )
-      )
-    }
+  app.post("/api/game-rooms/:room/participants/:id/assignment/retry", (c) =>
+    action(c, async () => {
+      await deps
+        .assignments(c)
+        .retry(actor(c), c.req.param("room"), c.req.param("id"))
+      return { ok: true }
+    })
   )
+  registerRoomPlayRoutes(app, { service: deps.service, actor })
 }

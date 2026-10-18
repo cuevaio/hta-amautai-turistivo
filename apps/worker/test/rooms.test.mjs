@@ -565,3 +565,247 @@ test("room deletion enforces owner, tenant, authentication and CSRF and cascades
   )
   assert.equal(db.prepare("PRAGMA foreign_key_check").all().length, 0)
 })
+
+test("fair rooms persist equal orders, deduplicate scoring, isolate games, and retain loss until retry", async () => {
+  const { service, actor, request, db } = setup()
+  const room = await service.create(actor, "jungle", "fair", "challenge")
+  await service.add(actor, room.id, "Prueba vivero")
+  const p = (await service.detail(actor, room.id)).participants[0]
+  let run = await service.fairStart(actor, room.id, p.id)
+  const prefix = `/${room.id}/participants/${p.id}/fair`
+  const input = {
+    version: run.participant.version,
+    answer: run.task.target - run.task.base,
+  }
+  const answer = await request(prefix + "/answer", {
+    method: "POST",
+    data: input,
+  })
+  assert.equal(answer.status, 200)
+  run = await answer.json()
+  assert.equal(run.participant.score, 100)
+  const duplicate = await request(prefix + "/answer", {
+    method: "POST",
+    data: input,
+  })
+  assert.equal((await duplicate.json()).participant.score, 100)
+  assert.equal(
+    (
+      await request(prefix + "/answer", {
+        method: "POST",
+        data: { ...input, score: 999 },
+      })
+    ).status,
+    400
+  )
+  assert.equal(
+    (await request(prefix + "/start", { method: "POST", user: "bob" })).status,
+    404
+  )
+  await assert.rejects(() => service.marketStart(actor, room.id, p.id), {
+    code: "room_conflict",
+  })
+  await assert.rejects(() => service.start(actor, room.id, p.id), {
+    code: "room_conflict",
+  })
+  for (let i = 0; i < 3; i++)
+    run = await service.fairAction(actor, room.id, p.id, {
+      version: run.participant.version,
+      answer: run.task.choices.find(
+        (n) => n !== run.task.target - run.task.base
+      ),
+    })
+  const saved = await service.fairStart(actor, room.id, p.id)
+  assert.equal(saved.participant.score, 40)
+  assert.equal(saved.participant.mistakes, 3)
+  await assert.rejects(
+    () =>
+      service.fairAction(actor, room.id, p.id, {
+        version: saved.participant.version,
+        answer: saved.task.choices[0],
+      }),
+    { code: "room_conflict" }
+  )
+  run = await service.fairRetry(actor, room.id, p.id, saved.participant.version)
+  assert.equal(run.participant.score, 0)
+  assert.equal(run.task.id, 0)
+  assert.equal((await service.detail(actor, room.id)).room.kind, "fair")
+  assert.equal(db.prepare("PRAGMA foreign_key_check").all().length, 0)
+})
+
+test("data rooms persist individual votes, idempotent progress, ownership and final scores", async () => {
+  const { service, actor, request, db } = setup()
+  const room = await service.create(actor, "highlands", "data", "challenge")
+  await service.add(actor, room.id, "Prueba Datos Uno")
+  const p = (await service.detail(actor, room.id)).participants[0]
+  let run = await service.dataStart(actor, room.id, p.id)
+  const prefix = `/${room.id}/participants/${p.id}/data`
+  let input = { version: run.participant.version, answer: run.task.votes[0] }
+  const first = await request(prefix + "/answer", {
+    method: "POST",
+    data: input,
+  })
+  assert.equal(first.status, 200)
+  run = await first.json()
+  assert.equal(run.task.cursor, 1)
+  assert.equal(run.participant.score, 0)
+  const duplicate = await request(prefix + "/answer", {
+    method: "POST",
+    data: input,
+  })
+  assert.equal((await duplicate.json()).task.cursor, 1)
+  const saved = await service.dataStart(actor, room.id, p.id)
+  assert.equal(saved.task.cursor, 1)
+  while (run.task.skill === 0) {
+    run = await service.dataAction(actor, room.id, p.id, {
+      version: run.participant.version,
+      answer: run.task.votes[run.task.cursor],
+    })
+  }
+  assert.equal(run.participant.score, 100)
+  assert.equal(run.task.skill, 1)
+  assert.deepEqual(run.task.registered, run.task.counts)
+  assert.equal(
+    (
+      await request(prefix + "/answer", {
+        method: "POST",
+        data: {
+          version: run.participant.version,
+          answer: run.task.counts[run.task.category],
+          score: 900,
+        },
+      })
+    ).status,
+    400
+  )
+  assert.equal(
+    (await request(prefix + "/start", { method: "POST", user: "bob" })).status,
+    404
+  )
+  await assert.rejects(() => service.fairStart(actor, room.id, p.id), {
+    code: "room_conflict",
+  })
+  await assert.rejects(() => service.start(actor, room.id, p.id), {
+    code: "room_conflict",
+  })
+  for (let i = 0; i < 3; i++)
+    run = await service.dataAction(actor, room.id, p.id, {
+      version: run.participant.version,
+      answer: run.task.choices.find(
+        (n) => n !== run.task.counts[run.task.category]
+      ),
+    })
+  assert.equal(run.participant.mistakes, 3)
+  assert.equal(run.participant.score, 40)
+  assert.equal(
+    (await service.dataStart(actor, room.id, p.id)).participant.mistakes,
+    3
+  )
+  await assert.rejects(
+    () =>
+      service.dataAction(actor, room.id, p.id, {
+        version: run.participant.version,
+        help: true,
+      }),
+    { code: "room_conflict" }
+  )
+  run = await service.dataRetry(actor, room.id, p.id, run.participant.version)
+  assert.equal(run.task.cursor, 0)
+  assert.equal(run.participant.score, 0)
+  assert.equal(db.prepare("PRAGMA foreign_key_check").all().length, 0)
+})
+
+test("builder room saves pieces once, isolates legacy scores and persists loss/retry", async () => {
+  const { service, actor, request, db } = setup()
+  const room = await service.create(actor, "coast", "builder", "challenge")
+  await service.add(actor, room.id, "Prueba Constructores")
+  const p = (await service.detail(actor, room.id)).participants[0]
+  let run = await service.builderStart(actor, room.id, p.id)
+  const prefix = `/${room.id}/participants/${p.id}/builder`
+  const input = {
+    version: run.participant.version,
+    shape: run.task.targets[0],
+    rotation: 0,
+  }
+  const first = await request(prefix + "/answer", {
+    method: "POST",
+    data: input,
+  })
+  assert.equal(first.status, 200)
+  run = await first.json()
+  assert.equal(run.task.cursor, 1)
+  assert.equal(run.participant.score, 0)
+  const repeated = await request(prefix + "/answer", {
+    method: "POST",
+    data: input,
+  })
+  assert.equal((await repeated.json()).task.cursor, 1)
+  assert.equal(
+    (await service.builderStart(actor, room.id, p.id)).task.cursor,
+    1
+  )
+  for (let i = 0; i < 2; i++)
+    run = await service.builderAction(actor, room.id, p.id, {
+      version: run.participant.version,
+      shape: run.task.targets[run.task.cursor],
+      rotation: 0,
+    })
+  assert.equal(run.participant.score, 100)
+  assert.equal(run.task.id, 1)
+  assert.equal(
+    (
+      await request(prefix + "/answer", {
+        method: "POST",
+        data: {
+          version: run.participant.version,
+          shape: "rectangle",
+          rotation: 0,
+          score: 999,
+        },
+      })
+    ).status,
+    400
+  )
+  assert.equal(
+    (await request(prefix + "/start", { method: "POST", user: "bob" })).status,
+    404
+  )
+  await assert.rejects(() => service.dataStart(actor, room.id, p.id), {
+    code: "room_conflict",
+  })
+  for (let i = 0; i < 3; i++)
+    run = await service.builderAction(actor, room.id, p.id, {
+      version: run.participant.version,
+      shape: "triangle",
+      rotation: 0,
+    })
+  assert.equal(run.participant.score, 40)
+  assert.equal(run.participant.mistakes, 3)
+  assert.equal(
+    (await service.builderStart(actor, room.id, p.id)).participant.mistakes,
+    3
+  )
+  await assert.rejects(
+    () =>
+      service.builderAction(actor, room.id, p.id, {
+        version: run.participant.version,
+        shape: "rectangle",
+        rotation: 0,
+      }),
+    { code: "room_conflict" }
+  )
+  run = await service.builderRetry(
+    actor,
+    room.id,
+    p.id,
+    run.participant.version
+  )
+  assert.equal(run.participant.score, 0)
+  assert.equal(run.task.cursor, 0)
+  assert.equal(db.prepare("PRAGMA foreign_key_check").all().length, 0)
+  const retired = await request("", {
+    method: "POST",
+    data: { region: "coast", kind: "data", mode: "practice", name: "Retired" },
+  })
+  assert.equal(retired.status, 400)
+})

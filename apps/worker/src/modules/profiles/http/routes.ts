@@ -25,6 +25,6 @@ export function registerProfileRoutes(
     const body = await c.req.json().catch(() => null)
     const input = accountProfileInput.safeParse(body)
     if (!input.success) return c.json({ error: "invalid_profile_input" }, 400)
-    return c.json({ profile: await deps.service(c).save(actor(c), input.data.role) })
+    return c.json({ profile: await deps.service(c).save(actor(c), input.data) })
   })
 }

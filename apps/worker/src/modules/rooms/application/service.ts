@@ -1,3 +1,9 @@
+import { initialBuilder, builderTask, builderStep } from "../domain/builder.ts"
+import type { BuilderState, Shape } from "../domain/builder.ts"
+import { initialData, dataTask, dataStep } from "../domain/data.ts"
+import type { DataState } from "../domain/data.ts"
+import { initialFair, fairTask, fairStep } from "../domain/fair.ts"
+import type { FairState } from "../domain/fair.ts"
 import { initialNursery, nurseryTask, nurseryStep } from "../domain/nursery.ts"
 import type { NurseryState } from "../domain/nursery.ts"
 import { initialMarket, marketTask, marketStep } from "../domain/market.ts"
@@ -34,6 +40,30 @@ export interface RoomRepository {
     room: string,
     p: Participant,
     state: NurseryState,
+    version: number
+  ): Promise<boolean>
+  fair(actor: Actor, room: string, id: string): Promise<FairState | null>
+  saveFair(
+    actor: Actor,
+    room: string,
+    p: Participant,
+    state: FairState,
+    version: number
+  ): Promise<boolean>
+  data(actor: Actor, room: string, id: string): Promise<DataState | null>
+  saveData(
+    actor: Actor,
+    room: string,
+    p: Participant,
+    state: DataState,
+    version: number
+  ): Promise<boolean>
+  builder(actor: Actor, room: string, id: string): Promise<BuilderState | null>
+  saveBuilder(
+    actor: Actor,
+    room: string,
+    p: Participant,
+    state: BuilderState,
     version: number
   ): Promise<boolean>
   deleteRoom(actor: Actor, id: string): Promise<boolean>
@@ -140,6 +170,101 @@ export function roomService(
       room: r,
       participant: p,
       task: nurseryTask(state),
+      helped: state.helped,
+      attempts: state.attempts,
+      streak: state.streak,
+      bands: state.bands,
+      evidence: state.evidence,
+      feedback,
+      delta,
+    }
+  }
+  async function fairRun(actor: Actor, roomId: string, participantId: string) {
+    const r = await room(actor, roomId)
+    if (r.kind !== "fair") throw new RoomError("room_conflict")
+    const p = await participant(actor, roomId, participantId)
+    return {
+      r,
+      p,
+      state: (await repo.fair(actor, roomId, participantId)) ?? initialFair(),
+    }
+  }
+  function fairDto(
+    r: Room,
+    p: Participant,
+    state: FairState,
+    feedback: "" | "correct" | "wrong" | "help" = "",
+    delta = 0
+  ) {
+    return {
+      room: r,
+      participant: p,
+      task: fairTask(state),
+      helped: state.helped,
+      attempts: state.attempts,
+      streak: state.streak,
+      bands: state.bands,
+      evidence: state.evidence,
+      feedback,
+      delta,
+    }
+  }
+  async function dataRun(actor: Actor, roomId: string, participantId: string) {
+    const r = await room(actor, roomId)
+    if (r.kind !== "data") throw new RoomError("room_conflict")
+    const p = await participant(actor, roomId, participantId)
+    return {
+      r,
+      p,
+      state: (await repo.data(actor, roomId, participantId)) ?? initialData(),
+    }
+  }
+  function dataDto(
+    r: Room,
+    p: Participant,
+    state: DataState,
+    feedback: "" | "correct" | "wrong" | "help" = "",
+    delta = 0
+  ) {
+    return {
+      room: r,
+      participant: p,
+      task: dataTask(state),
+      helped: state.helped,
+      attempts: state.attempts,
+      streak: state.streak,
+      bands: state.bands,
+      evidence: state.evidence,
+      feedback,
+      delta,
+    }
+  }
+  async function builderRun(
+    actor: Actor,
+    roomId: string,
+    participantId: string
+  ) {
+    const r = await room(actor, roomId)
+    if (r.kind !== "builder") throw new RoomError("room_conflict")
+    const p = await participant(actor, roomId, participantId)
+    return {
+      r,
+      p,
+      state:
+        (await repo.builder(actor, roomId, participantId)) ?? initialBuilder(),
+    }
+  }
+  function builderDto(
+    r: Room,
+    p: Participant,
+    state: BuilderState,
+    feedback: "" | "correct" | "wrong" | "help" = "",
+    delta = 0
+  ) {
+    return {
+      room: r,
+      participant: p,
+      task: builderTask(state),
       helped: state.helped,
       attempts: state.attempts,
       streak: state.streak,
@@ -264,6 +389,182 @@ export function roomService(
         throw new RoomError("room_conflict")
       return nurseryDto(r, next, state)
     },
+    async fairStart(actor: Actor, roomId: string, participantId: string) {
+      await fairRun(actor, roomId, participantId)
+      await repo.start(actor, roomId, participantId)
+      const { r, p, state } = await fairRun(actor, roomId, participantId)
+      return fairDto(r, p, state)
+    },
+    async fairAction(
+      actor: Actor,
+      roomId: string,
+      participantId: string,
+      input: { version: number; answer?: number; help?: boolean }
+    ) {
+      const { r, p, state } = await fairRun(actor, roomId, participantId)
+      if (input.version < p.version) return fairDto(r, p, state)
+      if (input.version !== p.version) throw new RoomError("room_conflict")
+      const result = fairStep(p, state, r, input)
+      if (
+        !(await repo.saveFair(
+          actor,
+          roomId,
+          result.participant,
+          result.state,
+          p.version
+        ))
+      )
+        throw new RoomError("room_conflict")
+      return fairDto(
+        r,
+        result.participant,
+        result.state,
+        result.feedback,
+        result.delta
+      )
+    },
+    async fairRetry(
+      actor: Actor,
+      roomId: string,
+      participantId: string,
+      version: number
+    ) {
+      const { r, p } = await fairRun(actor, roomId, participantId)
+      if (p.mistakes < 3 || p.version !== version)
+        throw new RoomError("room_conflict")
+      const next = {
+        ...p,
+        score: 0,
+        solved: 0,
+        mistakes: 0,
+        caught: 0,
+        paused: false,
+        version: p.version + 1,
+      }
+      const state = initialFair()
+      if (!(await repo.saveFair(actor, roomId, next, state, p.version)))
+        throw new RoomError("room_conflict")
+      return fairDto(r, next, state)
+    },
+    async dataStart(actor: Actor, roomId: string, participantId: string) {
+      await dataRun(actor, roomId, participantId)
+      await repo.start(actor, roomId, participantId)
+      const { r, p, state } = await dataRun(actor, roomId, participantId)
+      return dataDto(r, p, state)
+    },
+    async dataAction(
+      actor: Actor,
+      roomId: string,
+      participantId: string,
+      input: { version: number; answer?: number; help?: boolean }
+    ) {
+      const { r, p, state } = await dataRun(actor, roomId, participantId)
+      if (input.version < p.version) return dataDto(r, p, state)
+      if (input.version !== p.version) throw new RoomError("room_conflict")
+      const result = dataStep(p, state, r, input)
+      if (
+        !(await repo.saveData(
+          actor,
+          roomId,
+          result.participant,
+          result.state,
+          p.version
+        ))
+      )
+        throw new RoomError("room_conflict")
+      return dataDto(
+        r,
+        result.participant,
+        result.state,
+        result.feedback,
+        result.delta
+      )
+    },
+    async dataRetry(
+      actor: Actor,
+      roomId: string,
+      participantId: string,
+      version: number
+    ) {
+      const { r, p } = await dataRun(actor, roomId, participantId)
+      if (p.mistakes < 3 || p.version !== version)
+        throw new RoomError("room_conflict")
+      const next = {
+        ...p,
+        score: 0,
+        solved: 0,
+        mistakes: 0,
+        caught: 0,
+        paused: false,
+        version: p.version + 1,
+      }
+      const state = initialData()
+      if (!(await repo.saveData(actor, roomId, next, state, p.version)))
+        throw new RoomError("room_conflict")
+      return dataDto(r, next, state)
+    },
+    async builderStart(actor: Actor, roomId: string, participantId: string) {
+      await builderRun(actor, roomId, participantId)
+      await repo.start(actor, roomId, participantId)
+      const { r, p, state } = await builderRun(actor, roomId, participantId)
+      return builderDto(r, p, state)
+    },
+    async builderAction(
+      actor: Actor,
+      roomId: string,
+      participantId: string,
+      input: {
+        version: number
+        shape?: Shape
+        rotation?: number
+        help?: boolean
+      }
+    ) {
+      const { r, p, state } = await builderRun(actor, roomId, participantId)
+      if (input.version < p.version) return builderDto(r, p, state)
+      if (input.version !== p.version) throw new RoomError("room_conflict")
+      const result = builderStep(p, state, r, input)
+      if (
+        !(await repo.saveBuilder(
+          actor,
+          roomId,
+          result.participant,
+          result.state,
+          p.version
+        ))
+      )
+        throw new RoomError("room_conflict")
+      return builderDto(
+        r,
+        result.participant,
+        result.state,
+        result.feedback,
+        result.delta
+      )
+    },
+    async builderRetry(
+      actor: Actor,
+      roomId: string,
+      participantId: string,
+      version: number
+    ) {
+      const { r, p } = await builderRun(actor, roomId, participantId)
+      if (p.mistakes < 3 || p.version !== version)
+        throw new RoomError("room_conflict")
+      const next = {
+        ...p,
+        score: 0,
+        solved: 0,
+        mistakes: 0,
+        caught: 0,
+        paused: false,
+        version: p.version + 1,
+      }
+      const state = initialBuilder()
+      if (!(await repo.saveBuilder(actor, roomId, next, state, p.version)))
+        throw new RoomError("room_conflict")
+      return builderDto(r, next, state)
+    },
     list: (actor: Actor) => repo.list(actor),
     async create(
       actor: Actor,
@@ -289,12 +590,12 @@ export function roomService(
       }
     },
     async add(actor: Actor, roomId: string, raw: string) {
-      await room(actor, roomId)
+      if ((await room(actor, roomId)).familyChildId) throw new RoomError("room_conflict")
       const name = participantName(raw)
       await repo.add(actor, roomId, id(), name.name, name.key)
     },
     async remove(actor: Actor, roomId: string, participantId: string) {
-      await room(actor, roomId)
+      if ((await room(actor, roomId)).familyChildId) throw new RoomError("room_conflict")
       await participant(actor, roomId, participantId)
       await repo.remove(actor, roomId, participantId)
     },

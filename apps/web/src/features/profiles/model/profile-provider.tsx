@@ -7,7 +7,7 @@ import {
 } from "react"
 import type {
   AccountProfile,
-  AccountProfileRole,
+  AccountProfileInput,
   FamilyProfile,
   FamilyProfileInput,
 } from "@amautai/contracts"
@@ -24,7 +24,7 @@ type ProfileState = {
 }
 type ProfileContextValue = Omit<ProfileState, "attempt"> & {
   retry: () => void
-  save: (role: AccountProfileRole) => Promise<void>
+  save: (input: AccountProfileInput) => Promise<void>
   saveFamily: (input: FamilyProfileInput) => Promise<void>
 }
 const Context = createContext<ProfileContextValue | null>(null)
@@ -76,11 +76,18 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
     return () => controller.abort()
   }, [key, attempt])
 
-  async function save(role: AccountProfileRole) {
-    const { profile } = await profileApi.save(role)
+  async function save(input: AccountProfileInput) {
+    const { profile } = await profileApi.save(input)
     const familyProfile =
-      role === "parent" ? (await profileApi.getFamily()).profile : null
-    setState({ key, attempt, profile, familyProfile, error: "", loading: false })
+      input.role === "parent" ? (await profileApi.getFamily()).profile : null
+    setState({
+      key,
+      attempt,
+      profile,
+      familyProfile,
+      error: "",
+      loading: false,
+    })
   }
 
   async function saveFamily(input: FamilyProfileInput) {

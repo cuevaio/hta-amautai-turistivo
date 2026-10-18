@@ -10,6 +10,7 @@ export interface NotificationRepository {
   register(actor: Actor, phone: string, now: number): Promise<void>
   preferences(actor: Actor, enabled: boolean, timezone: string): Promise<void>
   enqueue(item: Notification): Promise<Notification>
+  welcome(item: Notification): Promise<void>
   cancel(actor: Actor, id: string): Promise<boolean>
   claim(now: number): Promise<Notification[]>
   track(now: number): Promise<Notification[]>

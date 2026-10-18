@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from "react"
 import type { MarketRun } from "@amautai/contracts"
-import { roomsApi } from "../api/rooms-api"
+import { useGameApi } from "./game-api-context"
 import { roomError } from "./use-rooms"
 export function useMarketRun(room: string, participant: string) {
+  const roomsApi = useGameApi()
   const [revision, setRevision] = useState(0),
     [resource, setResource] = useState<{
       key: string
@@ -30,7 +31,7 @@ export function useMarketRun(room: string, participant: string) {
       c.abort()
       active.current = ""
     }
-  }, [key, room, participant])
+  }, [key, room, participant, roomsApi])
   const run = resource.key === key ? resource.run : null
   async function act(kind: "answer" | "help" | "retry", answer?: number) {
     if (lock.current || !run) return

@@ -16,11 +16,13 @@ The last documented public release includes teacher onboarding and persisted sec
 
 The public `/lista-de-espera` page lists respondent names from the family and teacher surveys in separate columns. It does not show phone numbers or survey answers. The names are a snapshot and are not synchronized automatically. See [survey method and results](docs/PROBLEM_VALIDATION_SURVEYS.md).
 
+Teachers can now register a student's name with their **father, mother, or guardian's phone number** and assign the room's game through WhatsApp. The personal link opens a student-only activity without a teacher login and saves progress in the teacher's room. This local change requires migration 0016 and a connected gateway before production delivery. See [student assignments](docs/STUDENT_ASSIGNMENTS.md) for delivery states, access boundaries, and verification.
+
 ## Profiles and games
 
 - After sign-in, users choose a teacher or parent profile at `/registro/perfil`. Family registration requires a primary grade, city, and main language. Registration uses its own loading layout; `/panel` uses the shared shadcn sidebar. See [profile onboarding](docs/PROFILE_ONBOARDING.md).
-- Teacher rooms at `/panel/salas` support names, participant scores, deletion, and three games: food-group multiplication, [market addition/subtraction](docs/MARKET_GAME.md), and [nursery units/tens](docs/NURSERY_GAME.md).
-- Parents can open a fixed second-grade multiplication sample at `/panel/familia/jugar`. Its score is not persisted and it is not generated or personalized from the saved profile.
+- Teacher rooms at `/panel/salas` support names, participant scores, deletion, and five games: food-group multiplication, [market addition/subtraction](docs/MARKET_GAME.md), [nursery units/tens](docs/NURSERY_GAME.md), [equality fair](docs/FAIR_GAME.md), and [builders geometry](docs/BUILDER_GAME.md).
+- Parents use `/panel` to manage multiple child aliases and create private practice sessions using the same five teacher games. Each child has an explicit regional context, saved scores and resumable sessions. See [family games](docs/FAMILY_GAMES.md).
 - Existing profile and game migration filenames are retained, including their shared numeric prefixes. Wrangler tracks full filenames; the standard migration command below applies only pending files.
 
 ## Stack

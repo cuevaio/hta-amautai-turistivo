@@ -1,0 +1,59 @@
+{
+  "version": 1,
+  "generator": "OpenAI built-in image_gen",
+  "assets": [
+    {
+      "file": "guide.png",
+      "size": [
+        2172,
+        724
+      ],
+      "mode": "RGBA",
+      "sha256": "dbc09231e71c8befe5c77345c43724a0b42049f5d7a030f185228c2ddc63f244"
+    },
+    {
+      "file": "guide.webp",
+      "size": [
+        2172,
+        724
+      ],
+      "mode": "RGBA",
+      "sha256": "f17ccfaf09416b1533e7723745d8258542eade29ea74675f6c2fe94d57b42748"
+    },
+    {
+      "file": "booth.png",
+      "size": [
+        1536,
+        1024
+      ],
+      "mode": "RGBA",
+      "sha256": "cc8f14618ed873bd12c7a864ae2054ff35963d9e8402d9aaaecc078172618746"
+    },
+    {
+      "file": "booth.webp",
+      "size": [
+        1536,
+        1024
+      ],
+      "mode": "RGBA",
+      "sha256": "ae00b4145757b8dffe191e9e897bbc7248977b77fd017ee915d96604cb3e4b1c"
+    }
+  ],
+  "reused": [
+    "/games/fair/v1/{coast,highlands,jungle}.webp",
+    "/games/fair/v1/helper.webp",
+    "/games/market/v2/{fish,corn,banana}.png"
+  ],
+  "animation": {
+    "guide": {
+      "frames": 4,
+      "fps": 2,
+      "cell": [
+        543,
+        724
+      ],
+      "baseline": 709
+    }
+  },
+  "notes": "Generated transparent originals retained. WebP is lossless with exact RGBA. Graphs, tokens and feedback are native Phaser geometry."
+}

@@ -6,9 +6,13 @@ import { GameCanvas } from "./game-canvas"
 export function CargoPlayer({
   roomId,
   participantId,
+  returnTo,
+  returnLabel,
 }: {
   roomId: string
   participantId: string
+  returnLabel?: string
+  returnTo?: string
 }) {
   const { m, locale } = useMessages()
   const game = useCargoRun(roomId, participantId)
@@ -18,9 +22,9 @@ export function CargoPlayer({
     <Button
       nativeButton={false}
       variant="outline"
-      render={<Link to={"/panel/salas/" + roomId} />}
+      render={<Link to={returnTo ?? "/panel/salas/" + roomId} />}
     >
-      {m("Volver a la sala")}
+      {m(returnLabel ?? (returnTo ? "Mis juegos" : "Volver a la sala"))}
     </Button>
   )
   if (game.loadError)
@@ -40,6 +44,11 @@ export function CargoPlayer({
           <h1 className="text-2xl font-semibold">
             {m("Alimenta a tu comunidad")}
           </h1>
+          {returnTo && (
+            <p className="break-words text-muted-foreground">
+              {run.participant.name}
+            </p>
+          )}
         </div>
         <div className="flex flex-wrap gap-2">
           {!lost && (

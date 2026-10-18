@@ -15,10 +15,14 @@ const skills = [
 export function NurseryPlayer({
   roomId,
   participantId,
+  returnTo,
+  returnLabel,
   nextStudent,
 }: {
   roomId: string
   participantId: string
+  returnLabel?: string
+  returnTo?: string
   nextStudent?: { id: string; name: string }
 }) {
   const game = useNurseryRun(roomId, participantId),
@@ -33,9 +37,9 @@ export function NurseryPlayer({
     <Button
       nativeButton={false}
       variant="outline"
-      render={<Link to={"/panel/salas/" + roomId} />}
+      render={<Link to={returnTo ?? "/panel/salas/" + roomId} />}
     >
-      {m("Ver resultados")}
+      {m(returnLabel ?? "Ver resultados")}
     </Button>
   )
   const run = game.run

@@ -52,8 +52,7 @@ export function useLoginForm(mode: "login" | "signup") {
         navigate("/verificar-correo", { replace: true })
         return
       }
-      if (await reloadSession())
-        navigate("/panel/proyectos", { replace: true })
+      if (await reloadSession()) navigate("/panel", { replace: true })
       else
         setError(
           "No pudimos comprobar tu sesión. Recarga para intentarlo de nuevo."

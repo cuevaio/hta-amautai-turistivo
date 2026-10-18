@@ -1,3 +1,9 @@
+import { assignmentRows } from "./messages-assignments.ts"
+import { uiPolishRows } from "./messages-ui-polish.ts"
+import { familyGameRows } from "./messages-family-games.ts"
+import { builderRows } from "./messages-builder.ts"
+import { dataRows } from "./messages-data.ts"
+import { fairRows } from "./messages-fair.ts"
 // Initial AI-authored interface translations. No bilingual human review has been recorded.
 // Curriculum labels are localized for display; original sources and teacher content stay intact.
 import { nurseryRows } from "./messages-nursery.ts"
@@ -7,6 +13,16 @@ import { additionalRows } from "./messages-extra.ts"
 import { landingRows } from "./messages-landing.ts"
 import { legalRows } from "./messages-legal.ts"
 const rows: readonly (readonly [string, string, string])[] = [
+  [
+    "Incluye el código de país. Te enviaremos una bienvenida automática a Amautai.",
+    "Suyuykipa yupayninta churay. Amautaiman allin hamusqa willakuyta kikillanmanta apachimusqayki.",
+    "Markamana jakhupa uñtʼayam. Amautairu suma jutäwi yatiyawi jupa pachpata apayanipxäma.",
+  ],
+  [
+    "Acepto recibir la bienvenida y los avisos que elija por WhatsApp. Puedo desactivarlos en Notificaciones.",
+    "WhatsAppnintakama allin hamusqa willakuyta hinaspa akllasqay willakuykunata chaskiyta munani. Willakuykunapi wañuchiyta atini.",
+    "WhatsApp tuqi suma jutäwi ukhamaraki ajllita yatiyawinaka katuqañ munta. Yatiyawinakana jiwtʼayirista.",
+  ],
   ["Reproducir animación", "Kawsachisqata purichiy", "Sarnaqawi qalltayaña"],
   ["Pausar animación", "Kawsachisqata samachiy", "Sarnaqawi saytʼayaña"],
   ["Inicio", "Qallariy", "Qallta"],
@@ -892,33 +908,51 @@ export const spanishMessages: Record<string, string> = Object.fromEntries(
   [
     ...rows,
     ...marketRows,
+    ...fairRows,
+    ...dataRows,
+    ...builderRows,
+    ...familyGameRows,
     ...nurseryRows,
     ...gameRows,
     ...additionalRows,
     ...landingRows,
     ...legalRows,
+    ...uiPolishRows,
+    ...assignmentRows,
   ].map(([es]) => [es, es])
 )
 export const chankaMessages: Record<string, string> = Object.fromEntries(
   [
     ...rows,
     ...marketRows,
+    ...fairRows,
+    ...dataRows,
+    ...builderRows,
+    ...familyGameRows,
     ...nurseryRows,
     ...gameRows,
     ...additionalRows,
     ...landingRows,
     ...legalRows,
+    ...uiPolishRows,
+    ...assignmentRows,
   ].map(([es, quy]) => [es, quy])
 )
 export const aymaraMessages: Record<string, string> = Object.fromEntries(
   [
     ...rows,
     ...marketRows,
+    ...fairRows,
+    ...dataRows,
+    ...builderRows,
+    ...familyGameRows,
     ...nurseryRows,
     ...gameRows,
     ...additionalRows,
     ...landingRows,
     ...legalRows,
+    ...uiPolishRows,
+    ...assignmentRows,
   ].map(([es, , ay]) => [es, ay])
 )
 spanishMessages["Datos pendientes_one"] = "{{count}} dato por completar"

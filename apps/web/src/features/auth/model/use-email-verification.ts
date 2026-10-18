@@ -20,8 +20,7 @@ export function useEmailVerification() {
     setPending(true)
     try {
       await authApi.verify(code)
-      if (await reloadSession())
-        navigate("/panel/proyectos", { replace: true })
+      if (await reloadSession()) navigate("/panel", { replace: true })
       else
         setError(
           "No pudimos comprobar tu sesión. Intenta iniciar sesión de nuevo."

@@ -71,9 +71,13 @@ function NumberLine({ task, label }: { task: MarketTask; label: string }) {
 export function MarketPlayer({
   roomId,
   participantId,
+  returnTo,
+  returnLabel,
 }: {
   roomId: string
   participantId: string
+  returnLabel?: string
+  returnTo?: string
 }) {
   const game = useMarketRun(roomId, participantId),
     { m, locale } = useMessages()
@@ -88,9 +92,9 @@ export function MarketPlayer({
     <Button
       nativeButton={false}
       variant="outline"
-      render={<Link to={"/panel/salas/" + roomId} />}
+      render={<Link to={returnTo ?? "/panel/salas/" + roomId} />}
     >
-      {m("Volver a la sala")}
+      {m(returnLabel ?? (returnTo ? "Mis juegos" : "Volver a la sala"))}
     </Button>
   )
   if (!run)
@@ -164,6 +168,9 @@ export function MarketPlayer({
       <header className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <h1 className="text-2xl font-semibold">{m("La ruta del mercado")}</h1>
+          {returnTo && (
+            <p className="break-words text-muted-foreground">{p.name}</p>
+          )}
         </div>
         {back}
       </header>

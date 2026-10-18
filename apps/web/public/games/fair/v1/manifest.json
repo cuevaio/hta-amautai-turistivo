@@ -1,0 +1,89 @@
+{
+  "generator": "built-in image_gen",
+  "prompts": "prompts.json",
+  "files": [
+    {
+      "source": "basket.png",
+      "delivery": "basket.webp",
+      "size": [
+        1536,
+        1024
+      ],
+      "sha256": "04e7253e34ab4844a78663e87debdd97caf291dd5c26a268a7ce522c884abb1a",
+      "deliveryBytes": 1500138,
+      "lossless": true,
+      "decodedRGBAIdentical": true
+    },
+    {
+      "source": "coast.png",
+      "delivery": "coast.webp",
+      "size": [
+        1536,
+        1024
+      ],
+      "sha256": "095c5a566f76be6d3bd9ae866dec9570b09233de9b6c5c9015f542bb7192b578",
+      "deliveryBytes": 1938998,
+      "lossless": true,
+      "decodedRGBAIdentical": true
+    },
+    {
+      "source": "helper.png",
+      "delivery": "helper.webp",
+      "size": [
+        2079,
+        756
+      ],
+      "sha256": "458872537d92ad446c13b299859e4fec8ed6fa3a9f17a03315be7ce9753198c4",
+      "deliveryBytes": 818758,
+      "lossless": true,
+      "decodedRGBAIdentical": true
+    },
+    {
+      "source": "highlands.png",
+      "delivery": "highlands.webp",
+      "size": [
+        1536,
+        1024
+      ],
+      "sha256": "c7b3520125a9cc8327a47352dbdd16958a767d6452afb3509d228c0eae67c5ec",
+      "deliveryBytes": 2206170,
+      "lossless": true,
+      "decodedRGBAIdentical": true
+    },
+    {
+      "source": "jungle.png",
+      "delivery": "jungle.webp",
+      "size": [
+        1536,
+        1024
+      ],
+      "sha256": "a8d22d8eb730015669e41f0e90381e87b1d781e5e016ca7827f3595ca9656c9e",
+      "deliveryBytes": 2272990,
+      "lossless": true,
+      "decodedRGBAIdentical": true
+    }
+  ],
+  "animations": {
+    "helper": {
+      "atlas": "helper.json",
+      "frames": 4,
+      "frameRate": 7,
+      "states": [
+        "idle",
+        "walk-right",
+        "walk-left (flipped)"
+      ],
+      "origin": [
+        0.5,
+        1
+      ]
+    },
+    "basket": "Runtime receipt squash/settle; no frame-sheet claim"
+  },
+  "reusedAssets": [
+    "/games/market/v2/fish.png",
+    "/games/market/v2/corn.png",
+    "/games/market/v2/banana.png"
+  ],
+  "notes": "Regional backdrops do not change mathematics or travel cost. Original PNGs preserved."
+}

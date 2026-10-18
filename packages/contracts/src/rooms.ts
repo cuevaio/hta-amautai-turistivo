@@ -3,10 +3,35 @@ export const roomInput = z
   .object({
     name: z.string().trim().min(1).max(80).optional(),
     region: z.enum(["coast", "highlands", "jungle"]),
-    kind: z.enum(["cargo", "market", "nursery"]).default("cargo"),
+    kind: z
+      .enum(["cargo", "market", "nursery", "fair", "builder"])
+      .default("cargo"),
     mode: z.enum(["practice", "challenge"]).default("challenge"),
   })
   .strict()
+export const studentAssignmentInput = z
+  .object({
+    name: z.string().trim().min(1).max(80),
+    guardianPhone: z.string().trim().min(8).max(30),
+    requestKey: z.uuid(),
+  })
+  .strict()
+export type StudentAssignment = {
+  expired: boolean
+  status:
+    | "pending"
+    | "dispatching"
+    | "accepted"
+    | "sent"
+    | "delivered"
+    | "read"
+    | "failed"
+    | "expired"
+    | "cancelled"
+    | "uncertain"
+  guardianPhone: string
+  expiresAt: string
+}
 export const participantInput = z
   .object({ name: z.string().trim().min(1).max(80) })
   .strict()
@@ -22,6 +47,7 @@ export const cargoPauseInput = z
 export type CargoRegion = z.infer<typeof roomInput>["region"]
 export type CargoChallenge = { groupCount: number; unitsPerGroup: number }
 export type CargoParticipant = {
+  assignment?: StudentAssignment | null
   id: string
   name: string
   score: number
@@ -33,11 +59,12 @@ export type CargoParticipant = {
   version: number
 }
 export type CargoRoom = {
+  familyChildId?: string | null
   name: string | null
   id: string
   region: CargoRegion
   createdAt: string
-  kind: "cargo" | "market" | "nursery"
+  kind: "cargo" | "market" | "nursery" | "fair" | "data" | "builder"
   mode: "practice" | "challenge"
 }
 export type CargoRun = {

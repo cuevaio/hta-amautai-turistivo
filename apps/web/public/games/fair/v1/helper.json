@@ -1,0 +1,52 @@
+{
+  "frames": {
+    "0": {
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 520,
+        "h": 756
+      },
+      "rotated": false,
+      "trimmed": false
+    },
+    "1": {
+      "frame": {
+        "x": 520,
+        "y": 0,
+        "w": 520,
+        "h": 756
+      },
+      "rotated": false,
+      "trimmed": false
+    },
+    "2": {
+      "frame": {
+        "x": 1040,
+        "y": 0,
+        "w": 519,
+        "h": 756
+      },
+      "rotated": false,
+      "trimmed": false
+    },
+    "3": {
+      "frame": {
+        "x": 1559,
+        "y": 0,
+        "w": 520,
+        "h": 756
+      },
+      "rotated": false,
+      "trimmed": false
+    }
+  },
+  "meta": {
+    "image": "helper.png",
+    "size": {
+      "w": 2079,
+      "h": 756
+    },
+    "scale": "1"
+  }
+}

@@ -6,6 +6,35 @@ import {
 } from "../domain/notification.ts"
 const columns = "*,tenant_id AS tenantId,user_id AS userId"
 export function d1Notifications(db: D1Database): NotificationRepository {
+  function insertNotification(n: Notification) {
+    return db
+      .prepare(
+        "INSERT OR IGNORE INTO notifications(id,tenant_id,user_id,kind,phone,title,body,scheduled_at,expires_at,created_at,next_attempt,request_key,event_type) SELECT ?,?,?,?,?,?,?,?,?,?,?,?,? WHERE (SELECT COUNT(*) FROM notifications WHERE tenant_id=? AND user_id=? AND kind!='verification' AND created_at>?)<20 AND (SELECT COUNT(*) FROM notifications WHERE phone=? AND kind!='verification' AND created_at>?)<20 AND EXISTS(SELECT 1 FROM notification_contacts WHERE tenant_id=? AND user_id=? AND enabled=1 AND consent_at IS NOT NULL AND phone=?)"
+      )
+      .bind(
+        n.id,
+        n.tenantId,
+        n.userId,
+        n.kind,
+        n.phone,
+        n.title,
+        n.body,
+        n.scheduled_at,
+        n.expires_at,
+        n.created_at,
+        n.scheduled_at,
+        n.request_key,
+        n.event_type || null,
+        n.tenantId,
+        n.userId,
+        n.created_at - 86400000,
+        n.phone,
+        n.created_at - 86400000,
+        n.tenantId,
+        n.userId,
+        n.phone
+      )
+  }
   return {
     contact: (a) =>
       db
@@ -65,35 +94,33 @@ export function d1Notifications(db: D1Database): NotificationRepository {
           .bind(a.tenantId, a.userId, enabled ? 1 : 0),
       ])
     },
-    async enqueue(n) {
-      await db
+    async welcome(n) {
+      await db.batch([
+        db
+          .prepare(
+            "INSERT INTO notification_contacts(tenant_id,user_id,phone,enabled,consent_at) VALUES(?,?,?,1,?) ON CONFLICT(tenant_id,user_id) DO UPDATE SET phone=excluded.phone,enabled=1,consent_at=excluded.consent_at WHERE notification_contacts.phone IS NULL AND notification_contacts.consent_at IS NULL"
+          )
+          .bind(n.tenantId, n.userId, n.phone, n.created_at),
+        insertNotification(n),
+      ])
+      const existing = await db
         .prepare(
-          "INSERT OR IGNORE INTO notifications(id,tenant_id,user_id,kind,phone,title,body,scheduled_at,expires_at,created_at,next_attempt,request_key,event_type) SELECT ?,?,?,?,?,?,?,?,?,?,?,?,? WHERE (SELECT COUNT(*) FROM notifications WHERE tenant_id=? AND user_id=? AND kind!='verification' AND created_at>?)<20 AND (SELECT COUNT(*) FROM notifications WHERE phone=? AND kind!='verification' AND created_at>?)<20 AND EXISTS(SELECT 1 FROM notification_contacts WHERE tenant_id=? AND user_id=? AND enabled=1 AND consent_at IS NOT NULL AND phone=?)"
+          "SELECT id FROM notifications WHERE tenant_id=? AND user_id=? AND request_key=?"
         )
-        .bind(
-          n.id,
-          n.tenantId,
-          n.userId,
-          n.kind,
-          n.phone,
-          n.title,
-          n.body,
-          n.scheduled_at,
-          n.expires_at,
-          n.created_at,
-          n.scheduled_at,
-          n.request_key,
-          n.event_type || null,
-          n.tenantId,
-          n.userId,
-          n.created_at - 86400000,
-          n.phone,
-          n.created_at - 86400000,
-          n.tenantId,
-          n.userId,
-          n.phone
+        .bind(n.tenantId, n.userId, n.request_key)
+        .first()
+      if (existing) return
+      const eligible = await db
+        .prepare(
+          "SELECT 1 FROM notification_contacts WHERE tenant_id=? AND user_id=? AND phone=? AND enabled=1 AND consent_at IS NOT NULL"
         )
-        .run()
+        .bind(n.tenantId, n.userId, n.phone)
+        .first()
+      // A later opt-out or phone change takes precedence over registration retries.
+      if (eligible) throw new NotificationError("notification_rate_limited")
+    },
+    async enqueue(n) {
+      await insertNotification(n).run()
       const item = await db
         .prepare(
           "SELECT " +

@@ -1,11 +1,10 @@
 import { useMessages } from "@/shared/i18n/use-messages"
 import { Notifications } from "@/features/notifications"
-import { LearningSessions, TeacherProfileForm } from "@/features/education"
+import { TeacherProfileForm } from "@/features/education"
 import { WorkspaceSettings } from "@/features/settings"
 import { NotFoundPage } from "@/pages/not-found"
-import { Projects } from "@/features/projects"
-import { Rooms } from "@/features/rooms"
-import { ParentProfileHome, useProfile } from "@/features/profiles"
+import { Rooms, FamilyGames } from "@/features/rooms"
+import { useProfile } from "@/features/profiles"
 import { MoonIcon, SunIcon } from "lucide-react"
 import { motion } from "motion/react"
 import { Link, useParams } from "react-router"
@@ -29,8 +28,6 @@ import {
 
 const sections: Record<string, string> = {
   overview: "Inicio",
-  projects: "Proyectos",
-  sessions: "Sesiones de aprendizaje",
   rooms: "Salas de juego",
   settings: "Configuración",
   notifications: "Notificaciones",
@@ -38,8 +35,6 @@ const sections: Record<string, string> = {
 }
 
 const routeSections: Record<string, string> = {
-  proyectos: "projects",
-  sesiones: "sessions",
   salas: "rooms",
   configuracion: "settings",
   notificaciones: "notifications",
@@ -49,20 +44,27 @@ const routeSections: Record<string, string> = {
 export function DashboardPage({
   sectionOverride,
 }: {
-  sectionOverride?: "sessions" | "rooms"
+  sectionOverride?: "rooms"
 }) {
   const { m } = useMessages()
   const { profile } = useProfile()
 
-  const { section: routeSection, sessionId } = useParams()
-  const section = sectionOverride ?? (routeSection && routeSections[routeSection]) ?? routeSection ?? "overview"
-  const title = sections[section] ?? "Página no encontrada"
+  const { section: routeSection } = useParams()
+  const section =
+    sectionOverride ??
+    (routeSection && routeSections[routeSection]) ??
+    routeSection ??
+    "overview"
+  const title =
+    profile?.role === "parent" && !["account", "settings"].includes(section)
+      ? "Mis juegos"
+      : (sections[section] ?? "Página no encontrada")
   const { theme, setTheme } = useTheme()
   return (
     <SidebarProvider>
       <AppSidebar />
       <SidebarInset>
-        <header className="flex h-16 shrink-0 items-center justify-between gap-2 px-4">
+        <header className="flex h-16 shrink-0 items-center justify-between gap-2 border-b px-4 sm:px-6">
           <div className="flex min-w-0 items-center gap-2">
             <SidebarTrigger
               className="-ml-1"
@@ -104,10 +106,16 @@ export function DashboardPage({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.2 }}
-          className="flex flex-1 flex-col gap-4 p-4 pt-0"
+          className="flex min-w-0 flex-1 flex-col gap-6 p-4 sm:p-6 lg:p-8"
         >
           {profile?.role === "parent" ? (
-            <ParentProfileHome />
+            section === "account" ? (
+              <WorkspaceSettings account />
+            ) : section === "settings" ? (
+              <WorkspaceSettings />
+            ) : (
+              <FamilyGames />
+            )
           ) : section === "notifications" ? (
             <Notifications />
           ) : section === "settings" ? (
@@ -119,10 +127,6 @@ export function DashboardPage({
             <WorkspaceSettings account />
           ) : section === "overview" || section === "rooms" ? (
             <Rooms />
-          ) : section === "sessions" ? (
-            <LearningSessions sessionId={sessionId} />
-          ) : section === "projects" && !sessionId ? (
-            <Projects />
           ) : (
             <NotFoundPage />
           )}

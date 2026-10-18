@@ -4,7 +4,7 @@ import worker from "../src/index.ts"
 import { test } from "node:test"
 import assert from "node:assert/strict"
 import { DatabaseSync } from "node:sqlite"
-import { readFileSync } from "node:fs"
+import { readFileSync, readdirSync } from "node:fs"
 import { d1Notifications } from "../src/modules/notifications/infrastructure/d1-notifications.ts"
 import {
   notificationService,
@@ -14,13 +14,9 @@ import { verificationCrypto } from "../src/modules/notifications/infrastructure/
 import { createApp } from "../src/app.ts"
 function setup() {
   const db = new DatabaseSync(":memory:")
-  for (const name of [
-    "0001_projects.sql",
-    "0002_notifications.sql",
-    "0003_email_notifications.sql",
-    "0004_email_account_preferences.sql",
-    "0005_activity_preferences.sql",
-  ])
+  for (const name of readdirSync(new URL("../migrations/", import.meta.url))
+    .filter((name) => name.endsWith(".sql"))
+    .sort())
     db.exec(
       readFileSync(new URL("../migrations/" + name, import.meta.url), "utf8")
     )
@@ -413,4 +409,227 @@ test("Worker entrypoint exposes HTTP and scheduled handlers", async () => {
     200
   )
   await worker.scheduled({}, { DB: s.DB })
+})
+
+// Registration and delivery exercise the same persistent SQL outboxes as production.
+import { d1Profiles } from "../src/modules/profiles/infrastructure/d1-profiles.ts"
+import { dispatchProfileWelcomes } from "../src/modules/profiles/application/service.ts"
+import { accountProfileInput } from "../../../packages/contracts/src/index.ts"
+
+function registrationApp(s) {
+  let user = "alice"
+  const app = createApp(
+    async () =>
+      user
+        ? {
+            sessionId: "registration-test",
+            user: {
+              id: user,
+              email: user + "@example.test",
+              emailVerified: true,
+            },
+          }
+        : null,
+    undefined,
+    () => s.gateway
+  )
+  return {
+    user(value) {
+      user = value
+    },
+    request(body, origin = "https://amautai.test", csrf = true) {
+      return app.request(
+        "https://amautai.test/api/profile",
+        {
+          method: "PUT",
+          headers: {
+            Origin: origin,
+            "Content-Type": "application/json",
+            ...(csrf ? { "X-Amautai-Request": "1" } : {}),
+          },
+          body: JSON.stringify(body),
+        },
+        { DB: s.DB, APP_ORIGINS: "https://amautai.test" }
+      )
+    },
+  }
+}
+const registration = {
+  role: "teacher",
+  phone: "51 999-999-999",
+  consent: true,
+  locale: "es-PE",
+}
+
+test("teacher and parent registration queue one localized welcome and dispatch it via the gateway", async () => {
+  for (const role of ["teacher", "parent"])
+    for (const locale of ["es-PE", "quy-PE", "ay-PE"]) {
+      const s = setup(),
+        http = registrationApp(s),
+        profiles = d1Profiles(s.DB)
+      s.actor.tenantId = "user:alice"
+      const response = await http.request({ ...registration, role, locale })
+      assert.equal(response.status, 200)
+      assert.equal((await response.json()).profile.role, role)
+      const pending = await profiles.pendingWelcomes(Date.now())
+      assert.equal(pending.length, 1)
+      assert.equal(pending[0].phone, "+51999999999")
+      assert.equal(pending[0].locale, locale)
+      assert.equal(s.sent.length, 0)
+      await dispatchProfileWelcomes(profiles, (event) =>
+        s.service.welcome(event)
+      )
+      assert.equal((await profiles.pendingWelcomes(Date.now())).length, 0)
+      assert.equal((await s.repo.contact(s.actor)).phone, "+51999999999")
+      const [message] = await s.repo.list(s.actor)
+      assert.equal(message.status, "pending")
+      assert.ok(message.body.includes("https://amautai.turistivo.com/panel"))
+      const titles = {
+        "es-PE": "¡Bienvenido a Amautai!",
+        "quy-PE": "¡Amautaiman allin hamusqa!",
+        "ay-PE": "¡Amautairu suma jutäwi!",
+      }
+      assert.equal(message.title, titles[locale])
+      assert.match(
+        message.body,
+        role === "teacher"
+          ? /estudiantes|Yachakuqnikikunapaq|Yatiqirinakamataki/
+          : /hijos|wawaykikunapa|wawanakamana/
+      )
+      await dispatchNotifications(s.repo, s.gateway)
+      assert.deepEqual(s.sent, [message.id])
+      await dispatchNotifications(s.repo, s.gateway)
+      assert.equal((await s.repo.list(s.actor))[0].status, "delivered")
+      // Completed events retain only idempotency metadata, no duplicate phone copy.
+      assert.equal(
+        s.db.prepare("SELECT phone FROM profile_welcomes").get().phone,
+        null
+      )
+    }
+})
+
+test("registration rejects missing/invalid phone, consent, locale and untrusted scope before saving", async () => {
+  const s = setup(),
+    http = registrationApp(s)
+  for (const body of [
+    { role: "teacher" },
+    { ...registration, phone: "" },
+    { ...registration, phone: "+000" },
+    { ...registration, phone: "++51999999999" },
+    { ...registration, phone: "1234567890123456" },
+    { ...registration, consent: false },
+    { ...registration, locale: "en" },
+    { ...registration, tenantId: "evil" },
+    { ...registration, userId: "bob" },
+  ]) {
+    assert.equal((await http.request(body)).status, 400)
+  }
+  assert.equal(await d1Profiles(s.DB).find(s.actor), null)
+  assert.equal((await d1Profiles(s.DB).pendingWelcomes(Date.now())).length, 0)
+  assert.equal(
+    (await http.request(registration, "https://evil.test")).status,
+    403
+  )
+  assert.equal((await http.request(registration, undefined, false)).status, 403)
+  http.user(null)
+  assert.equal((await http.request(registration)).status, 401)
+  assert.equal(accountProfileInput.parse(registration).phone, "+51999999999")
+})
+
+test("profile registration and welcome event roll back together on storage failure", async () => {
+  const s = setup()
+  s.db.exec(
+    "CREATE TRIGGER fail_welcome BEFORE INSERT ON profile_welcomes BEGIN SELECT RAISE(ABORT,'storage unavailable'); END"
+  )
+  await assert.rejects(
+    d1Profiles(s.DB).save(s.actor, accountProfileInput.parse(registration)),
+    /storage unavailable/
+  )
+  assert.equal(await d1Profiles(s.DB).find(s.actor), null)
+})
+
+test("welcome retries survive queue/ack failures and never replace a stable gateway job", async () => {
+  const s = setup(),
+    profiles = d1Profiles(s.DB)
+  await profiles.save(s.actor, accountProfileInput.parse(registration))
+  await dispatchProfileWelcomes(profiles, async () => {
+    throw Error("temporary outage")
+  })
+  assert.equal((await profiles.pendingWelcomes(Date.now())).length, 1)
+  await dispatchProfileWelcomes(
+    {
+      ...profiles,
+      completeWelcome: async () => {
+        throw Error("ack failed")
+      },
+    },
+    (event) => s.service.welcome(event)
+  )
+  const [first] = await s.repo.list(s.actor)
+  await dispatchProfileWelcomes(profiles, (event) => s.service.welcome(event))
+  assert.equal((await s.repo.list(s.actor)).length, 1)
+  assert.equal((await s.repo.list(s.actor))[0].id, first.id)
+  s.fail(true)
+  await dispatchNotifications(s.repo, s.gateway)
+  s.fail(false)
+  await dispatchNotifications(s.repo, s.gateway, Date.now() + 200000)
+  assert.deepEqual(s.sent, [first.id, first.id])
+  await profiles.save(s.actor, {
+    ...accountProfileInput.parse(registration),
+    role: "parent",
+    phone: "+51988888888",
+  })
+  assert.equal((await profiles.pendingWelcomes(Date.now())).length, 0)
+  assert.equal((await s.repo.contact(s.actor)).phone, "+51999999999")
+})
+
+test("deferred welcome respects opt-out and updated recipients, and isolates accounts", async () => {
+  for (const change of ["optout", "phone"]) {
+    const s = setup(),
+      profiles = d1Profiles(s.DB)
+    await profiles.save(s.actor, accountProfileInput.parse(registration))
+    await s.registered()
+    if (change === "optout")
+      await s.service.preferences(s.actor, false, "America/Lima")
+    else await s.service.register(s.actor, "+51988888888")
+    await dispatchProfileWelcomes(profiles, (event) => s.service.welcome(event))
+    assert.equal((await s.repo.list(s.actor)).length, 0)
+    const contact = await s.repo.contact(s.actor)
+    assert.equal(contact.enabled, change === "optout" ? 0 : 1)
+    assert.equal(
+      contact.phone,
+      change === "phone" ? "+51988888888" : "+51999999999"
+    )
+  }
+  const s = setup(),
+    http = registrationApp(s)
+  s.actor.tenantId = "user:alice"
+  await http.request(registration)
+  http.user("bob")
+  await http.request({ ...registration, role: "parent", phone: "+51988888888" })
+  await dispatchProfileWelcomes(d1Profiles(s.DB), (event) =>
+    s.service.welcome(event)
+  )
+  assert.equal((await s.repo.list(s.actor)).length, 1)
+  assert.equal(
+    (await s.repo.list({ tenantId: "user:bob", userId: "bob" })).length,
+    1
+  )
+  assert.equal((await s.repo.list({ ...s.actor, userId: "bob" })).length, 0)
+})
+
+test("expired registrations release their phone data without sending a late welcome", async () => {
+  const s = setup(),
+    profiles = d1Profiles(s.DB)
+  await profiles.save(s.actor, accountProfileInput.parse(registration))
+  await dispatchProfileWelcomes(
+    profiles,
+    (event) => s.service.welcome(event),
+    Date.now() + 86400001
+  )
+  assert.equal((await s.repo.list(s.actor)).length, 0)
+  assert.equal(
+    s.db.prepare("SELECT phone FROM profile_welcomes").get().phone,
+    null
+  )
 })

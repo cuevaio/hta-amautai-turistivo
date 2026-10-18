@@ -4,6 +4,13 @@ export type AccountProfile = {
   updatedAt: string
 }
 export type ProfileRole = AccountProfile["role"]
+export type ProfileRegistration = {
+  role: ProfileRole
+  phone: string
+  consent: true
+  locale: "es-PE" | "quy-PE" | "ay-PE"
+}
+export type ProfileWelcome = Actor & ProfileRegistration & { createdAt: number }
 export type FamilyProfileInput = {
   grade: number
   location: string

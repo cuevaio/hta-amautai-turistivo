@@ -1,3 +1,11 @@
+import { assignmentService } from "./modules/rooms/application/assignment-service.ts"
+import type { AssignmentMessenger } from "./modules/rooms/application/assignment-service.ts"
+import { d1Assignments } from "./modules/rooms/infrastructure/d1-assignments.ts"
+import { assignmentCrypto } from "./modules/rooms/infrastructure/assignment-crypto.ts"
+import { registerAssignedGameRoutes } from "./modules/rooms/http/assignment-routes.ts"
+import { familyGameService } from "./modules/rooms/application/family-service.ts"
+import { d1FamilyGames } from "./modules/rooms/infrastructure/d1-family-games.ts"
+import { registerFamilyGameRoutes } from "./modules/rooms/http/family-routes.ts"
 import { authMailer } from "./modules/auth/infrastructure/auth-mailer.ts"
 import { roomService } from "./modules/rooms/application/service.ts"
 import { d1Rooms } from "./modules/rooms/infrastructure/d1-rooms.ts"
@@ -74,7 +82,20 @@ export function createApp(
     })
     return profile?.role === "parent"
   }
+  const assignments = (c: AppContext) =>
+    assignmentService({
+      repo: d1Assignments(c.env.DB),
+      rooms: d1Rooms(c.env.DB),
+      crypto: assignmentCrypto(),
+      id: () => crypto.randomUUID(),
+    })
   registerAuthRoutes(app, {
+    publicRoutes: (app) =>
+      registerAssignedGameRoutes(app, {
+        assignments,
+        service: (c) =>
+          roomService(d1Rooms(c.env.DB), () => crypto.randomUUID()),
+      }),
     authenticate,
     service: (c) =>
       createAuthService(
@@ -114,7 +135,13 @@ export function createApp(
       educationService(d1Education(c.env.DB), () => crypto.randomUUID()),
     ensure: ensureTeacher,
   })
+  registerFamilyGameRoutes(app, {
+    service: (c) =>
+      familyGameService(d1FamilyGames(c.env.DB), () => crypto.randomUUID()),
+    ensureParent,
+  })
   registerRoomRoutes(app, {
+    assignments,
     service: (c) => roomService(d1Rooms(c.env.DB), () => crypto.randomUUID()),
     ensure: ensureTenant,
   })
@@ -166,4 +193,33 @@ export function createApp(
   app.onError(handleApiError)
   app.notFound((c) => c.json({ error: "not_found" }, 404))
   return app
+}
+
+export function assignmentMessenger(
+  gateway: WhatsAppGateway
+): AssignmentMessenger {
+  return {
+    async send(a) {
+      return (
+        await gateway.send({
+          tenantId: a.tenantId,
+          userId: a.userId,
+          id: a.deliveryId,
+          kind: "reminder",
+          phone: a.guardianPhone,
+          title: "Actividad asignada",
+          body: a.messageBody,
+          status: "pending",
+          scheduled_at: a.createdAt,
+          expires_at: a.expiresAt,
+          created_at: a.createdAt,
+          attempts: a.attempts,
+          request_key: a.requestKey,
+        })
+      ).status
+    },
+    async status(id) {
+      return (await gateway.status(id))?.status ?? null
+    },
+  }
 }

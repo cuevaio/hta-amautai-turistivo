@@ -9,6 +9,7 @@ import { registerRecoveryRoutes } from "./recovery-routes.ts"
 export function registerAuthRoutes(
   app: Hono<AppEnv>,
   deps: {
+    publicRoutes?: (app: Hono<AppEnv>) => void
     service: (c: AppContext) => AuthService
     authenticate: (c: AppContext) => Promise<Identity | null>
     ensureTenant: (c: AppContext) => Promise<Tenant>
@@ -53,6 +54,7 @@ export function registerAuthRoutes(
   app.get("/callback", (c) => finishOAuth(c, deps.service))
   registerPasswordRoutes(app, deps.service)
   registerRecoveryRoutes(app, deps.service)
+  deps.publicRoutes?.(app)
   app.use("/api/*", async (c, next) => {
     try {
       const identity = await deps.authenticate(c)

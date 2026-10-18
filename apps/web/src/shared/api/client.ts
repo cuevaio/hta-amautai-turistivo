@@ -28,7 +28,11 @@ export async function api<T>(
     signal,
   })
   if (!response.ok) {
-    if (response.status === 401 && !path.startsWith("/api/auth/"))
+    if (
+      response.status === 401 &&
+      !path.startsWith("/api/auth/") &&
+      !path.startsWith("/api/assigned-games")
+    )
       window.location.replace("/iniciar-sesion")
     const body = (await response.json().catch(() => ({}))) as { error?: string }
     const authMessages: Record<string, string> = {

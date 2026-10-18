@@ -6,13 +6,20 @@ import type {
   CargoRoom,
 } from "@amautai/contracts"
 import { useMessages } from "@/shared/i18n/use-messages"
+import { familyHomePath } from "../model/family-catalog"
 import { useRooms } from "../model/use-rooms"
+import { BuilderPlayer } from "./builder-player"
+import { FairPlayer } from "./fair-player"
 import { NurseryPlayer } from "./nursery-player"
 import { MarketPlayer } from "./market-player"
 import { CargoPlayer } from "./cargo-player"
 import { Button } from "@workspace/ui/components/button"
 import { Input } from "@workspace/ui/components/input"
-import { Field, FieldLabel } from "@workspace/ui/components/field"
+import {
+  Field,
+  FieldLabel,
+  FieldDescription,
+} from "@workspace/ui/components/field"
 import {
   Select,
   SelectContent,
@@ -38,11 +45,29 @@ import {
   AlertDialogFooter,
   AlertDialogCancel,
 } from "@workspace/ui/components/alert-dialog"
+const assignmentStatusLabels = {
+  pending: "En cola de envío",
+  dispatching: "Enviando enlace…",
+  accepted: "En cola de WhatsApp",
+  sent: "Enlace enviado",
+  delivered: "Enlace entregado",
+  read: "Mensaje leído",
+  failed: "No se pudo enviar",
+  expired: "Envío vencido",
+  cancelled: "Envío cancelado",
+  uncertain: "Envío por confirmar",
+}
 const gameNames = {
+  builder: "Constructores del Perú · Figuras y orientación",
+  data: "La feria de los datos · Gráficos y decisiones",
+  fair: "La feria del equilibrio · Igualdades y equivalencias",
   cargo: "Alimenta a tu comunidad · Multiplicación",
   market: "La ruta del mercado · Sumas y restas",
   nursery: "El vivero de las decenas · Unidades y decenas",
 }
+const availableGames = Object.entries(gameNames).filter(
+  ([kind]) => kind !== "data"
+)
 const regions = { coast: "Costa", highlands: "Sierra", jungle: "Selva" }
 export function Rooms() {
   const { roomId, participantId } = useParams()
@@ -56,50 +81,84 @@ export function Rooms() {
     <RoomManager key={roomId ?? "list"} roomId={roomId} />
   )
 }
-function RoomPlayer({
+export function RoomPlayer({
   roomId,
   participantId,
+  family = false,
 }: {
   roomId: string
   participantId: string
+  family?: boolean
 }) {
   const data = useRooms(roomId),
     { m } = useMessages()
+  const backTo = family
+    ? familyHomePath(data.room?.familyChildId)
+    : "/panel/salas/" + roomId
+  const back = (
+    <Button
+      nativeButton={false}
+      variant="outline"
+      render={<Link to={backTo} />}
+    >
+      {m(family ? "Mis juegos" : "Ver resultados")}
+    </Button>
+  )
   if (data.loadError)
     return (
-      <div role="alert">
+      <div role="alert" className="space-y-3">
         <p>{m(data.loadError)}</p>
         <Button onClick={data.refresh}>{m("Reintentar")}</Button>
+        {back}
       </div>
     )
   if (!data.room) return <p role="status">{m("Cargando el juego…")}</p>
-  if (data.room.kind === "nursery") {
-    const nextStudent = data.participants.find(
-      (p) => p.id !== participantId && !p.started
-    )
+  if (family && !data.room.familyChildId)
     return (
-      <NurseryPlayer
-        roomId={roomId}
-        participantId={participantId}
-        nextStudent={nextStudent}
-      />
+      <div className="space-y-3">
+        <p role="alert">{m("Esta partida no pertenece a tu familia.")}</p>
+        {back}
+      </div>
     )
-  }
-  return data.room.kind === "market" ? (
-    <MarketPlayer roomId={roomId} participantId={participantId} />
-  ) : (
-    <CargoPlayer roomId={roomId} participantId={participantId} />
-  )
+  if (data.room.kind === "data")
+    return (
+      <section className="space-y-4">
+        <h1 className="text-2xl font-semibold">{m("Juego reemplazado")}</h1>
+        <p>
+          {m(
+            "La feria de los datos fue reemplazada por Constructores del Perú. Los resultados anteriores se conservan."
+          )}
+        </p>
+        {back}
+      </section>
+    )
+  const props = { roomId, participantId, returnTo: family ? backTo : undefined }
+  const nextStudent = family
+    ? undefined
+    : data.participants.find((p) => p.id !== participantId && !p.started)
+  if (data.room.kind === "builder")
+    return <BuilderPlayer {...props} nextStudent={nextStudent} />
+  if (data.room.kind === "fair")
+    return <FairPlayer {...props} nextStudent={nextStudent} />
+  if (data.room.kind === "nursery")
+    return <NurseryPlayer {...props} nextStudent={nextStudent} />
+  if (data.room.kind === "market") return <MarketPlayer {...props} />
+  return <CargoPlayer {...props} />
 }
 function RoomManager({ roomId }: { roomId?: string }) {
   const { m, formatDate, locale } = useMessages()
   const nav = useNavigate()
   const data = useRooms(roomId)
   const [region, setRegion] = useState<CargoRegion>("coast")
-  const [kind, setKind] = useState<CargoRoom["kind"]>("market")
+  const [kind, setKind] = useState<CargoRoom["kind"]>("builder")
   const [mode, setMode] = useState<CargoRoom["mode"]>("practice")
   const [name, setName] = useState("")
+  const [guardianPhone, setGuardianPhone] = useState("")
+  const [requestKey, setRequestKey] = useState(() => crypto.randomUUID())
+  const [assigning, setAssigning] = useState<CargoParticipant | null>(null)
   const [roomName, setRoomName] = useState("")
+  const [creating, setCreating] = useState(false)
+  const showCreate = creating || (!data.loading && !data.rooms.length)
   const [deletingRoom, setDeletingRoom] = useState<CargoRoom | null>(null)
   const [removing, setRemoving] = useState<CargoParticipant | null>(null)
   const number = new Intl.NumberFormat(locale)
@@ -116,12 +175,32 @@ function RoomManager({ roomId }: { roomId?: string }) {
               ? data.room?.name || m("Sala de juego")
               : m("Salas de juego")}
           </h1>
-          <p className="text-muted-foreground">
-            {m(gameNames[data.room?.kind ?? kind])}
+          <p className="text-sm text-muted-foreground">
+            {roomId
+              ? m(gameNames[data.room?.kind ?? kind])
+              : m("Matemática · 2.º de Primaria")}
           </p>
         </div>
+        {!roomId && data.rooms.length > 0 && (
+          <Button
+            variant={creating ? "outline" : "default"}
+            onClick={() => setCreating(!creating)}
+            aria-expanded={creating}
+            aria-controls="create-room-form"
+            disabled={data.busy}
+          >
+            {m(creating ? "Cancelar" : "Crear sala")}
+          </Button>
+        )}
         {roomId && (
           <div className="flex flex-wrap gap-2">
+            <Button
+              variant="outline"
+              disabled={data.busy || data.loading}
+              onClick={data.refresh}
+            >
+              {m("Actualizar")}
+            </Button>
             {data.room && (
               <Button
                 variant="ghost"
@@ -141,27 +220,47 @@ function RoomManager({ roomId }: { roomId?: string }) {
           </div>
         )}
       </header>
-      <dl className="grid gap-3 rounded-xl border p-4 sm:grid-cols-3">
-        <div>
-          <dt className="text-sm text-muted-foreground">
-            {m("Área curricular")}
-          </dt>
-          <dd>{m("Matemática")}</dd>
-        </div>
-        <div>
-          <dt className="text-sm text-muted-foreground">
-            {m("Nivel y grado")}
-          </dt>
-          <dd>{m("Primaria · 2.º grado")}</dd>
-        </div>
-        <div>
-          <dt className="text-sm text-muted-foreground">{m("Competencia")}</dt>
-          <dd>{m("Resuelve problemas de cantidad")}</dd>
-        </div>
-      </dl>
-      {!roomId && (
+      {(roomId || showCreate) && (
+        <details className="rounded-xl border px-4 py-3">
+          <summary className="cursor-pointer text-sm font-medium focus-visible:outline-2 focus-visible:outline-ring">
+            {m("Objetivo de aprendizaje")}
+          </summary>
+          <dl className="mt-4 grid gap-4 sm:grid-cols-3">
+            <div>
+              <dt className="text-sm text-muted-foreground">
+                {m("Área curricular")}
+              </dt>
+              <dd>{m("Matemática")}</dd>
+            </div>
+            <div>
+              <dt className="text-sm text-muted-foreground">
+                {m("Nivel y grado")}
+              </dt>
+              <dd>{m("Primaria · 2.º grado")}</dd>
+            </div>
+            <div>
+              <dt className="text-sm text-muted-foreground">
+                {m("Competencia")}
+              </dt>
+              <dd>
+                {m(
+                  (data.room?.kind ?? kind) === "builder"
+                    ? "Resuelve problemas de forma, movimiento y localización"
+                    : (data.room?.kind ?? kind) === "data"
+                      ? "Resuelve problemas de gestión de datos e incertidumbre"
+                      : (data.room?.kind ?? kind) === "fair"
+                        ? "Resuelve problemas de regularidad, equivalencia y cambio"
+                        : "Resuelve problemas de cantidad"
+                )}
+              </dd>
+            </div>
+          </dl>
+        </details>
+      )}
+      {!roomId && showCreate && (
         <form
-          className="grid items-end gap-4 rounded-xl border p-4 sm:grid-cols-2 lg:grid-cols-3"
+          id="create-room-form"
+          className="grid items-end gap-4 rounded-xl border bg-card p-4 sm:grid-cols-2 sm:p-6 lg:grid-cols-3"
           onSubmit={(e) => {
             e.preventDefault()
             void data.create(
@@ -191,7 +290,7 @@ function RoomManager({ roomId }: { roomId?: string }) {
           <Field className="min-w-0 sm:col-span-2 lg:col-span-2">
             <FieldLabel htmlFor="room-game">{m("Juego")}</FieldLabel>
             <Select
-              items={Object.entries(gameNames).map(([value, label]) => ({
+              items={availableGames.map(([value, label]) => ({
                 value,
                 label: m(label),
               }))}
@@ -215,7 +314,7 @@ function RoomManager({ roomId }: { roomId?: string }) {
                 alignItemWithTrigger={false}
                 className="p-1"
               >
-                {Object.entries(gameNames).map(([value, label]) => {
+                {availableGames.map(([value, label]) => {
                   const [title, objective] = m(label).split(" · ")
                   return (
                     <SelectItem key={value} value={value} className="py-3">
@@ -267,7 +366,7 @@ function RoomManager({ roomId }: { roomId?: string }) {
           )}
           <Field className="min-w-0">
             <FieldLabel htmlFor="room-region">
-              {m("Contexto / situación significativa")}
+              {m("Contexto del juego")}
             </FieldLabel>
             <Select
               items={items}
@@ -305,6 +404,11 @@ function RoomManager({ roomId }: { roomId?: string }) {
         </div>
       )}
       {data.loading && <p role="status">{m("Cargando sala…")}</p>}
+      {data.notice && (
+        <p role="status" className="rounded-lg border p-3">
+          {m(data.notice)}
+        </p>
+      )}
       {data.error && (
         <p role="alert" className="text-destructive">
           {m(data.error)}
@@ -316,37 +420,121 @@ function RoomManager({ roomId }: { roomId?: string }) {
             {m(regions[data.room.region])} ·{" "}
             {m("Partida continua. Tres errores terminan el intento.")}
           </p>
-          <form
-            className="flex flex-wrap items-end gap-3"
-            onSubmit={(e) => {
-              e.preventDefault()
-              void data.add(name).then((ok) => {
-                if (ok) setName("")
-              })
-            }}
-          >
-            <Field className="w-full sm:max-w-sm">
-              <FieldLabel htmlFor="participant-name">
-                {m("Nombre del estudiante")}
-              </FieldLabel>
-              <Input
-                id="participant-name"
-                autoComplete="off"
-                required
-                maxLength={80}
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                placeholder={m("Por ejemplo: Juan Pérez")}
-                disabled={data.busy}
-              />
-            </Field>
-            <Button
-              type="submit"
-              disabled={data.busy || data.loading || !name.trim()}
+          {data.room.kind === "data" && (
+            <p className="rounded-lg border p-4">
+              {m(
+                "La feria de los datos fue reemplazada por Constructores del Perú. Los resultados anteriores se conservan."
+              )}
+            </p>
+          )}
+          {data.room.kind !== "data" && (
+            <form
+              className="grid items-start gap-4 sm:grid-cols-2 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto]"
+              onSubmit={(e) => {
+                e.preventDefault()
+                void data
+                  .assign(name, guardianPhone, requestKey, assigning?.id)
+                  .then((ok) => {
+                    if (ok) {
+                      setName("")
+                      setGuardianPhone("")
+                      setAssigning(null)
+                      setRequestKey(crypto.randomUUID())
+                    }
+                  })
+              }}
             >
-              {m("Añadir estudiante")}
-            </Button>
-          </form>
+              <Field className="min-w-0">
+                <FieldLabel htmlFor="participant-name">
+                  {m("Nombre del estudiante")}
+                </FieldLabel>
+                <Input
+                  id="participant-name"
+                  autoComplete="off"
+                  required
+                  maxLength={80}
+                  value={name}
+                  onChange={(e) => {
+                    setName(e.target.value)
+                    setRequestKey(crypto.randomUUID())
+                  }}
+                  readOnly={!!assigning}
+                  placeholder={m("Por ejemplo: Juan Pérez")}
+                  disabled={data.busy}
+                />
+              </Field>
+              <Field className="min-w-0">
+                <FieldLabel htmlFor="guardian-phone">
+                  {m("Teléfono del padre, madre o apoderado")}
+                </FieldLabel>
+                <Input
+                  id="guardian-phone"
+                  type="tel"
+                  inputMode="tel"
+                  autoComplete="tel"
+                  maxLength={30}
+                  required
+                  value={guardianPhone}
+                  onChange={(e) => {
+                    setGuardianPhone(e.target.value)
+                    setRequestKey(crypto.randomUUID())
+                  }}
+                  placeholder="+51 999 999 999"
+                  disabled={data.busy}
+                  aria-invalid={
+                    data.error ===
+                    "Escribe un celular peruano de 9 dígitos o un teléfono con código de país."
+                  }
+                  aria-describedby="guardian-phone-help"
+                />
+                {data.error ===
+                  "Escribe un celular peruano de 9 dígitos o un teléfono con código de país." && (
+                  <p role="alert" className="text-sm text-destructive">
+                    {m(data.error)}
+                  </p>
+                )}
+                <FieldDescription id="guardian-phone-help">
+                  {m(
+                    "El apoderado recibirá por WhatsApp el enlace del juego asignado."
+                  )}
+                </FieldDescription>
+              </Field>
+              <div className="flex flex-wrap gap-2 sm:col-span-2 lg:col-span-1 lg:pt-7">
+                <Button
+                  type="submit"
+                  disabled={
+                    data.busy ||
+                    data.loading ||
+                    !name.trim() ||
+                    !guardianPhone.trim()
+                  }
+                >
+                  {m(
+                    data.busy
+                      ? "Asignando…"
+                      : assigning
+                        ? "Asignar por WhatsApp"
+                        : "Registrar y asignar juego"
+                  )}
+                </Button>
+                {assigning && (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    disabled={data.busy}
+                    onClick={() => {
+                      setAssigning(null)
+                      setName("")
+                      setGuardianPhone("")
+                      setRequestKey(crypto.randomUUID())
+                    }}
+                  >
+                    {m("Cancelar")}
+                  </Button>
+                )}
+              </div>
+            </form>
+          )}
           <div className="overflow-hidden rounded-xl border">
             <Table>
               <TableCaption>
@@ -363,6 +551,7 @@ function RoomManager({ roomId }: { roomId?: string }) {
                     "Estudiante",
                     "Puntos",
                     "Estado",
+                    "WhatsApp del apoderado",
                     "Acciones",
                   ].map((label) => (
                     <TableHead key={label}>{m(label)}</TableHead>
@@ -372,7 +561,7 @@ function RoomManager({ roomId }: { roomId?: string }) {
               <TableBody>
                 {!data.participants.length ? (
                   <TableRow>
-                    <TableCell colSpan={5} className="py-8 text-center">
+                    <TableCell colSpan={6} className="py-8 text-center">
                       {m("Añade estudiantes para iniciar las pruebas.")}
                     </TableCell>
                   </TableRow>
@@ -393,7 +582,9 @@ function RoomManager({ roomId }: { roomId?: string }) {
                         <TableCell className="max-w-72 font-medium break-words whitespace-normal">
                           {p.name}
                         </TableCell>
-                        <TableCell>{number.format(p.score)}</TableCell>
+                        <TableCell className="font-semibold tabular-nums">
+                          {number.format(p.score)}
+                        </TableCell>
                         <TableCell>
                           {m(
                             p.mistakes >= 3
@@ -403,19 +594,71 @@ function RoomManager({ roomId }: { roomId?: string }) {
                                 : "Pendiente"
                           )}
                         </TableCell>
+                        <TableCell className="min-w-44 whitespace-normal">
+                          {p.assignment ? (
+                            <div className="space-y-1">
+                              <p dir="ltr" className="text-sm tabular-nums">
+                                {p.assignment.guardianPhone}
+                              </p>
+                              <p className="text-sm text-muted-foreground">
+                                {m(assignmentStatusLabels[p.assignment.status])}
+                              </p>
+                            </div>
+                          ) : (
+                            <span className="text-sm text-muted-foreground">
+                              {m("Sin asignar por WhatsApp")}
+                            </span>
+                          )}
+                        </TableCell>
                         <TableCell>
                           <div className="flex flex-wrap gap-2">
+                            {(!p.assignment || p.assignment.expired) &&
+                              data.room?.kind !== "data" && (
+                                <Button
+                                  variant="outline"
+                                  disabled={data.busy || data.loading}
+                                  onClick={() => {
+                                    setAssigning(p)
+                                    setName(p.name)
+                                    setGuardianPhone(
+                                      p.assignment?.guardianPhone ?? ""
+                                    )
+                                    setRequestKey(crypto.randomUUID())
+                                    document
+                                      .getElementById("guardian-phone")
+                                      ?.focus()
+                                  }}
+                                >
+                                  {m("Asignar por WhatsApp")}
+                                </Button>
+                              )}
+                            {p.assignment &&
+                              !p.assignment.expired &&
+                              ["failed", "expired"].includes(
+                                p.assignment.status
+                              ) && (
+                                <Button
+                                  variant="outline"
+                                  disabled={data.busy || data.loading}
+                                  onClick={() =>
+                                    void data.retryAssignment(p.id)
+                                  }
+                                >
+                                  {m("Reintentar envío")}
+                                </Button>
+                              )}
                             <Button
                               nativeButton={false}
                               variant="outline"
-                              disabled={data.busy || data.loading}
+                              disabled={
+                                data.busy ||
+                                data.loading ||
+                                data.room?.kind === "data"
+                              }
                               render={
                                 <Link
                                   to={
-                                    "/panel/salas/" +
-                                    roomId +
-                                    "/jugar/" +
-                                    p.id
+                                    "/panel/salas/" + roomId + "/jugar/" + p.id
                                   }
                                 />
                               }

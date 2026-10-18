@@ -29,7 +29,7 @@ export function WorkspaceSettings({ account = false }: { account?: boolean }) {
   const { theme, setTheme } = useTheme()
   const { health, retry } = useWorkspaceHealth(account)
   return (
-    <section className="flex max-w-2xl flex-col gap-6 py-4">
+    <section className="mx-auto flex w-full max-w-2xl flex-col gap-6">
       <div className="flex flex-col gap-1">
         <h1 className="text-2xl font-semibold">
           {account ? m("Mi cuenta") : m("Configuración")}
@@ -52,9 +52,6 @@ export function WorkspaceSettings({ account = false }: { account?: boolean }) {
                   .filter(Boolean)
                   .join(" ")}
               />
-              <FieldDescription>
-                {m("Nombre asociado a tu cuenta.")}
-              </FieldDescription>
             </Field>
             <Field>
               <FieldLabel htmlFor="account-email">

@@ -1,9 +1,13 @@
+import type { DataState } from "../domain/data.ts"
+import type { BuilderState } from "../domain/builder.ts"
+import type { FairState } from "../domain/fair.ts"
 import type { NurseryState } from "../domain/nursery.ts"
 import type { MarketState } from "../domain/market.ts"
 import type { RoomRepository } from "../application/service.ts"
 import type { Actor, Participant, Room } from "../domain/cargo.ts"
 import { RoomError } from "../domain/cargo.ts"
 type Row = {
+  assignmentData?: string | null
   id: string
   name: string
   solved: number
@@ -16,11 +20,23 @@ type Row = {
   lastEventAt: number
   version: number
 }
-const dto = (p: Row): Participant => ({
-  ...p,
-  started: !!p.started,
-  paused: !!p.paused,
-})
+const dto = (p: Row): Participant => {
+  const { assignmentData, ...participant } = p
+  const assignment = assignmentData ? JSON.parse(assignmentData) : null
+  return {
+    ...participant,
+    ...(assignment
+      ? {
+          assignment: {
+            ...assignment,
+            expired: Date.parse(assignment.expiresAt) <= Date.now(),
+          },
+        }
+      : {}),
+    started: !!p.started,
+    paused: !!p.paused,
+  }
+}
 export function d1Rooms(db: D1Database): RoomRepository {
   const owned = (a: Actor, room: string) => [room, a.tenantId, a.userId]
   const owner =
@@ -80,6 +96,87 @@ export function d1Rooms(db: D1Database): RoomRepository {
         .run()
       return !!result.meta.changes
     },
+    async fair(a, room, id) {
+      const row = await db
+        .prepare(
+          `SELECT fair_state AS state FROM game_participants WHERE id=? AND ${owner}`
+        )
+        .bind(id, ...owned(a, room))
+        .first<{ state: string | null }>()
+      return row?.state ? (JSON.parse(row.state) as FairState) : null
+    },
+    async saveFair(a, room, p, state, version) {
+      const result = await db
+        .prepare(
+          `UPDATE game_participants SET score=?,solved=?,mistakes=?,caught=0,paused=0,fair_state=?,version=? WHERE id=? AND version=? AND ${owner}`
+        )
+        .bind(
+          p.score,
+          p.solved,
+          p.mistakes,
+          JSON.stringify(state),
+          p.version,
+          p.id,
+          version,
+          ...owned(a, room)
+        )
+        .run()
+      return !!result.meta.changes
+    },
+    async data(a, room, id) {
+      const row = await db
+        .prepare(
+          `SELECT data_state AS state FROM game_participants WHERE id=? AND ${owner}`
+        )
+        .bind(id, ...owned(a, room))
+        .first<{ state: string | null }>()
+      return row?.state ? (JSON.parse(row.state) as DataState) : null
+    },
+    async saveData(a, room, p, state, version) {
+      const result = await db
+        .prepare(
+          `UPDATE game_participants SET score=?,solved=?,mistakes=?,caught=0,paused=0,data_state=?,version=? WHERE id=? AND version=? AND ${owner}`
+        )
+        .bind(
+          p.score,
+          p.solved,
+          p.mistakes,
+          JSON.stringify(state),
+          p.version,
+          p.id,
+          version,
+          ...owned(a, room)
+        )
+        .run()
+      return !!result.meta.changes
+    },
+    async builder(a, room, id) {
+      const row = await db
+        .prepare(
+          `SELECT builder_state AS state FROM game_participants WHERE id=? AND ${owner}`
+        )
+        .bind(id, ...owned(a, room))
+        .first<{ state: string | null }>()
+      return row?.state ? (JSON.parse(row.state) as BuilderState) : null
+    },
+    async saveBuilder(a, room, p, state, version) {
+      const result = await db
+        .prepare(
+          `UPDATE game_participants SET score=?,solved=?,mistakes=?,caught=0,paused=0,builder_state=?,version=? WHERE id=? AND version=? AND ${owner}`
+        )
+        .bind(
+          p.score,
+          p.solved,
+          p.mistakes,
+          JSON.stringify(state),
+          p.version,
+          p.id,
+          version,
+          ...owned(a, room)
+        )
+        .run()
+      return !!result.meta.changes
+    },
     async teacher(a) {
       return !!(await db
         .prepare(
@@ -92,7 +189,7 @@ export function d1Rooms(db: D1Database): RoomRepository {
       return (
         await db
           .prepare(
-            "SELECT id,name,region,kind,mode,created_at AS createdAt FROM game_rooms WHERE tenant_id=? AND user_id=? ORDER BY created_at DESC,id DESC LIMIT 100"
+            "SELECT id,name,region,kind,mode,created_at AS createdAt FROM game_rooms WHERE tenant_id=? AND user_id=? AND family_child_id IS NULL ORDER BY created_at DESC,id DESC LIMIT 100"
           )
           .bind(a.tenantId, a.userId)
           .all<Room>()
@@ -119,7 +216,7 @@ export function d1Rooms(db: D1Database): RoomRepository {
     async find(a, id) {
       return db
         .prepare(
-          "SELECT id,name,region,kind,mode,created_at AS createdAt FROM game_rooms WHERE id=? AND tenant_id=? AND user_id=?"
+          "SELECT id,name,region,kind,mode,created_at AS createdAt,family_child_id AS familyChildId FROM game_rooms WHERE id=? AND tenant_id=? AND user_id=?"
         )
         .bind(...owned(a, id))
         .first<Room>()
@@ -128,9 +225,9 @@ export function d1Rooms(db: D1Database): RoomRepository {
       return (
         await db
           .prepare(
-            `SELECT id,name,solved,started,version,score,caught,mistakes,paused,active_ms AS activeMs,last_event_at AS lastEventAt FROM game_participants WHERE ${owner} ORDER BY score DESC,name_key,id`
+            `SELECT id,name,solved,started,version,score,caught,mistakes,paused,active_ms AS activeMs,last_event_at AS lastEventAt,(SELECT json_object('guardianPhone',guardian_phone,'status',status,'expiresAt',strftime('%Y-%m-%dT%H:%M:%fZ',expires_at/1000.0,'unixepoch')) FROM student_assignments a WHERE a.participant_id=game_participants.id AND a.tenant_id=? AND a.user_id=?) AS assignmentData FROM game_participants WHERE ${owner} ORDER BY score DESC,name_key,id`
           )
-          .bind(...owned(a, room))
+          .bind(a.tenantId, a.userId, ...owned(a, room))
           .all<Row>()
       ).results.map(dto)
     },
@@ -147,7 +244,7 @@ export function d1Rooms(db: D1Database): RoomRepository {
       try {
         const r = await db
           .prepare(
-            "INSERT INTO game_participants(id,room_id,name,name_key) SELECT ?,id,?,? FROM game_rooms WHERE id=? AND tenant_id=? AND user_id=? AND (SELECT COUNT(*) FROM game_participants WHERE room_id=game_rooms.id)<100"
+            "INSERT INTO game_participants(id,room_id,name,name_key) SELECT ?,id,?,? FROM game_rooms WHERE id=? AND tenant_id=? AND user_id=? AND family_child_id IS NULL AND (SELECT COUNT(*) FROM game_participants WHERE room_id=game_rooms.id)<100"
           )
           .bind(id, name, key, ...owned(a, room))
           .run()

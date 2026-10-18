@@ -51,7 +51,11 @@ export function NavMain({
           >
             <SidebarMenuButton
               tooltip={m(item.title)}
-              isActive={pathname === item.url}
+              isActive={
+                pathname === item.url ||
+                (item.url === "/panel/salas" && pathname === "/panel") ||
+                (item.url !== "/panel" && pathname.startsWith(item.url + "/"))
+              }
               onClick={() => setOpenMobile(false)}
               render={
                 item.url.startsWith("/") ? (

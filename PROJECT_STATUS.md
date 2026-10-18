@@ -9,9 +9,9 @@
 ## Local integration
 
 - Local onboarding, pixel artwork, Spanish routes, and the shared family dashboard sidebar are preserved. Integration originated on `codex/integrate-remote-games` and is included in `master`.
-- Remote commit `c873a3f` adds market/nursery games, named rooms, and room deletion. Its changes are integrated with the existing family sample and translations.
+- Remote changes through `73a0942` are integrated with the local game work. The family sample is replaced locally by [saved multi-child family games](docs/FAMILY_GAMES.md), reusing all five active teacher games.
 - Existing migration filenames are retained. The three pending game migrations were applied locally after a database backup; existing application data was unchanged.
-- `pnpm run check` passes: architecture, lint, typechecking, 142 tests, and the production build/dry run.
+- The current local `pnpm run check` passes: architecture, lint, typechecking, 121 Worker tests, 40 web tests, four gateway tests, eleven architecture fixtures, and the production build/dry run.
 
 ## Next steps
 

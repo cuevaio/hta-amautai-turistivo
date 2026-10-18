@@ -8,6 +8,14 @@ import { ApiError } from "@/shared/api/client"
 import { roomsApi } from "../api/rooms-api"
 export function roomError(e: unknown) {
   const messages: Record<string, string> = {
+    assignment_not_found:
+      "El enlace de la actividad venció o ya no está disponible. Solicita otro a tu docente.",
+    assignment_conflict:
+      "Esta actividad ya fue asignada con otros datos o el envío sigue en curso. Actualiza la sala.",
+    invalid_guardian_phone:
+      "Escribe un celular peruano de 9 dígitos o un teléfono con código de país.",
+    invalid_assignment_input:
+      "Revisa el nombre del estudiante y el teléfono de su apoderado.",
     duplicate_participant:
       "Ya hay un participante con ese nombre en esta sala.",
     room_not_found: "No encontramos la sala o no tienes acceso.",
@@ -34,6 +42,7 @@ export function useRooms(roomId?: string) {
     participants: CargoParticipant[]
     error: string
   }>({ key: "", rooms: [], room: null, participants: [], error: "" })
+  const [notice, setNotice] = useState("")
   const [error, setError] = useState("")
   const [busy, setBusy] = useState(false)
   const lock = useRef(false)
@@ -74,6 +83,7 @@ export function useRooms(roomId?: string) {
     lock.current = true
     setBusy(true)
     setError("")
+    setNotice("")
     try {
       await run()
       return true
@@ -93,6 +103,7 @@ export function useRooms(roomId?: string) {
     loadError: resource.key === key ? resource.error : "",
     error,
     busy,
+    notice,
     refresh: () => setRevision((n) => n + 1),
     create: (
       region: CargoRegion,
@@ -113,6 +124,35 @@ export function useRooms(roomId?: string) {
             ...current,
             rooms: current.rooms.filter((room) => room.id !== id),
           }))
+        }
+      }),
+    assign: (
+      name: string,
+      guardianPhone: string,
+      requestKey: string,
+      participantId?: string
+    ) =>
+      action(async () => {
+        if (!roomId) return
+        await roomsApi.assign(
+          roomId,
+          { name, guardianPhone, requestKey },
+          participantId
+        )
+        if (alive.current) {
+          setNotice(
+            "Actividad asignada. El enlace está en la cola de envío de WhatsApp del apoderado."
+          )
+          setRevision((n) => n + 1)
+        }
+      }),
+    retryAssignment: (id: string) =>
+      action(async () => {
+        if (!roomId) return
+        await roomsApi.retryAssignment(roomId, id)
+        if (alive.current) {
+          setNotice("El envío por WhatsApp se reintentará en unos momentos.")
+          setRevision((n) => n + 1)
         }
       }),
     add: (name: string) =>

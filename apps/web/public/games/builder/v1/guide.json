@@ -1,0 +1,52 @@
+{
+  "frames": {
+    "0": {
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 543,
+        "h": 724
+      },
+      "rotated": false,
+      "trimmed": false
+    },
+    "1": {
+      "frame": {
+        "x": 543,
+        "y": 0,
+        "w": 543,
+        "h": 724
+      },
+      "rotated": false,
+      "trimmed": false
+    },
+    "2": {
+      "frame": {
+        "x": 1086,
+        "y": 0,
+        "w": 543,
+        "h": 724
+      },
+      "rotated": false,
+      "trimmed": false
+    },
+    "3": {
+      "frame": {
+        "x": 1629,
+        "y": 0,
+        "w": 543,
+        "h": 724
+      },
+      "rotated": false,
+      "trimmed": false
+    }
+  },
+  "meta": {
+    "image": "guide.webp",
+    "size": {
+      "w": 2172,
+      "h": 724
+    },
+    "scale": "1"
+  }
+}

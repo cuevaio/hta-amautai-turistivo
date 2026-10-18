@@ -1,0 +1,36 @@
+{
+  "version": 1,
+  "generator": "OpenAI built-in image_gen",
+  "assets": [
+    {
+      "name": "guide",
+      "size": [
+        2172,
+        724
+      ],
+      "mode": "RGBA",
+      "sha256": "c2fa4d3739f8285f6dde8c16e76d32c3231c835efd325fed1638c57534aa657d"
+    },
+    {
+      "name": "workbench",
+      "size": [
+        1536,
+        1024
+      ],
+      "mode": "RGB",
+      "sha256": "4b1851723a19adb0954d89da92e662e0ee2234f4cf3cffb446a8e6b590c4019b"
+    }
+  ],
+  "animation": {
+    "guide": {
+      "frames": 4,
+      "fps": 3,
+      "cell": [
+        543,
+        724
+      ]
+    }
+  },
+  "reuse": "Existing Fair coast/highlands/jungle backgrounds; provenance retained there.",
+  "geometry": "Mathematically exact polygon pieces, highlights and snap animation authored in Phaser, rather than raster approximation."
+}

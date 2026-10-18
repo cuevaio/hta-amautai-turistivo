@@ -4,12 +4,16 @@ import {
   type AccountProfile,
   type FamilyProfile,
   type FamilyProfileInput,
-  type ProfileRole,
+  type ProfileRegistration,
+  type ProfileWelcome,
 } from "../domain/profile.ts"
 
 export interface ProfileRepository {
   find(actor: Actor): Promise<AccountProfile | null>
-  save(actor: Actor, role: ProfileRole): Promise<AccountProfile>
+  save(actor: Actor, input: ProfileRegistration): Promise<AccountProfile>
+  pendingWelcomes(now: number): Promise<ProfileWelcome[]>
+  completeWelcome(actor: Actor, now: number): Promise<void>
+  expireWelcomes(now: number): Promise<void>
 }
 
 export interface FamilyProfileRepository {
@@ -20,11 +24,29 @@ export interface FamilyProfileRepository {
 export function profileService(repository: ProfileRepository) {
   return {
     get: (actor: Actor) => repository.find(actor),
-    save: (actor: Actor, role: ProfileRole) => repository.save(actor, role),
+    save: (actor: Actor, input: ProfileRegistration) =>
+      repository.save(actor, input),
   }
 }
 
 export type ProfileService = ReturnType<typeof profileService>
+
+export async function dispatchProfileWelcomes(
+  repository: ProfileRepository,
+  welcome: (input: ProfileWelcome) => Promise<void>,
+  now = Date.now()
+) {
+  await repository.expireWelcomes(now)
+  for (const input of await repository.pendingWelcomes(now)) {
+    try {
+      await welcome(input)
+      await repository.completeWelcome(input, now)
+    } catch {
+      // Keep the durable registration event for the next minute's retry.
+      console.info("amautai_profile_welcome_deferred")
+    }
+  }
+}
 
 export function familyProfileService(repository: FamilyProfileRepository) {
   return {

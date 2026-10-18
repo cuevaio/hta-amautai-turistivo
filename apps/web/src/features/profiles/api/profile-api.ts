@@ -1,7 +1,7 @@
 import { api } from "@/shared/api/client"
 import type {
   AccountProfile,
-  AccountProfileRole,
+  AccountProfileInput,
   FamilyProfile,
   FamilyProfileInput,
 } from "@amautai/contracts"
@@ -9,10 +9,10 @@ import type {
 export const profileApi = {
   get: (signal?: AbortSignal) =>
     api<{ profile: AccountProfile | null }>("/api/profile", { signal }),
-  save: (role: AccountProfileRole) =>
+  save: (input: AccountProfileInput) =>
     api<{ profile: AccountProfile }>("/api/profile", {
       method: "PUT",
-      body: JSON.stringify({ role }),
+      body: JSON.stringify(input),
     }),
   getFamily: (signal?: AbortSignal) =>
     api<{ profile: FamilyProfile | null }>("/api/profile/family", { signal }),

@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from "react"
 import type { CargoRun } from "@amautai/contracts"
-import { roomsApi } from "../api/rooms-api"
+import { useGameApi } from "./game-api-context"
 import { roomError } from "./use-rooms"
 export function useCargoRun(room: string, participant: string) {
+  const roomsApi = useGameApi()
   const [revision, setRevision] = useState(0)
   const key = room + ":" + participant + ":" + revision
   const [resource, setResource] = useState<{
@@ -33,7 +34,7 @@ export function useCargoRun(room: string, participant: string) {
           setResource({ key, run: null, error: roomError(e) })
       })
     return () => c.abort()
-  }, [room, participant, key])
+  }, [room, participant, key, roomsApi])
   const run = resource.key === key ? resource.run : null
   async function perform(kind: "collect" | "pause" | "retry", value = 0) {
     if (lock.current || !run) return

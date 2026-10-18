@@ -32,7 +32,7 @@ export function LoginPage({
           </div>
         </div>
         <div className="flex flex-1 items-center justify-center py-12">
-          <div className="w-full max-w-xs">
+          <div className="w-full max-w-sm">
             {mode === "verify" ? (
               <VerifyEmailForm />
             ) : mode === "forgot" || mode === "reset" ? (

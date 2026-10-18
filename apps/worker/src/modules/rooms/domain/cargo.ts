@@ -1,11 +1,12 @@
 export type Actor = { tenantId: string; userId: string }
 export type Region = "coast" | "highlands" | "jungle"
 export type Room = {
+  familyChildId?: string | null
   name: string | null
   id: string
   region: Region
   createdAt: string
-  kind: "cargo" | "market" | "nursery"
+  kind: "cargo" | "market" | "nursery" | "fair" | "data" | "builder"
   mode: "practice" | "challenge"
 }
 export type Participant = {
@@ -30,6 +31,9 @@ export const challenges = [
 ]
 export class RoomError extends Error {
   code:
+    | "assignment_not_found"
+    | "assignment_conflict"
+    | "invalid_guardian_phone"
     | "room_not_found"
     | "participant_not_found"
     | "duplicate_participant"

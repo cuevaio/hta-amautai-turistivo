@@ -2,9 +2,6 @@ import { z } from "zod"
 export * from "./education.ts"
 export * from "./rooms.ts"
 
-export const accountProfileInput = z
-  .object({ role: z.enum(["teacher", "parent"]) })
-  .strict()
 export type AccountProfileRole = z.infer<typeof accountProfileInput>["role"]
 export type AccountProfile = { role: AccountProfileRole; updatedAt: string }
 export const familyProfileInput = z
@@ -82,6 +79,13 @@ export const notificationPhoneInput = z
     consent: z.literal(true),
   })
   .strict()
+export const accountProfileInput = notificationPhoneInput
+  .extend({
+    role: z.enum(["teacher", "parent"]),
+    locale: z.enum(["es-PE", "quy-PE", "ay-PE"]),
+  })
+  .strict()
+export type AccountProfileInput = z.infer<typeof accountProfileInput>
 export const notificationVerifyInput = z
   .object({ code: z.string().regex(/^\d{6}$/) })
   .strict()
@@ -152,3 +156,12 @@ export type { MarketRun, MarketTask } from "./rooms.ts"
 
 export { nurseryAnswerInput } from "./nursery.ts"
 export type { NurseryTask, NurseryRun } from "./nursery.ts"
+
+export * from "./fair.ts"
+export * from "./data.ts"
+export * from "./builder.ts"
+
+export * from "./family-games.ts"
+
+export { studentAssignmentInput } from "./rooms.ts"
+export type { StudentAssignment } from "./rooms.ts"

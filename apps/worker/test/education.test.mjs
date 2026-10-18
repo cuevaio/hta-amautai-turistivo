@@ -50,6 +50,18 @@ function setup() {
     .sort())
     db.exec(readFileSync(new URL(name, migrations), "utf8"))
   const DB = {
+    async batch(statements) {
+      db.exec("BEGIN")
+      try {
+        const results = []
+        for (const statement of statements) results.push(await statement.run())
+        db.exec("COMMIT")
+        return results
+      } catch (error) {
+        db.exec("ROLLBACK")
+        throw error
+      }
+    },
     prepare(sql) {
       let args = []
       return {
@@ -255,10 +267,17 @@ test("HTTP enforces auth, mutation origin, strict scope and absent onboarding", 
   )
   assert.equal((await s.request("/api/education/catalog")).status, 403)
   assert.equal(
-    (await s.request("/api/profile", {
-      method: "PUT",
-      data: { role: "teacher" },
-    })).status,
+    (
+      await s.request("/api/profile", {
+        method: "PUT",
+        data: {
+          role: "teacher",
+          phone: "+51999999999",
+          consent: true,
+          locale: "es-PE",
+        },
+      })
+    ).status,
     200
   )
   assert.equal((await s.request("/api/education/catalog")).status, 200)
@@ -307,11 +326,18 @@ test("HTTP round trip persists independent session versions and reports only mis
   const s = setup()
   for (const user of ["alice", "bob"])
     assert.equal(
-      (await s.request("/api/profile", {
-        method: "PUT",
-        data: { role: "teacher" },
-        user,
-      })).status,
+      (
+        await s.request("/api/profile", {
+          method: "PUT",
+          data: {
+            role: "teacher",
+            phone: "+51999999999",
+            consent: true,
+            locale: "es-PE",
+          },
+          user,
+        })
+      ).status,
       200
     )
   assert.equal(

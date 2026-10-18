@@ -9,6 +9,7 @@ import type {
   WhatsAppGateway,
   VerificationCrypto,
 } from "./ports.ts"
+import { welcomeMessage, type WelcomeInput } from "../domain/welcome.ts"
 export function notificationService(
   repo: NotificationRepository,
   gateway: WhatsAppGateway,
@@ -16,6 +17,22 @@ export function notificationService(
   clock = Date.now
 ) {
   return {
+    async welcome(input: WelcomeInput) {
+      await repo.welcome({
+        tenantId: input.tenantId,
+        userId: input.userId,
+        phone: input.phone,
+        id: secure.id(),
+        kind: "reminder",
+        ...welcomeMessage(input),
+        status: "pending",
+        scheduled_at: input.createdAt,
+        expires_at: input.createdAt + 86400000,
+        created_at: input.createdAt,
+        attempts: 0,
+        request_key: "account-welcome-v1",
+      })
+    },
     async overview(actor: Actor) {
       const [contact, items, connection] = await Promise.all([
         repo.contact(actor),

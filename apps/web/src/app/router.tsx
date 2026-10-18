@@ -23,6 +23,11 @@ import {
 const LandingPage = lazy(() =>
   import("@/pages/landing").then((module) => ({ default: module.LandingPage }))
 )
+const AssignedGamePage = lazy(() =>
+  import("@/features/rooms").then((module) => ({
+    default: module.AssignedGamePage,
+  }))
+)
 const FamilyGamePage = lazy(() =>
   import("@/features/rooms").then((module) => ({
     default: module.FamilyGamePage,
@@ -72,19 +77,63 @@ export function App() {
         <BrowserRouter>
           <Suspense fallback={<RouteLoading />}>
             <Routes>
+              <Route path="/actividad" element={<AssignedGamePage />} />
               <Route path="/" element={<LandingPage />} />
-              <Route path="/evidence" element={<LocalizedRouteRedirect to="/lista-de-espera" />} />
-              <Route path="/privacy" element={<LocalizedRouteRedirect to="/privacidad" />} />
-              <Route path="/terms" element={<LocalizedRouteRedirect to="/terminos" />} />
-              <Route path="/login" element={<LocalizedRouteRedirect to="/iniciar-sesion" />} />
-              <Route path="/signup" element={<LocalizedRouteRedirect to="/crear-cuenta" />} />
-              <Route path="/verify-email" element={<LocalizedRouteRedirect to="/verificar-correo" />} />
-              <Route path="/forgot-password" element={<LocalizedRouteRedirect to="/recuperar-contrasena" />} />
-              <Route path="/reset-password" element={<LocalizedRouteRedirect to="/restablecer-contrasena" />} />
-              <Route path="/panel/projects/*" element={<LegacyPanelRedirect />} />
-              <Route path="/panel/sessions/*" element={<LegacyPanelRedirect />} />
+              <Route
+                path="/evidence"
+                element={<LocalizedRouteRedirect to="/lista-de-espera" />}
+              />
+              <Route
+                path="/privacy"
+                element={<LocalizedRouteRedirect to="/privacidad" />}
+              />
+              <Route
+                path="/terms"
+                element={<LocalizedRouteRedirect to="/terminos" />}
+              />
+              <Route
+                path="/login"
+                element={<LocalizedRouteRedirect to="/iniciar-sesion" />}
+              />
+              <Route
+                path="/signup"
+                element={<LocalizedRouteRedirect to="/crear-cuenta" />}
+              />
+              <Route
+                path="/verify-email"
+                element={<LocalizedRouteRedirect to="/verificar-correo" />}
+              />
+              <Route
+                path="/forgot-password"
+                element={<LocalizedRouteRedirect to="/recuperar-contrasena" />}
+              />
+              <Route
+                path="/reset-password"
+                element={
+                  <LocalizedRouteRedirect to="/restablecer-contrasena" />
+                }
+              />
+              <Route
+                path="/panel/proyectos/*"
+                element={<Navigate to="/panel" replace />}
+              />
+              <Route
+                path="/panel/sesiones/*"
+                element={<Navigate to="/panel" replace />}
+              />
+              <Route
+                path="/panel/projects/*"
+                element={<LegacyPanelRedirect />}
+              />
+              <Route
+                path="/panel/sessions/*"
+                element={<LegacyPanelRedirect />}
+              />
               <Route path="/panel/rooms/*" element={<LegacyPanelRedirect />} />
-              <Route path="/panel/notifications" element={<LegacyPanelRedirect />} />
+              <Route
+                path="/panel/notifications"
+                element={<LegacyPanelRedirect />}
+              />
               <Route path="/panel/settings" element={<LegacyPanelRedirect />} />
               <Route path="/panel/account" element={<LegacyPanelRedirect />} />
               <Route path="/lista-de-espera" element={<EvidencePage />} />
@@ -92,7 +141,10 @@ export function App() {
                 path="/privacidad"
                 element={<LegalPage document="privacy" />}
               />
-              <Route path="/terminos" element={<LegalPage document="terms" />} />
+              <Route
+                path="/terminos"
+                element={<LegalPage document="terms" />}
+              />
               <Route path="/dashboard" element={<LegacyPanelRedirect />} />
               <Route path="/dashboard/*" element={<LegacyPanelRedirect />} />
               <Route
@@ -144,7 +196,10 @@ export function App() {
                 path="/restablecer-contrasena"
                 element={<LoginPage mode="reset" />}
               />
-              <Route path="/crear-cuenta" element={<LoginPage mode="signup" />} />
+              <Route
+                path="/crear-cuenta"
+                element={<LoginPage mode="signup" />}
+              />
               <Route
                 path="/verificar-correo"
                 element={<LoginPage mode="verify" />}
@@ -174,24 +229,24 @@ export function App() {
                 }
               />
               <Route
+                path="/panel/familia/jugar/:roomId/:participantId"
+                element={
+                  <AuthGuard>
+                    <ProfileGate>
+                      <FamilyGameGate>
+                        <FamilyGamePage />
+                      </FamilyGameGate>
+                    </ProfileGate>
+                  </AuthGuard>
+                }
+              />
+              <Route
                 path="/panel/:section"
                 element={
                   <AuthGuard>
                     <ProfileGate>
                       <EducationGate>
                         <DashboardPage />
-                      </EducationGate>
-                    </ProfileGate>
-                  </AuthGuard>
-                }
-              />
-              <Route
-                path="/panel/sesiones/:sessionId"
-                element={
-                  <AuthGuard>
-                    <ProfileGate>
-                      <EducationGate>
-                        <DashboardPage sectionOverride="sessions" />
                       </EducationGate>
                     </ProfileGate>
                   </AuthGuard>

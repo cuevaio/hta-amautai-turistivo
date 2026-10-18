@@ -49,9 +49,8 @@ export function LandingPage() {
         </div>
         <Button
           nativeButton={false}
-          size="lg"
           variant="outline"
-          className="col-start-2 row-start-2 min-h-11 justify-self-end"
+          className="col-start-2 row-start-2 justify-self-end"
           render={<Link to="/login" />}
         >
           {m("Iniciar sesión")}
@@ -74,8 +73,6 @@ export function LandingPage() {
             <div className="flex w-full flex-col items-start gap-3 sm:w-auto">
               <Button
                 nativeButton={false}
-                size="lg"
-                className="min-h-11 max-w-full whitespace-normal"
                 render={<Link to="/signup" />}
               >
                 {m("Preparar mi primera sesión")}
@@ -197,8 +194,6 @@ export function LandingPage() {
             </p>
             <Button
               nativeButton={false}
-              size="lg"
-              className="min-h-11 max-w-full whitespace-normal"
               render={<Link to="/signup" />}
             >
               {m("Crear mi cuenta docente")}
@@ -211,6 +206,9 @@ export function LandingPage() {
           aria-label={m("Contenido del documento")}
           className="mx-auto flex max-w-7xl flex-wrap gap-x-6 gap-y-3 px-5 pt-6 text-sm sm:px-8 lg:px-12"
         >
+          <Link to="/evidence" className="underline underline-offset-4">
+            {m("Resultados de las encuestas")}
+          </Link>
           <Link to="/privacy" className="underline underline-offset-4">
             {m("Política de privacidad")}
           </Link>
@@ -231,9 +229,7 @@ export function LandingPage() {
           </p>
           <Button
             nativeButton={false}
-            size="lg"
             variant="link"
-            className="min-h-11"
             render={<Link to="/login" />}
           >
             {m("Iniciar sesión")}

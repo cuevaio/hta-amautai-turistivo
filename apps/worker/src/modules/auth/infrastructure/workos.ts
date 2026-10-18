@@ -19,12 +19,17 @@ async function invoke<T>(operation: () => Promise<T>): Promise<T> {
     const detail = error as {
       code?: string
       status?: number
-      rawData?: { code?: string; pending_authentication_token?: string }
+      rawData?: {
+        code?: string
+        pending_authentication_token?: string
+        email_verification_id?: string
+      }
     }
     throw {
       code: detail.rawData?.code || detail.code,
       status: detail.status,
       pendingToken: detail.rawData?.pending_authentication_token,
+      verificationId: detail.rawData?.email_verification_id,
     }
   }
 }
@@ -33,6 +38,8 @@ export function workosGateway(
 ): AuthGateway {
   const service = workos.userManagement
   return {
+    getEmailVerification: (id) =>
+      invoke(() => service.getEmailVerification(id)),
     createUser: (input) => invoke(() => service.createUser(input)),
     authenticateWithPassword: (input) =>
       invoke(() => service.authenticateWithPassword(input)),

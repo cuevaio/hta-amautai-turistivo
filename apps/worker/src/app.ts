@@ -1,3 +1,4 @@
+import { authMailer } from "./modules/auth/infrastructure/auth-mailer.ts"
 import { emailService } from "./modules/notifications/application/email-service.ts"
 import { d1Email } from "./modules/notifications/infrastructure/d1-email.ts"
 import { stalwartEmail } from "./modules/notifications/infrastructure/stalwart-email.ts"
@@ -42,7 +43,20 @@ export function createApp(
   }
   registerAuthRoutes(app, {
     authenticate,
-    service: (c) => createAuthService(workosGateway(provider(c))),
+    service: (c) =>
+      createAuthService(
+        workosGateway(provider(c)),
+        c.env.AUTH_EMAIL_MODE === "custom"
+          ? authMailer(
+              stalwartEmail({
+                sessionUrl: c.env.EMAIL_JMAP_SESSION_URL,
+                username: c.env.EMAIL_JMAP_USERNAME,
+                password: c.env.EMAIL_JMAP_PASSWORD,
+                from: c.env.EMAIL_FROM,
+              })
+            )
+          : undefined
+      ),
     ensureTenant,
     healthy: (c) => workspace(c).healthy(),
   })
@@ -66,10 +80,18 @@ export function createApp(
       await ensureTenant(c)
     }
   )
-  registerEmailRoutes(app, c => emailService(d1Email(c.env.DB), stalwartEmail({
-    sessionUrl:c.env.EMAIL_JMAP_SESSION_URL, username:c.env.EMAIL_JMAP_USERNAME,
-    password:c.env.EMAIL_JMAP_PASSWORD, from:c.env.EMAIL_FROM,
-  }), verificationCrypto(c.env.WORKOS_COOKIE_PASSWORD)))
+  registerEmailRoutes(app, (c) =>
+    emailService(
+      d1Email(c.env.DB),
+      stalwartEmail({
+        sessionUrl: c.env.EMAIL_JMAP_SESSION_URL,
+        username: c.env.EMAIL_JMAP_USERNAME,
+        password: c.env.EMAIL_JMAP_PASSWORD,
+        from: c.env.EMAIL_FROM,
+      }),
+      verificationCrypto(c.env.WORKOS_COOKIE_PASSWORD)
+    )
+  )
   app.onError(handleApiError)
   app.notFound((c) => c.json({ error: "not_found" }, 404))
   return app

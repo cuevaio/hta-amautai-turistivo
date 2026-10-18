@@ -1,4 +1,5 @@
 export type Bindings = {
+  AUTH_EMAIL_MODE?: "custom"
   EMAIL_JMAP_SESSION_URL?: string
   EMAIL_JMAP_USERNAME?: string
   EMAIL_JMAP_PASSWORD?: string

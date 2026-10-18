@@ -19,6 +19,10 @@ function kind(file) {
       return { side: "backend", layer: "entry" }
     if (["app.ts", "index.ts"].includes(rest))
       return { side: "backend", layer: "composition" }
+    if (rest.startsWith("shared/application/"))
+      return { side: "backend", layer: "application" }
+    if (rest.startsWith("shared/infrastructure/"))
+      return { side: "backend", layer: "infrastructure" }
     if (rest.startsWith("shared/domain/"))
       return { side: "backend", layer: "domain" }
     if (rest.startsWith("shared/http/"))

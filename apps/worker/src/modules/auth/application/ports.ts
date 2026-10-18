@@ -8,6 +8,9 @@ export type SessionOptions = {
 }
 export type AuthResult = { sealedSession?: string }
 export interface AuthGateway {
+  getEmailVerification(
+    id: string
+  ): Promise<{ id: string; email: string; code: string }>
   createUser(input: Registration): Promise<unknown>
   authenticateWithPassword(
     input: Credentials & SessionOptions
@@ -30,4 +33,5 @@ export type AuthFailure = {
   code?: string
   status?: number
   pendingToken?: string
+  verificationId?: string
 }

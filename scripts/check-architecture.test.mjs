@@ -111,3 +111,31 @@ test("gateway remains isolated from Worker/browser internals", () => {
     ).some((e) => e.includes("Gateway cannot"))
   )
 })
+
+test("shared mail infrastructure stays inward and shared application cannot fetch or import features", () => {
+  const port = "apps/worker/src/shared/application/email.ts"
+  const adapter = "apps/worker/src/shared/infrastructure/mail.ts"
+  assert.deepEqual(
+    checkArchitecture(
+      new Map([
+        [port, "export type Message = {id:string}"],
+        [
+          adapter,
+          'import type { Message } from "../application/email.ts"; export const send=fetch',
+        ],
+      ])
+    ),
+    []
+  )
+  assert.ok(
+    checkArchitecture(
+      new Map([
+        [
+          port,
+          'import "../../modules/projects/application/service.ts"; export const send=fetch',
+        ],
+        [a, "export {}"],
+      ])
+    ).some((error) => error.includes("Shared code cannot"))
+  )
+})

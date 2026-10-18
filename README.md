@@ -10,9 +10,11 @@ Development handoff: [messaging architecture, WhatsApp and email](docs/MESSAGING
 
 Amautai is a multilingual math-learning platform for primary-school teachers and families. It includes WorkOS authentication, a localized public landing page, teacher onboarding, persisted learning-session drafts for second-grade Mathematics, a tenant-scoped project workspace, and email/WhatsApp notification settings. Interactive learning games and measured learning outcomes remain future work.
 
-The public Worker is `30bc1389-aa25-4c4a-8817-1f4aa2514ead` (October 18, 2026; legal pages published), with D1 migration `0006`. The domain entry Worker is `610d9376-2822-41fe-8d2e-e0a1910cab66`. See [project status](PROJECT_STATUS.md) for verified behavior and remaining work.
+The production configuration targets one Amautai Worker and its D1 database in the Turistivo Cloudflare account. The canonical domain binds directly to that Worker; the app does not proxy to `amautai.urday.dev`. See [project status](PROJECT_STATUS.md) for verified behavior and remaining work.
 
 The public code includes teacher onboarding and persisted learning-session drafts for second-grade primary Mathematics, the localized landing page and static login artwork. See [teacher onboarding and session drafts](docs/TEACHER_ONBOARDING.md).
+
+The public `/evidence` page presents the October 18, 2026 aggregate results from the problem-validation surveys, with links to the original teacher and family forms. Individual names, telephone numbers and free-text responses remain private; the published results are a snapshot and are not synchronized automatically. See [survey method and results](docs/PROBLEM_VALIDATION_SURVEYS.md).
 
 ## Stack
 
@@ -265,18 +267,13 @@ Activation order: deploy the custom mail implementation and AUTH_EMAIL_MODE=cust
 
 The custom-mail release was published as Worker b438d08f-2d46-4063-967c-d9f3608fc5bd with migration 0005 on October 17, 2026. WorkOS delivery for verification/reset is disabled in the isolated environment. A real public recovery request arrived in Outlook Inbox from the Amautai sender at 16:41:02 Lima. No password was changed. Verification challenge delivery is covered by automated password/signup/OAuth tests; a fresh real signup remains untested in this release.
 
-## Public domain migration
+## Cloudflare deployment
 
-Canonical URL: https://amautai.turistivo.com. The `amautai-domain` Worker in the Turistivo Cloudflare account (`49d9cc4a3f40d7228ed3593263d35588`) forwards requests to the existing `amautai` Worker at https://amautai.urday.dev in the personal account. D1, secrets, scheduled jobs and the `notificaciones@amautai.urday.dev` mail identity remain there. OAuth redirects are forwarded without following them; host-only cookies stay on the public host. The previous callback remains allowed during migration.
+Canonical URL: https://amautai.turistivo.com. `apps/worker/wrangler.jsonc` targets the Turistivo Cloudflare account (`49d9cc4a3f40d7228ed3593263d35588`), binds that domain directly to the `amautai` Worker, and uses its D1 database. Do not deploy a separate domain proxy. Worker secrets are provisioned separately and never committed.
 
-Deploy the application first, then the entry Worker:
+Build and deploy the application:
 
 ```bash
 pnpm --filter @amautai/worker exec wrangler d1 migrations apply andes-app-db --remote
 pnpm --filter @amautai/worker exec wrangler deploy
-pnpm --filter @amautai/worker exec wrangler deploy --config ../../infra/domain-proxy/wrangler.jsonc
 ```
-
-Migration is deployed and verified: HTTPS root/login/artwork return 200, D1 reports connected, anonymous protected APIs return 401, both provider authorization redirects use the new callback with Secure/HttpOnly state cookies, and Google login returned to authenticated onboarding with session persistence after reload. Recovery entry redirects to the new host with an encrypted secure cookie; allowed-origin/CSRF rejection remains enforced. No real password reset or GitHub account login was completed during this migration. Published changes include the localized landing page, static login illustration, theme toggle, teacher onboarding and session drafts. The Google OAuth client exists but WorkOS still uses demo Google credentials; own-brand activation remains pending public privacy/terms pages and Google verification.
-
-The entry Worker also owns the exact `amautai.turistivo.com/*` route, which takes precedence over the existing Turistivo wildcard router. Keep both its custom domain and exact route.

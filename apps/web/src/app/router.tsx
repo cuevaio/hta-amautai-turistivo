@@ -11,6 +11,11 @@ import { EducationGate, Onboarding } from "@/features/education"
 const LandingPage = lazy(() =>
   import("@/pages/landing").then((module) => ({ default: module.LandingPage }))
 )
+const EvidencePage = lazy(() =>
+  import("@/features/evidence").then((module) => ({
+    default: module.EvidencePage,
+  }))
+)
 const LegalPage = lazy(() =>
   import("@/pages/legal").then((module) => ({ default: module.LegalPage }))
 )
@@ -32,6 +37,7 @@ export function App() {
           <Suspense fallback={<RouteLoading />}>
             <Routes>
               <Route path="/" element={<LandingPage />} />
+              <Route path="/evidence" element={<EvidencePage />} />
               <Route
                 path="/privacy"
                 element={<LegalPage document="privacy" />}

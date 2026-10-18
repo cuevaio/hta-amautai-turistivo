@@ -36,10 +36,7 @@ export function authMailer(provider: TransactionalEmailProvider): AuthMailer {
       const data = recovery.parse(input)
       const url = new URL(data.passwordResetUrl)
       if (
-        ![
-          "https://amautai.turistivo.com",
-          "https://amautai.urday.dev",
-        ].includes(url.origin) ||
+        url.origin !== "https://amautai.turistivo.com" ||
         url.pathname !== "/api/auth/password-reset/start" ||
         !url.searchParams.get("token")
       )

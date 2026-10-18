@@ -11,11 +11,15 @@
       "/callback"
     ]
   },
-  "account_id": "6f820062b903f496de6330e4c926675e",
+  "account_id": "49d9cc4a3f40d7228ed3593263d35588",
   "routes": [
     {
-      "pattern": "amautai.urday.dev",
+      "pattern": "amautai.turistivo.com",
       "custom_domain": true
+    },
+    {
+      "pattern": "amautai.turistivo.com/*",
+      "zone_name": "turistivo.com"
     }
   ],
   "triggers": {
@@ -27,14 +31,14 @@
     "AUTH_EMAIL_MODE": "custom",
     "WORKOS_CLIENT_ID": "client_01M55794X1B33VNMX8PW0JEYQ9",
     "WORKOS_TOKEN_ISSUER": "https://api.workos.com/user_management/client_01M55794X1B33VNMX8PW0JEYQ9",
-    "APP_ORIGINS": "http://localhost:5173,https://amautai.turistivo.com,https://amautai.urday.dev",
+    "APP_ORIGINS": "http://localhost:5173,https://amautai.turistivo.com",
     "WHATSAPP_GATEWAY_URL": "https://notify.urday.dev/amautai-whatsapp"
   },
   "d1_databases": [
     {
       "binding": "DB",
       "database_name": "andes-app-db",
-      "database_id": "b3693f74-2f25-464d-9704-8335005b58eb",
+      "database_id": "11764a92-4ee9-4d46-bbe1-3cd0d6c8af97",
       "migrations_dir": "migrations"
     }
   ]

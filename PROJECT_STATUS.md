@@ -12,7 +12,7 @@ Published features include the localized landing page, static login artwork, lig
 
 Live verification: HTTPS root/login/artwork 200; D1 connected; anonymous protected endpoints 401; Google/GitHub authorization use the new callback and secure state cookies. Real Google login reached authenticated onboarding and persisted after reload. Recovery entry keeps its secure encrypted cookie and redirects to the new domain; allowed-origin/CSRF checks remain enforced. Actual password reset and a full GitHub login were not repeated. WorkOS callback, login, signup, sign-out and reset URLs use the new host; localhost and previous callbacks remain allowed for continuity. Google Cloud developer notifications now include `amautai@turistivo.com`. The user-support email remains the Google account because the selector only offers eligible Google accounts or managed groups. Amautai's own Google OAuth client credentials are connected in WorkOS Andes Staging. Google consent-screen audience is still Testing, and WorkOS Production requires billing information; neither has been enabled.
 
-Git audit: origin git@github.com:turistivo/amautai.git is private, has a project description, and has no commits ahead of upstream. The evidence page, direct Worker migration, and concurrent local changes remain uncommitted; deployment is not a remote backup.
+Git audit: origin git@github.com:turistivo/amautai.git is private and has a project description. Commit `9097b69` contains the evidence page and direct Worker migration and is pushed to `origin/master`; the working tree is clean.
 
 Snapshot: 2026-10-17. Read this file when resuming; verify runtime and external state again.
 

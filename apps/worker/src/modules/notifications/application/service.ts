@@ -127,10 +127,11 @@ export function notificationService(
 export async function dispatchNotifications(
   repo: NotificationRepository,
   gateway: WhatsAppGateway,
-  now = Date.now()
+  now = Date.now(),
+  target?: Actor & { requestKey: string }
 ) {
-  await repo.cleanup(now)
-  for (const item of await repo.track(now)) {
+  if (!target) await repo.cleanup(now)
+  for (const item of target ? [] : await repo.track(now)) {
     try {
       const result = await gateway.status(item.id)
       if (result)
@@ -139,7 +140,7 @@ export async function dispatchNotifications(
       /* Persist state until the next bounded polling cycle. */
     }
   }
-  for (const item of await repo.claim(now)) {
+  for (const item of await repo.claim(now, target)) {
     if (!(await repo.eligible(item, Date.now()))) {
       await repo.update(item.id, "cancelled")
       continue

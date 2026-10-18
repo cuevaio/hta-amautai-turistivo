@@ -12,7 +12,10 @@ export interface NotificationRepository {
   enqueue(item: Notification): Promise<Notification>
   welcome(item: Notification): Promise<void>
   cancel(actor: Actor, id: string): Promise<boolean>
-  claim(now: number): Promise<Notification[]>
+  claim(
+    now: number,
+    target?: Actor & { requestKey: string }
+  ): Promise<Notification[]>
   track(now: number): Promise<Notification[]>
   eligible(item: Notification, now: number): Promise<boolean>
   update(

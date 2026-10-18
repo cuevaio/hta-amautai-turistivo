@@ -9,12 +9,7 @@ import { useMessages } from "@/shared/i18n/use-messages"
 import { BrandLogo } from "@/shared/ui/brand-logo"
 import { LanguageSelector } from "@/shared/ui/language-selector"
 import { Button } from "@workspace/ui/components/button"
-import {
-  InputGroup,
-  InputGroupAddon,
-  InputGroupInput,
-  InputGroupText,
-} from "@workspace/ui/components/input-group"
+import { PhoneInput } from "@/shared/ui/phone-input"
 import {
   Field,
   FieldError,
@@ -25,10 +20,7 @@ import {
   ToggleGroup,
   ToggleGroupItem,
 } from "@workspace/ui/components/toggle-group"
-import {
-  normalizeRegistrationPhone,
-  isRegistrationPhoneValid,
-} from "../model/registration"
+import { isRegistrationPhoneValid } from "../model/registration"
 import { useProfile } from "../model/profile-provider"
 
 export function ProfileTypeSelection() {
@@ -145,37 +137,32 @@ export function ProfileTypeSelection() {
               <FieldLabel htmlFor="registration-phone">
                 {m("Número de WhatsApp")}
               </FieldLabel>
-              <InputGroup aria-disabled={busy}>
-                <InputGroupAddon>
-                  <InputGroupText>+51</InputGroupText>
-                </InputGroupAddon>
-                <InputGroupInput
-                  id="registration-phone"
-                  ref={phoneInput}
-                  name="phone"
-                  type="tel"
-                  inputMode="numeric"
-                  autoComplete="tel-national"
-                  placeholder="999 999 999"
-                  maxLength={32}
-                  required
-                  value={phone}
-                  onChange={(event) => {
-                    setPhone(normalizeRegistrationPhone(event.target.value))
-                    setPhoneError("")
-                  }}
-                  disabled={busy}
-                  aria-invalid={!!phoneError}
-                  aria-describedby={
-                    phoneError
-                      ? "registration-phone-help registration-phone-error"
-                      : "registration-phone-help"
-                  }
-                />
-              </InputGroup>
+              <PhoneInput
+                id="registration-phone"
+                ref={phoneInput}
+                name="phone"
+                required
+                value={phone}
+                onValueChange={(value) => {
+                  setPhone(value)
+                  setPhoneError("")
+                }}
+                disabled={busy}
+                aria-invalid={!!phoneError}
+                aria-describedby={
+                  phoneError
+                    ? "registration-phone-help registration-phone-error"
+                    : "registration-phone-help"
+                }
+              />
               <FieldDescription id="registration-phone-help">
                 {m(
                   "Ingresa 9 dígitos. También puedes pegar tu número con +51."
+                )}
+              </FieldDescription>
+              <FieldDescription>
+                {m(
+                  "Al continuar recibirás una bienvenida por WhatsApp según tu perfil. Puedes gestionar tus avisos en Notificaciones."
                 )}
               </FieldDescription>
               {phoneError && (

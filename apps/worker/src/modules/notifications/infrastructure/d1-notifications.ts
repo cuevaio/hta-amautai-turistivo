@@ -161,14 +161,26 @@ export function d1Notifications(db: D1Database): NotificationRepository {
           .bind(),
       ])
     },
-    async claim(now) {
+    async claim(now, target) {
       return (
         await db
           .prepare(
-            "UPDATE notifications SET status='dispatching',lease_until=?,attempts=attempts+1 WHERE id IN (SELECT id FROM notifications WHERE ((status='pending' AND next_attempt<=?) OR (status='dispatching' AND lease_until<=?)) AND expires_at>? ORDER BY scheduled_at LIMIT 5) RETURNING " +
+            "UPDATE notifications SET status='dispatching',lease_until=?,attempts=attempts+1 WHERE id IN (SELECT id FROM notifications WHERE ((status='pending' AND next_attempt<=?) OR (status='dispatching' AND lease_until<=?)) AND expires_at>?" +
+              (target
+                ? " AND tenant_id=? AND user_id=? AND request_key=?"
+                : "") +
+              " ORDER BY scheduled_at LIMIT 5) RETURNING " +
               columns
           )
-          .bind(now + 120000, now, now, now)
+          .bind(
+            now + 120000,
+            now,
+            now,
+            now,
+            ...(target
+              ? [target.tenantId, target.userId, target.requestKey]
+              : [])
+          )
           .all<Notification>()
       ).results
     },

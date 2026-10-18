@@ -33,14 +33,13 @@ export type AssignedGame = {
 }
 export function guardianPhone(raw: string) {
   const compact = raw.trim().replace(/[ ()-]/g, "")
-  // Local Peruvian mobile numbers default to +51; international numbers retain their code.
+  // Registration and assignment use Peru's fixed prefix and nine-digit mobiles.
   const phone = /^9\d{8}$/.test(compact)
     ? "+51" + compact
     : compact.startsWith("+")
       ? compact
       : "+" + compact
-  if (!/^\+[1-9]\d{7,14}$/.test(phone))
-    throw new RoomError("invalid_guardian_phone")
+  if (!/^\+519\d{8}$/.test(phone)) throw new RoomError("invalid_guardian_phone")
   return phone
 }
 export function assignmentDto(a: Assignment, now: number) {

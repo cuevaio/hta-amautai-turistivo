@@ -11,7 +11,7 @@ import {
 export interface ProfileRepository {
   find(actor: Actor): Promise<AccountProfile | null>
   save(actor: Actor, input: ProfileRegistration): Promise<AccountProfile>
-  pendingWelcomes(now: number): Promise<ProfileWelcome[]>
+  pendingWelcomes(now: number, actor?: Actor): Promise<ProfileWelcome[]>
   completeWelcome(actor: Actor, now: number): Promise<void>
   expireWelcomes(now: number): Promise<void>
 }
@@ -34,10 +34,11 @@ export type ProfileService = ReturnType<typeof profileService>
 export async function dispatchProfileWelcomes(
   repository: ProfileRepository,
   welcome: (input: ProfileWelcome) => Promise<void>,
-  now = Date.now()
+  now = Date.now(),
+  actor?: Actor
 ) {
-  await repository.expireWelcomes(now)
-  for (const input of await repository.pendingWelcomes(now)) {
+  if (!actor) await repository.expireWelcomes(now)
+  for (const input of await repository.pendingWelcomes(now, actor)) {
     try {
       await welcome(input)
       await repository.completeWelcome(input, now)

@@ -22,6 +22,8 @@ import { stalwartEmail } from "./modules/notifications/infrastructure/stalwart-e
 import { registerEmailRoutes } from "./modules/notifications/http/email-routes.ts"
 import type { WhatsAppGateway } from "./modules/notifications/application/ports.ts"
 import { notificationService } from "./modules/notifications/application/service.ts"
+import { dispatchNotifications } from "./modules/notifications/application/service.ts"
+import { dispatchProfileWelcomes } from "./modules/profiles/application/service.ts"
 import { d1Notifications } from "./modules/notifications/infrastructure/d1-notifications.ts"
 import { whatsappGateway } from "./modules/notifications/infrastructure/gateway.ts"
 import { verificationCrypto } from "./modules/notifications/infrastructure/crypto.ts"
@@ -117,6 +119,31 @@ export function createApp(
   registerProfileRoutes(app, {
     service: (c) => profileService(d1Profiles(c.env.DB)),
     ensure: ensureTenant,
+    registered(c, actor) {
+      c.executionCtx.waitUntil(
+        (async () => {
+          const profiles = d1Profiles(c.env.DB)
+          const repo = d1Notifications(c.env.DB)
+          const messenger = gateway(c)
+          const notifications = notificationService(repo, messenger, {
+            id: () => crypto.randomUUID(),
+          })
+          await dispatchProfileWelcomes(
+            profiles,
+            notifications.welcome,
+            Date.now(),
+            actor
+          )
+          await dispatchNotifications(repo, messenger, Date.now(), {
+            ...actor,
+            requestKey: "account-welcome-v1",
+          })
+        })().catch(() => {
+          // The persistent outboxes retain the welcome for the scheduled retry.
+          console.info("amautai_profile_welcome_deferred")
+        })
+      )
+    },
   })
   registerFamilyProfileRoutes(app, {
     service: (c) => familyProfileService(d1FamilyProfiles(c.env.DB)),

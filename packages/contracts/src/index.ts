@@ -75,7 +75,7 @@ export const notificationPhoneInput = z
       .transform(
         (value) => "+" + value.replace(/[\s()-]/g, "").replace(/^\+/, "")
       )
-      .pipe(z.string().regex(/^\+[1-9]\d{7,14}$/)),
+      .pipe(z.string().regex(/^\+519\d{8}$/)),
     consent: z.literal(true),
   })
   .strict()

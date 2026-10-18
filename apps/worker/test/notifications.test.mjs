@@ -418,6 +418,7 @@ import { accountProfileInput } from "../../../packages/contracts/src/index.ts"
 
 function registrationApp(s) {
   let user = "alice"
+  const background = []
   const app = createApp(
     async () =>
       user
@@ -434,6 +435,9 @@ function registrationApp(s) {
     () => s.gateway
   )
   return {
+    async flush() {
+      await Promise.all(background.splice(0))
+    },
     user(value) {
       user = value
     },
@@ -449,7 +453,14 @@ function registrationApp(s) {
           },
           body: JSON.stringify(body),
         },
-        { DB: s.DB, APP_ORIGINS: "https://amautai.test" }
+        { DB: s.DB, APP_ORIGINS: "https://amautai.test" },
+        {
+          waitUntil(task) {
+            background.push(task)
+          },
+          passThroughOnException() {},
+          props: {},
+        }
       )
     },
   }
@@ -461,7 +472,7 @@ const registration = {
   locale: "es-PE",
 }
 
-test("teacher and parent registration queue one localized welcome and dispatch it via the gateway", async () => {
+test("teacher and parent registration immediately dispatch one localized welcome via the gateway", async () => {
   for (const role of ["teacher", "parent"])
     for (const locale of ["es-PE", "quy-PE", "ay-PE"]) {
       const s = setup(),
@@ -471,18 +482,11 @@ test("teacher and parent registration queue one localized welcome and dispatch i
       const response = await http.request({ ...registration, role, locale })
       assert.equal(response.status, 200)
       assert.equal((await response.json()).profile.role, role)
-      const pending = await profiles.pendingWelcomes(Date.now())
-      assert.equal(pending.length, 1)
-      assert.equal(pending[0].phone, "+51999999999")
-      assert.equal(pending[0].locale, locale)
-      assert.equal(s.sent.length, 0)
-      await dispatchProfileWelcomes(profiles, (event) =>
-        s.service.welcome(event)
-      )
+      await http.flush()
       assert.equal((await profiles.pendingWelcomes(Date.now())).length, 0)
       assert.equal((await s.repo.contact(s.actor)).phone, "+51999999999")
       const [message] = await s.repo.list(s.actor)
-      assert.equal(message.status, "pending")
+      assert.equal(message.status, "accepted")
       assert.ok(message.body.includes("https://amautai.turistivo.com/panel"))
       const titles = {
         "es-PE": "¡Bienvenido a Amautai!",
@@ -496,7 +500,9 @@ test("teacher and parent registration queue one localized welcome and dispatch i
           ? /estudiantes|Yachakuqnikikunapaq|Yatiqirinakamataki/
           : /hijos|wawaykikunapa|wawanakamana/
       )
-      await dispatchNotifications(s.repo, s.gateway)
+      assert.deepEqual(s.sent, [message.id])
+      await http.request({ ...registration, role, locale })
+      await http.flush()
       assert.deepEqual(s.sent, [message.id])
       await dispatchNotifications(s.repo, s.gateway)
       assert.equal((await s.repo.list(s.actor))[0].status, "delivered")
@@ -517,6 +523,9 @@ test("registration rejects missing/invalid phone, consent, locale and untrusted 
     { ...registration, phone: "+000" },
     { ...registration, phone: "++51999999999" },
     { ...registration, phone: "1234567890123456" },
+    { ...registration, phone: "+519999999999" },
+    { ...registration, phone: "+12025550123" },
+    { ...registration, phone: "+51899999999" },
     { ...registration, consent: false },
     { ...registration, locale: "en" },
     { ...registration, tenantId: "evil" },
@@ -534,6 +543,64 @@ test("registration rejects missing/invalid phone, consent, locale and untrusted 
   http.user(null)
   assert.equal((await http.request(registration)).status, 401)
   assert.equal(accountProfileInput.parse(registration).phone, "+51999999999")
+})
+
+test("registration responds while its immediate gateway send is still pending", async () => {
+  const s = setup()
+  let release, started
+  const sending = new Promise((resolve) => {
+    started = resolve
+  })
+  s.gateway.send = async (item) => {
+    s.sent.push(item.id)
+    started()
+    await new Promise((resolve) => {
+      release = resolve
+    })
+    return { status: "accepted" }
+  }
+  const http = registrationApp(s)
+  const response = await http.request(registration)
+  assert.equal(response.status, 200)
+  await sending
+  assert.equal(s.sent.length, 1)
+  release()
+  await http.flush()
+})
+
+test("immediate welcome dispatch is scoped to the registered account and survives gateway failures", async () => {
+  const s = setup()
+  const oldActor = { ...s.actor }
+  const profiles = d1Profiles(s.DB)
+  await profiles.save(oldActor, accountProfileInput.parse(registration))
+  await s.service.welcome({
+    ...oldActor,
+    ...accountProfileInput.parse(registration),
+    createdAt: Date.now(),
+  })
+  const [oldMessage] = await s.repo.list(oldActor)
+  s.fail(true)
+  const http = registrationApp(s)
+  assert.equal(
+    (await http.request({ ...registration, role: "parent" })).status,
+    200
+  )
+  await http.flush()
+  const actor = { tenantId: "user:alice", userId: "alice" }
+  assert.equal((await profiles.find(actor)).role, "parent")
+  assert.equal((await s.repo.list(oldActor))[0].status, "pending")
+  assert.equal(s.sent.includes(oldMessage.id), false)
+  const [welcome] = await s.repo.list(actor)
+  assert.equal(welcome.status, "pending")
+  assert.deepEqual(s.sent, [welcome.id])
+  s.fail(false)
+  await dispatchNotifications(s.repo, s.gateway, Date.now() + 200000, {
+    ...actor,
+    requestKey: "account-welcome-v1",
+  })
+  assert.deepEqual(s.sent, [welcome.id, welcome.id])
+  assert.equal((await s.repo.list(actor)).length, 1)
+  assert.equal((await s.repo.list(oldActor))[0].status, "pending")
 })
 
 test("profile registration and welcome event roll back together on storage failure", async () => {
@@ -605,8 +672,10 @@ test("deferred welcome respects opt-out and updated recipients, and isolates acc
     http = registrationApp(s)
   s.actor.tenantId = "user:alice"
   await http.request(registration)
+  await http.flush()
   http.user("bob")
   await http.request({ ...registration, role: "parent", phone: "+51988888888" })
+  await http.flush()
   await dispatchProfileWelcomes(d1Profiles(s.DB), (event) =>
     s.service.welcome(event)
   )

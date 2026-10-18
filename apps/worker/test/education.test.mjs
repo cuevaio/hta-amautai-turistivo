@@ -113,21 +113,35 @@ function setup() {
       csrf = true,
       origin = "http://localhost:5173",
     } = {}
-  ) =>
-    app.request(
-      "http://localhost:5173" + path,
-      {
-        method,
-        headers: {
-          "x-test-user": user,
-          "Content-Type": "application/json",
-          Origin: origin,
-          ...(csrf ? { "X-Amautai-Request": "1" } : {}),
+  ) => {
+    const background = []
+    return app
+      .request(
+        "http://localhost:5173" + path,
+        {
+          method,
+          headers: {
+            "x-test-user": user,
+            "Content-Type": "application/json",
+            Origin: origin,
+            ...(csrf ? { "X-Amautai-Request": "1" } : {}),
+          },
+          ...(data !== undefined ? { body: JSON.stringify(data) } : {}),
         },
-        ...(data !== undefined ? { body: JSON.stringify(data) } : {}),
-      },
-      env
-    )
+        env,
+        {
+          waitUntil(task) {
+            background.push(task)
+          },
+          passThroughOnException() {},
+          props: {},
+        }
+      )
+      .then(async (response) => {
+        await Promise.all(background)
+        return response
+      })
+  }
   return { db, DB, repo, service, request }
 }
 test("catalog derives primary cycles and enables only second grade", () => {

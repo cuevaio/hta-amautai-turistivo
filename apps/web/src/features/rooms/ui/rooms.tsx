@@ -15,6 +15,8 @@ import { MarketPlayer } from "./market-player"
 import { CargoPlayer } from "./cargo-player"
 import { Button } from "@workspace/ui/components/button"
 import { Input } from "@workspace/ui/components/input"
+import { PhoneInput } from "@/shared/ui/phone-input"
+import { nationalPhone, isPeruvianMobile } from "@/shared/lib/peruvian-phone"
 import {
   Field,
   FieldLabel,
@@ -433,7 +435,12 @@ function RoomManager({ roomId }: { roomId?: string }) {
               onSubmit={(e) => {
                 e.preventDefault()
                 void data
-                  .assign(name, guardianPhone, requestKey, assigning?.id)
+                  .assign(
+                    name,
+                    `+51${guardianPhone}`,
+                    requestKey,
+                    assigning?.id
+                  )
                   .then((ok) => {
                     if (ok) {
                       setName("")
@@ -467,28 +474,21 @@ function RoomManager({ roomId }: { roomId?: string }) {
                 <FieldLabel htmlFor="guardian-phone">
                   {m("Teléfono del padre, madre o apoderado")}
                 </FieldLabel>
-                <Input
+                <PhoneInput
                   id="guardian-phone"
-                  type="tel"
-                  inputMode="tel"
-                  autoComplete="tel"
-                  maxLength={30}
                   required
                   value={guardianPhone}
-                  onChange={(e) => {
-                    setGuardianPhone(e.target.value)
+                  onValueChange={(value) => {
+                    setGuardianPhone(value)
                     setRequestKey(crypto.randomUUID())
                   }}
-                  placeholder="+51 999 999 999"
                   disabled={data.busy}
                   aria-invalid={
-                    data.error ===
-                    "Escribe un celular peruano de 9 dígitos o un teléfono con código de país."
+                    data.error === "Escribe los 9 dígitos de tu celular."
                   }
                   aria-describedby="guardian-phone-help"
                 />
-                {data.error ===
-                  "Escribe un celular peruano de 9 dígitos o un teléfono con código de país." && (
+                {data.error === "Escribe los 9 dígitos de tu celular." && (
                   <p role="alert" className="text-sm text-destructive">
                     {m(data.error)}
                   </p>
@@ -506,7 +506,7 @@ function RoomManager({ roomId }: { roomId?: string }) {
                     data.busy ||
                     data.loading ||
                     !name.trim() ||
-                    !guardianPhone.trim()
+                    !isPeruvianMobile(guardianPhone)
                   }
                 >
                   {m(
@@ -621,7 +621,9 @@ function RoomManager({ roomId }: { roomId?: string }) {
                                     setAssigning(p)
                                     setName(p.name)
                                     setGuardianPhone(
-                                      p.assignment?.guardianPhone ?? ""
+                                      nationalPhone(
+                                        p.assignment?.guardianPhone ?? ""
+                                      )
                                     )
                                     setRequestKey(crypto.randomUUID())
                                     document

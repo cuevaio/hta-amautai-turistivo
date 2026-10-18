@@ -8,7 +8,7 @@ import { useNotifications } from "../model/use-notifications"
 import { useEmailNotifications } from "../model/use-email-notifications"
 import { useActivitySettings } from "../model/use-activity-settings"
 import { Button } from "@workspace/ui/components/button"
-import { Input } from "@workspace/ui/components/input"
+import { PhoneInput } from "@/shared/ui/phone-input"
 import {
   Field,
   FieldGroup,
@@ -194,11 +194,11 @@ export function Notifications() {
               setPhoneError("")
               const form = new FormData(e.currentTarget)
               const input = notificationPhoneInput.safeParse({
-                phone: form.get("phone"),
+                phone: `+51${form.get("phone") || ""}`,
                 consent: true,
               })
               if (!input.success) {
-                setPhoneError("Escribe un número válido con código de país.")
+                setPhoneError("Escribe los 9 dígitos de tu celular.")
                 return
               }
               await n.register(input.data.phone)
@@ -209,13 +209,9 @@ export function Notifications() {
                 <FieldLabel htmlFor="whatsapp-phone">
                   {m("Número de WhatsApp")}
                 </FieldLabel>
-                <Input
+                <PhoneInput
                   id="whatsapp-phone"
                   name="phone"
-                  type="tel"
-                  autoComplete="tel"
-                  placeholder="+51987654321"
-                  maxLength={32}
                   required
                   defaultValue={n.data.contact?.phone || ""}
                   disabled={busy}
@@ -223,7 +219,7 @@ export function Notifications() {
                 />
                 <FieldDescription>
                   {m(
-                    "Al guardar aceptas recibir los avisos que elijas en este número. Incluye el código de país."
+                    "Al guardar aceptas recibir los avisos que elijas en este número. El prefijo +51 ya está incluido."
                   )}
                 </FieldDescription>
                 {phoneError && (

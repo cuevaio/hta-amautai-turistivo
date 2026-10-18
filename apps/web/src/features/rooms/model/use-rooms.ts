@@ -12,8 +12,7 @@ export function roomError(e: unknown) {
       "El enlace de la actividad venció o ya no está disponible. Solicita otro a tu docente.",
     assignment_conflict:
       "Esta actividad ya fue asignada con otros datos o el envío sigue en curso. Actualiza la sala.",
-    invalid_guardian_phone:
-      "Escribe un celular peruano de 9 dígitos o un teléfono con código de país.",
+    invalid_guardian_phone: "Escribe los 9 dígitos de tu celular.",
     invalid_assignment_input:
       "Revisa el nombre del estudiante y el teléfono de su apoderado.",
     duplicate_participant:

@@ -137,12 +137,19 @@ function setup() {
     },
   }
 }
-test("guardian phone belongs to the adult and normalizes Peruvian/international mobile numbers", () => {
+test("guardian phone belongs to the adult and accepts only nine-digit Peruvian mobiles", () => {
   assert.equal(guardianPhone("999 999 999"), "+51999999999")
   assert.equal(guardianPhone("+51 (999) 999-999"), "+51999999999")
   assert.equal(guardianPhone("51999999999"), "+51999999999")
-  assert.equal(guardianPhone("+1 202 555 0123"), "+12025550123")
-  for (const phone of ["abc999999999", "+00012345", "12345", "+51999<script>"])
+  for (const phone of [
+    "abc999999999",
+    "+00012345",
+    "12345",
+    "+51999<script>",
+    "+1 202 555 0123",
+    "+519999999999",
+    "899999999",
+  ])
     assert.throws(() => guardianPhone(phone), {
       code: "invalid_guardian_phone",
     })

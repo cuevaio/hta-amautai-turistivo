@@ -43,13 +43,18 @@ export function d1Profiles(db: D1Database): ProfileRepository {
       ])
       return (await find(actor))!
     },
-    async pendingWelcomes(now) {
+    async pendingWelcomes(now, actor) {
       return (
         await db
           .prepare(
-            "SELECT tenant_id AS tenantId,user_id AS userId,role,phone,locale,created_at AS createdAt FROM profile_welcomes WHERE completed_at IS NULL AND created_at>? ORDER BY created_at LIMIT 5"
+            "SELECT tenant_id AS tenantId,user_id AS userId,role,phone,locale,created_at AS createdAt FROM profile_welcomes WHERE completed_at IS NULL AND created_at>?" +
+              (actor ? " AND tenant_id=? AND user_id=?" : "") +
+              " ORDER BY created_at LIMIT 5"
           )
-          .bind(now - 86400000)
+          .bind(
+            now - 86400000,
+            ...(actor ? [actor.tenantId, actor.userId] : [])
+          )
           .all<Omit<ProfileWelcome, "consent">>()
       ).results.map((row) => ({ ...row, consent: true as const }))
     },

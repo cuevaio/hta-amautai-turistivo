@@ -4,16 +4,10 @@ import type {
   FamilyProfile,
 } from "@amautai/contracts"
 
-export function normalizeRegistrationPhone(value: string) {
-  const number = value.replace(/[\s()+.-]/gu, "")
-  if (number.startsWith("0051")) return number.slice(4)
-  if (number.length > 9 && number.startsWith("51")) return number.slice(2)
-  return number
-}
-
-export function isRegistrationPhoneValid(value: string) {
-  return /^9\d{8}$/.test(value)
-}
+export {
+  nationalPhone as normalizeRegistrationPhone,
+  isPeruvianMobile as isRegistrationPhoneValid,
+} from "../../../shared/lib/peruvian-phone.ts"
 
 type RegistrationApi = {
   save(input: AccountProfileInput): Promise<{ profile: AccountProfile }>

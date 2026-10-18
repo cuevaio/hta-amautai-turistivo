@@ -1,0 +1,98 @@
+{
+  "title": "Encuesta sobre matemáticas en casa",
+  "description": "Cuéntanos cómo acompañas a tu hijo en matemáticas durante las últimas cuatro semanas.",
+  "sourceUrl": "https://docs.google.com/forms/d/e/1FAIpQLScM9I69A8q4SC6l3aEp1bb7LUJuXN_vr3pM4tVtuyeh2B4zqA/viewform",
+  "questions": [
+    {
+      "question": "1. ¿Qué grado de primaria cursa tu hijo, hija o menor a cargo? Si tienes más de uno, responde pensando en uno solo.",
+      "required": true,
+      "options": [
+        "Primero de primaria",
+        "Segundo de primaria",
+        "Tercero de primaria",
+        "Cuarto de primaria",
+        "Quinto de primaria",
+        "Sexto de primaria"
+      ]
+    },
+    {
+      "question": "2. En las últimas cuatro semanas, ¿con qué frecuencia necesitó ayuda de otra persona para comprender una actividad de matemáticas?",
+      "required": true,
+      "options": [
+        "Nunca",
+        "Rara vez",
+        "A veces",
+        "Frecuentemente",
+        "Siempre",
+        "No lo pude observar"
+      ]
+    },
+    {
+      "question": "3. En la ocasión más reciente, ¿cuál fue la principal dificultad que observaste?",
+      "required": true,
+      "options": [
+        "Comprender qué pedía el problema",
+        "Comprender cantidades, números o conteo",
+        "Elegir o realizar una operación",
+        "Comprender figuras o medidas",
+        "Interpretar tablas o gráficos",
+        "Otra dificultad",
+        "No observé dificultades"
+      ]
+    },
+    {
+      "question": "4. Cuéntanos ese último caso en una frase: ¿qué intentaba resolver y qué hizo o dijo? Si no hubo dificultad, escribe «No hubo dificultad».",
+      "required": true,
+      "lines": 2
+    },
+    {
+      "question": "5. ¿Qué hiciste primero en esa ocasión?",
+      "required": true,
+      "options": [
+        "Le expliqué o practiqué con él o ella",
+        "Busqué un video, aplicación o juego",
+        "Pedí apoyo al docente o a un familiar",
+        "Contraté clases o apoyo particular",
+        "No hice nada adicional",
+        "Otra acción",
+        "No hubo dificultad"
+      ]
+    },
+    {
+      "question": "6. ¿Qué pasó después de ese apoyo? Cuenta en una frase qué observaste. Si no intervino nadie o aún no conoces el resultado, indícalo.",
+      "required": true,
+      "lines": 2
+    },
+    {
+      "question": "7. En esa ocasión, ¿cuánto tiempo dedicaste a apoyar o buscar ayuda para tu hijo, hija o menor a cargo?",
+      "required": true,
+      "options": [
+        "Menos de 10 minutos",
+        "Entre 10 y 30 minutos",
+        "Entre 31 y 60 minutos",
+        "Más de 60 minutos",
+        "No dediqué tiempo adicional",
+        "No hubo dificultad",
+        "No lo recuerdo"
+      ]
+    }
+  ],
+  "contactFields": [
+    {
+      "question": "Nombres y apellidos",
+      "required": true
+    },
+    {
+      "question": "Número de teléfono",
+      "required": true
+    }
+  ],
+  "printOptionLabels": {
+    "Primero de primaria": "1ero de primaria",
+    "Segundo de primaria": "2do de primaria",
+    "Tercero de primaria": "3ero de primaria",
+    "Cuarto de primaria": "4to de primaria",
+    "Quinto de primaria": "5to de primaria",
+    "Sexto de primaria": "6to de primaria"
+  }
+}

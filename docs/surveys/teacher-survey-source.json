@@ -1,0 +1,90 @@
+{
+  "title": "Encuesta sobre la enseñanza de matemáticas en primaria",
+  "description": "Cuéntanos tu experiencia enseñando matemáticas en primaria durante las últimas cuatro semanas.",
+  "sourceUrl": "https://docs.google.com/forms/d/e/1FAIpQLScCEOnoUi7v-eVGhhQGighLfkUTN3nrFdftYsZTte4GRvvknA/viewform",
+  "questions": [
+    {
+      "question": "1. ¿Qué grado enseñaste en tu clase más reciente de matemáticas de primaria?",
+      "required": true,
+      "options": [
+        "Primero de primaria",
+        "Segundo de primaria",
+        "Tercero de primaria",
+        "Cuarto de primaria",
+        "Quinto de primaria",
+        "Sexto de primaria"
+      ]
+    },
+    {
+      "question": "2. En las últimas cuatro semanas de clases, ¿con qué frecuencia tus estudiantes necesitaron apoyo adicional para comprender matemáticas?",
+      "required": true,
+      "options": [
+        "Nunca",
+        "Rara vez",
+        "A veces",
+        "Frecuentemente",
+        "Siempre",
+        "No lo pude observar"
+      ]
+    },
+    {
+      "question": "3. En la ocasión más reciente, ¿cuál fue la principal dificultad que observaste?",
+      "required": true,
+      "options": [
+        "Comprender qué pedía el problema",
+        "Comprender cantidades, números o conteo",
+        "Elegir o realizar una operación",
+        "Comprender figuras o medidas",
+        "Interpretar tablas o gráficos",
+        "Otra dificultad",
+        "No observé dificultades"
+      ]
+    },
+    {
+      "question": "4. Cuéntanos ese último caso en una frase: ¿qué intentaba resolver el estudiante y qué hizo o dijo? Si no hubo dificultad, escribe «No hubo dificultad».",
+      "required": true,
+      "lines": 2
+    },
+    {
+      "question": "5. ¿Qué hiciste primero en esa ocasión?",
+      "required": true,
+      "options": [
+        "Volví a explicar o practicar con el estudiante",
+        "Cambié la actividad o el material",
+        "Busqué un video, aplicación o juego",
+        "Pedí apoyo a otra persona",
+        "No hice nada adicional",
+        "Otra acción",
+        "No hubo dificultad"
+      ]
+    },
+    {
+      "question": "6. ¿Qué pasó después de ese apoyo? Cuenta en una frase qué observaste. Si no intervino nadie o aún no conoces el resultado, indícalo.",
+      "required": true,
+      "lines": 2
+    },
+    {
+      "question": "7. En esa ocasión, ¿cuánto tiempo dedicaste al apoyo adicional de tus estudiantes?",
+      "required": true,
+      "options": [
+        "Menos de 10 minutos",
+        "Entre 10 y 30 minutos",
+        "Entre 31 y 60 minutos",
+        "Más de 60 minutos",
+        "No dediqué tiempo adicional",
+        "No hubo dificultad",
+        "No lo recuerdo"
+      ]
+    }
+  ],
+  "contactFields": [
+    {
+      "question": "Nombres y apellidos",
+      "required": true
+    },
+    {
+      "question": "Número de teléfono",
+      "required": true
+    }
+  ]
+}

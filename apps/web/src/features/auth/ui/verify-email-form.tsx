@@ -1,8 +1,14 @@
+import { useState } from "react"
 import { useMessages } from "@/shared/i18n/use-messages"
 import { useEmailVerification } from "../model/use-email-verification"
 import { Link } from "react-router"
 import { Button } from "@workspace/ui/components/button"
-import { Input } from "@workspace/ui/components/input"
+import {
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSeparator,
+  InputOTPSlot,
+} from "@workspace/ui/components/input-otp"
 import {
   Field,
   FieldGroup,
@@ -12,8 +18,8 @@ import {
 
 export function VerifyEmailForm() {
   const { m, errorMessage } = useMessages()
-
   const { pending, error, submit } = useEmailVerification()
+  const [code, setCode] = useState("")
   return (
     <form noValidate onSubmit={submit} className="flex flex-col gap-6">
       <FieldGroup>
@@ -27,19 +33,33 @@ export function VerifyEmailForm() {
         </div>
         <Field data-invalid={!!error}>
           <FieldLabel htmlFor="code">{m("Código de verificación")}</FieldLabel>
-          <Input
+          <InputOTP
             id="code"
             name="code"
-            inputMode="numeric"
-            autoComplete="one-time-code"
-            pattern="[0-9]{6}"
-            minLength={6}
             maxLength={6}
+            pattern="[0-9]*"
+            autoComplete="one-time-code"
+            inputMode="numeric"
             required
             disabled={pending}
+            value={code}
+            onChange={setCode}
+            aria-label={m("Código de verificación")}
             aria-invalid={!!error}
             aria-describedby="code-help"
-          />
+          >
+            <InputOTPGroup>
+              <InputOTPSlot index={0} aria-invalid={!!error} />
+              <InputOTPSlot index={1} aria-invalid={!!error} />
+              <InputOTPSlot index={2} aria-invalid={!!error} />
+            </InputOTPGroup>
+            <InputOTPSeparator />
+            <InputOTPGroup>
+              <InputOTPSlot index={3} aria-invalid={!!error} />
+              <InputOTPSlot index={4} aria-invalid={!!error} />
+              <InputOTPSlot index={5} aria-invalid={!!error} />
+            </InputOTPGroup>
+          </InputOTP>
           <FieldDescription id="code-help">
             {m("El código tiene 6 dígitos.")}
           </FieldDescription>

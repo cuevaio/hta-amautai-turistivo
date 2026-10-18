@@ -9,11 +9,14 @@ import { useMessages } from "@/shared/i18n/use-messages"
 import { BrandLogo } from "@/shared/ui/brand-logo"
 import { LanguageSelector } from "@/shared/ui/language-selector"
 import { Button } from "@workspace/ui/components/button"
-import { Input } from "@workspace/ui/components/input"
-import { Checkbox } from "@workspace/ui/components/checkbox"
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+  InputGroupText,
+} from "@workspace/ui/components/input-group"
 import {
   Field,
-  FieldDescription,
   FieldError,
   FieldLabel,
 } from "@workspace/ui/components/field"
@@ -31,7 +34,6 @@ export function ProfileTypeSelection() {
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState("")
   const [phone, setPhone] = useState("")
-  const [consent, setConsent] = useState(false)
   const [phoneError, setPhoneError] = useState("")
   const submitting = useRef(false)
   const phoneInput = useRef<HTMLInputElement>(null)
@@ -42,12 +44,12 @@ export function ProfileTypeSelection() {
     setPhoneError("")
     const input = accountProfileInput.safeParse({
       role,
-      phone,
-      consent,
+      phone: `+51${phone}`,
+      consent: true,
       locale,
     })
     if (!input.success) {
-      setPhoneError("Escribe un número válido con código de país.")
+      setPhoneError("Escribe los 9 dígitos de tu celular.")
       phoneInput.current?.focus()
       return
     }
@@ -138,56 +140,40 @@ export function ProfileTypeSelection() {
               <FieldLabel htmlFor="registration-phone">
                 {m("Número de WhatsApp")}
               </FieldLabel>
-              <Input
-                id="registration-phone"
-                ref={phoneInput}
-                name="phone"
-                type="tel"
-                autoComplete="tel"
-                placeholder="+51 999 999 999"
-                maxLength={32}
-                required
-                value={phone}
-                onChange={(event) => {
-                  setPhone(event.target.value)
-                  setPhoneError("")
-                }}
-                disabled={busy}
-                aria-invalid={!!phoneError}
-                aria-describedby={
-                  phoneError
-                    ? "registration-phone-hint registration-phone-error"
-                    : "registration-phone-hint"
-                }
-              />
-              <FieldDescription id="registration-phone-hint">
-                {m(
-                  "Incluye el código de país. Te enviaremos una bienvenida automática a Amautai."
-                )}
-              </FieldDescription>
+              <InputGroup aria-disabled={busy}>
+                <InputGroupAddon>
+                  <InputGroupText>+51</InputGroupText>
+                </InputGroupAddon>
+                <InputGroupInput
+                  id="registration-phone"
+                  ref={phoneInput}
+                  name="phone"
+                  type="tel"
+                  inputMode="numeric"
+                  autoComplete="tel-national"
+                  placeholder="999 999 999"
+                  maxLength={9}
+                  required
+                  value={phone}
+                  onChange={(event) => {
+                    let digits = event.target.value.replace(/\D/g, "")
+                    if (digits.length > 9 && digits.startsWith("51"))
+                      digits = digits.slice(2)
+                    setPhone(digits.slice(0, 9))
+                    setPhoneError("")
+                  }}
+                  disabled={busy}
+                  aria-invalid={!!phoneError}
+                  aria-describedby={
+                    phoneError ? "registration-phone-error" : undefined
+                  }
+                />
+              </InputGroup>
               {phoneError && (
                 <FieldError id="registration-phone-error">
                   {m(phoneError)}
                 </FieldError>
               )}
-            </Field>
-            <Field orientation="horizontal">
-              <Checkbox
-                id="registration-consent"
-                name="consent"
-                required
-                checked={consent}
-                onCheckedChange={setConsent}
-                disabled={busy}
-              />
-              <FieldLabel
-                htmlFor="registration-consent"
-                className="text-sm font-normal"
-              >
-                {m(
-                  "Acepto recibir la bienvenida y los avisos que elija por WhatsApp. Puedo desactivarlos en Notificaciones."
-                )}
-              </FieldLabel>
             </Field>
           </div>
           {error && (
@@ -198,7 +184,7 @@ export function ProfileTypeSelection() {
           <div className="mt-7 flex justify-end">
             <Button
               type="submit"
-              disabled={!role || !phone.trim() || !consent || busy}
+              disabled={!role || phone.length !== 9 || busy}
             >
               {busy ? m("Guardando…") : m("Continuar")}
               {!busy && <ArrowRight aria-hidden="true" />}

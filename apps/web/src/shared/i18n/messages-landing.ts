@@ -366,9 +366,9 @@ export const landingRows: readonly (readonly [string, string, string])[] = [
     "Qallta yatiqawina jakhu yatiqawi",
   ],
   [
-    "Los niños aprenden mejor jugando.",
-    "Wawakuna pukllaspa aswan allinta yachanku.",
-    "Wawanakax anatasa jukʼamp sum yatiqapxi.",
+    "¡Los niños aprenden mejor jugando!",
+    "¡Wawakuna pukllaspa aswan allinta yachanku!",
+    "¡Wawanakax anatasa jukʼamp sum yatiqapxi!",
   ],
   [
     "Matemáticas de primaria con sesiones contextualizadas y un juego de multiplicación para segundo grado.",

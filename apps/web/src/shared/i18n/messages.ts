@@ -14,14 +14,9 @@ import { landingRows } from "./messages-landing.ts"
 import { legalRows } from "./messages-legal.ts"
 const rows: readonly (readonly [string, string, string])[] = [
   [
-    "Incluye el código de país. Te enviaremos una bienvenida automática a Amautai.",
-    "Suyuykipa yupayninta churay. Amautaiman allin hamusqa willakuyta kikillanmanta apachimusqayki.",
-    "Markamana jakhupa uñtʼayam. Amautairu suma jutäwi yatiyawi jupa pachpata apayanipxäma.",
-  ],
-  [
-    "Acepto recibir la bienvenida y los avisos que elija por WhatsApp. Puedo desactivarlos en Notificaciones.",
-    "WhatsAppnintakama allin hamusqa willakuyta hinaspa akllasqay willakuykunata chaskiyta munani. Willakuykunapi wañuchiyta atini.",
-    "WhatsApp tuqi suma jutäwi ukhamaraki ajllita yatiyawinaka katuqañ munta. Yatiyawinakana jiwtʼayirista.",
+    "Escribe los 9 dígitos de tu celular.",
+    "Celularykip 9 yupayninta qillqay.",
+    "Celularam 9 jakhunaka qillqtʼam.",
   ],
   ["Reproducir animación", "Kawsachisqata purichiy", "Sarnaqawi qalltayaña"],
   ["Pausar animación", "Kawsachisqata samachiy", "Sarnaqawi saytʼayaña"],

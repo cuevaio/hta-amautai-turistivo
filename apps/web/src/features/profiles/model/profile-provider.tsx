@@ -12,6 +12,7 @@ import type {
   FamilyProfileInput,
 } from "@amautai/contracts"
 import { useAuth } from "@/features/auth"
+import { saveProfileRegistration } from "./registration"
 import { profileApi } from "../api/profile-api"
 
 type ProfileState = {
@@ -77,17 +78,8 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
   }, [key, attempt])
 
   async function save(input: AccountProfileInput) {
-    const { profile } = await profileApi.save(input)
-    const familyProfile =
-      input.role === "parent" ? (await profileApi.getFamily()).profile : null
-    setState({
-      key,
-      attempt,
-      profile,
-      familyProfile,
-      error: "",
-      loading: false,
-    })
+    const saved = await saveProfileRegistration(profileApi, input)
+    setState({ key, attempt, ...saved, loading: false })
   }
 
   async function saveFamily(input: FamilyProfileInput) {

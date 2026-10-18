@@ -77,7 +77,7 @@ export function EvidencePage() {
       <main className="mx-auto max-w-7xl px-5 pt-8 pb-14 sm:px-8 sm:pt-12 lg:px-12 lg:pb-20">
         <div className="mb-8 max-w-5xl sm:mb-10">
           <p className="mb-4 w-fit rounded-full border border-primary/20 bg-primary/10 px-3 py-1.5 text-sm font-medium text-primary">
-            Hack the Andes
+            {m("Hack the Andes")}
           </p>
           <h1 className="text-3xl leading-[1.12] font-semibold text-balance sm:text-4xl">
             {m(

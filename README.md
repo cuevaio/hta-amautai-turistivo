@@ -68,6 +68,8 @@ pnpm --filter @amautai/worker exec wrangler d1 migrations apply andes-app-db --l
 pnpm exec turbo dev --filter=web --filter=@amautai/worker --ui=stream
 ```
 
+The Worker development command applies pending **local** D1 migrations before starting. After pulling changes while an older Worker is still running, restart it or run the migration command above; no remote migrations run automatically.
+
 Vite runs at port 5173 and proxies `/api/*` and `/callback` to the Worker at port 8787. Both processes must be running. The Worker uses an explicit local upstream to preserve the origin used for CSRF and cookie handling.
 
 The filtered command starts the web app and Worker without the standalone WhatsApp gateway, which has separate runtime configuration. Root `pnpm run dev` includes the gateway too.

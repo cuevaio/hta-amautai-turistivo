@@ -18,12 +18,17 @@ import {
 import {
   Field,
   FieldError,
+  FieldDescription,
   FieldLabel,
 } from "@workspace/ui/components/field"
 import {
   ToggleGroup,
   ToggleGroupItem,
 } from "@workspace/ui/components/toggle-group"
+import {
+  normalizeRegistrationPhone,
+  isRegistrationPhoneValid,
+} from "../model/registration"
 import { useProfile } from "../model/profile-provider"
 
 export function ProfileTypeSelection() {
@@ -48,7 +53,7 @@ export function ProfileTypeSelection() {
       consent: true,
       locale,
     })
-    if (!input.success) {
+    if (!isRegistrationPhoneValid(phone) || !input.success) {
       setPhoneError("Escribe los 9 dígitos de tu celular.")
       phoneInput.current?.focus()
       return
@@ -81,7 +86,7 @@ export function ProfileTypeSelection() {
           </h1>
           <p className="text-muted-foreground">{m("¿Cómo usarás Amautai?")}</p>
         </div>
-        <form onSubmit={(event) => void submit(event)}>
+        <form noValidate onSubmit={(event) => void submit(event)}>
           <p id="profile-type-label" className="mb-3 text-sm font-medium">
             {m("Selecciona una opción")}
           </p>
@@ -152,23 +157,27 @@ export function ProfileTypeSelection() {
                   inputMode="numeric"
                   autoComplete="tel-national"
                   placeholder="999 999 999"
-                  maxLength={9}
+                  maxLength={32}
                   required
                   value={phone}
                   onChange={(event) => {
-                    let digits = event.target.value.replace(/\D/g, "")
-                    if (digits.length > 9 && digits.startsWith("51"))
-                      digits = digits.slice(2)
-                    setPhone(digits.slice(0, 9))
+                    setPhone(normalizeRegistrationPhone(event.target.value))
                     setPhoneError("")
                   }}
                   disabled={busy}
                   aria-invalid={!!phoneError}
                   aria-describedby={
-                    phoneError ? "registration-phone-error" : undefined
+                    phoneError
+                      ? "registration-phone-help registration-phone-error"
+                      : "registration-phone-help"
                   }
                 />
               </InputGroup>
+              <FieldDescription id="registration-phone-help">
+                {m(
+                  "Ingresa 9 dígitos. También puedes pegar tu número con +51."
+                )}
+              </FieldDescription>
               {phoneError && (
                 <FieldError id="registration-phone-error">
                   {m(phoneError)}
@@ -182,10 +191,7 @@ export function ProfileTypeSelection() {
             </p>
           )}
           <div className="mt-7 flex justify-end">
-            <Button
-              type="submit"
-              disabled={!role || phone.length !== 9 || busy}
-            >
+            <Button type="submit" disabled={!role || busy}>
               {busy ? m("Guardando…") : m("Continuar")}
               {!busy && <ArrowRight aria-hidden="true" />}
             </Button>

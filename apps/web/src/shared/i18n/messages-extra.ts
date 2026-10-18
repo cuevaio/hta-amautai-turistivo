@@ -1,6 +1,12 @@
 // Initial UI translations, including localized curriculum display labels.
 // Original curriculum data and user-authored content remain unchanged.
 export const additionalRows: readonly (readonly [string, string, string])[] = [
+  ["Hack the Andes", "Hack the Andes", "Hack the Andes"],
+  [
+    "Ingresa 9 dígitos. También puedes pegar tu número con +51.",
+    "9 yupaykunata qillqay. +51 nisqawan telefonoykita laqayta atinkitaqmi.",
+    "9 jakhunaka qillqam. +51 chimpumpi telefonoma lipʼiyañamarakiwa.",
+  ],
   ["Personas registradas", "Runasqa runakuna", "Qillqantayata jaqinaka"],
   ["Lista de espera", "Suyakuqkuna", "Suytʼirinaka"],
   [

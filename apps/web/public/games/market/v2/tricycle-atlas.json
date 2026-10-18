@@ -1,0 +1,92 @@
+{
+  "frames": {
+    "0": {
+      "frame": {
+        "x": 42,
+        "y": 8,
+        "w": 685,
+        "h": 474
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 685,
+        "h": 474
+      },
+      "sourceSize": {
+        "w": 685,
+        "h": 474
+      }
+    },
+    "1": {
+      "frame": {
+        "x": 810,
+        "y": 8,
+        "w": 685,
+        "h": 474
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 685,
+        "h": 474
+      },
+      "sourceSize": {
+        "w": 685,
+        "h": 474
+      }
+    },
+    "2": {
+      "frame": {
+        "x": 42,
+        "y": 520,
+        "w": 685,
+        "h": 474
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 685,
+        "h": 474
+      },
+      "sourceSize": {
+        "w": 685,
+        "h": 474
+      }
+    },
+    "3": {
+      "frame": {
+        "x": 810,
+        "y": 520,
+        "w": 685,
+        "h": 474
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 685,
+        "h": 474
+      },
+      "sourceSize": {
+        "w": 685,
+        "h": 474
+      }
+    }
+  },
+  "meta": {
+    "image": "tricycle-sheet.png",
+    "size": {
+      "w": 1536,
+      "h": 1024
+    },
+    "scale": "1"
+  }
+}

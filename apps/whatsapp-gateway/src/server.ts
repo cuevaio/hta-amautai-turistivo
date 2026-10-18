@@ -1,12 +1,15 @@
 import { adminServer } from "./admin.ts"
 import { mkdirSync } from "node:fs"
+import { fileURLToPath } from "node:url"
+import { join } from "node:path"
 import { createStore } from "./store.ts"
 import { connectWhatsApp } from "./baileys.ts"
 import { apiServer } from "./http.ts"
-const dir = process.env.DATA_DIR || "/data"
+const dir =
+  process.env.DATA_DIR || fileURLToPath(new URL("../.data/", import.meta.url))
 mkdirSync(dir, { recursive: true, mode: 0o700 })
 const store = createStore(
-  dir + "/gateway.sqlite",
+  join(dir, "gateway.sqlite"),
   process.env.AUTH_ENCRYPTION_KEY || ""
 )
 const whatsapp = connectWhatsApp(store)

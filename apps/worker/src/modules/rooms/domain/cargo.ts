@@ -1,6 +1,13 @@
 export type Actor = { tenantId: string; userId: string }
 export type Region = "coast" | "highlands" | "jungle"
-export type Room = { id: string; region: Region; createdAt: string }
+export type Room = {
+  name: string | null
+  id: string
+  region: Region
+  createdAt: string
+  kind: "cargo" | "market" | "nursery"
+  mode: "practice" | "challenge"
+}
 export type Participant = {
   id: string
   name: string

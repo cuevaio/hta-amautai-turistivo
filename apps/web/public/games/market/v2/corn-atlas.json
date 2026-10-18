@@ -1,0 +1,32 @@
+{
+  "frames": {
+    "item": {
+      "frame": {
+        "x": 242,
+        "y": 81,
+        "w": 905,
+        "h": 1126
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 905,
+        "h": 1126
+      },
+      "sourceSize": {
+        "w": 905,
+        "h": 1126
+      }
+    }
+  },
+  "meta": {
+    "image": "corn.png",
+    "size": {
+      "w": 1254,
+      "h": 1254
+    },
+    "scale": "1"
+  }
+}

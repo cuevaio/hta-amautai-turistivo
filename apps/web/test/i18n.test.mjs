@@ -221,6 +221,15 @@ test("visible source messages from API, models and JSX have translations", () =>
           assert.equal(value, "Amautai", file + ": untranslated JSX " + value)
       }
       if (ts.isStringLiteral(node)) {
+        // Survey option labels quote original source material, not interface copy.
+        // Preserve those originals; chart titles and all application messages remain checked.
+        if (
+          file.replaceAll(path.sep, "/") ===
+            "features/evidence/model/validation-data.ts" &&
+          ts.isPropertyAssignment(node.parent) &&
+          node.parent.name.getText(ast) === "label"
+        )
+          return
         const value = node.text.trim()
         if (
           /[áéíóúñ¿¡…]/i.test(value) &&

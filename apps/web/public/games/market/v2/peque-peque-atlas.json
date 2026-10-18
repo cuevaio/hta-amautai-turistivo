@@ -1,0 +1,92 @@
+{
+  "frames": {
+    "0": {
+      "frame": {
+        "x": 27,
+        "y": 144,
+        "w": 733,
+        "h": 282
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 733,
+        "h": 282
+      },
+      "sourceSize": {
+        "w": 733,
+        "h": 282
+      }
+    },
+    "1": {
+      "frame": {
+        "x": 795,
+        "y": 144,
+        "w": 733,
+        "h": 282
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 733,
+        "h": 282
+      },
+      "sourceSize": {
+        "w": 733,
+        "h": 282
+      }
+    },
+    "2": {
+      "frame": {
+        "x": 27,
+        "y": 656,
+        "w": 733,
+        "h": 282
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 733,
+        "h": 282
+      },
+      "sourceSize": {
+        "w": 733,
+        "h": 282
+      }
+    },
+    "3": {
+      "frame": {
+        "x": 795,
+        "y": 656,
+        "w": 733,
+        "h": 282
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 733,
+        "h": 282
+      },
+      "sourceSize": {
+        "w": 733,
+        "h": 282
+      }
+    }
+  },
+  "meta": {
+    "image": "peque-peque-sheet.png",
+    "size": {
+      "w": 1536,
+      "h": 1024
+    },
+    "scale": "1"
+  }
+}

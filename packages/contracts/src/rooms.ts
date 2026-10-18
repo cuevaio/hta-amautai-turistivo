@@ -1,6 +1,11 @@
 import { z } from "zod"
 export const roomInput = z
-  .object({ region: z.enum(["coast", "highlands", "jungle"]) })
+  .object({
+    name: z.string().trim().min(1).max(80).optional(),
+    region: z.enum(["coast", "highlands", "jungle"]),
+    kind: z.enum(["cargo", "market", "nursery"]).default("cargo"),
+    mode: z.enum(["practice", "challenge"]).default("challenge"),
+  })
   .strict()
 export const participantInput = z
   .object({ name: z.string().trim().min(1).max(80) })
@@ -27,7 +32,14 @@ export type CargoParticipant = {
   paused: boolean
   version: number
 }
-export type CargoRoom = { id: string; region: CargoRegion; createdAt: string }
+export type CargoRoom = {
+  name: string | null
+  id: string
+  region: CargoRegion
+  createdAt: string
+  kind: "cargo" | "market" | "nursery"
+  mode: "practice" | "challenge"
+}
 export type CargoRun = {
   participant: CargoParticipant
   room: CargoRoom
@@ -36,4 +48,35 @@ export type CargoRun = {
 export type CargoAnswer = {
   participant: CargoParticipant
   challenge: CargoChallenge
+}
+
+export const marketAnswerInput = z
+  .object({
+    version: z.number().int().min(1),
+    answer: z.number().int().min(0).max(100),
+  })
+  .strict()
+export const marketVersionInput = z
+  .object({ version: z.number().int().min(1) })
+  .strict()
+export type MarketTask = {
+  id: number
+  skill: number
+  band: number
+  a: number
+  b: number
+  operation: "+" | "−"
+  missing: boolean
+}
+export type MarketRun = {
+  room: CargoRoom
+  participant: CargoParticipant
+  task: MarketTask
+  helped: boolean
+  attempts: number
+  streak: number
+  bands: number[]
+  evidence: { correct: number; assisted: number; errors: number }[]
+  feedback: "" | "correct" | "wrong" | "help"
+  delta: number
 }

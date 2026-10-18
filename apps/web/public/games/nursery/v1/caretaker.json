@@ -1,0 +1,52 @@
+{
+  "frames": {
+    "0": {
+      "frame": {
+        "x": 31,
+        "y": 38,
+        "w": 581,
+        "h": 545
+      },
+      "rotated": false,
+      "trimmed": false
+    },
+    "1": {
+      "frame": {
+        "x": 658,
+        "y": 38,
+        "w": 581,
+        "h": 545
+      },
+      "rotated": false,
+      "trimmed": false
+    },
+    "2": {
+      "frame": {
+        "x": 31,
+        "y": 665,
+        "w": 581,
+        "h": 545
+      },
+      "rotated": false,
+      "trimmed": false
+    },
+    "3": {
+      "frame": {
+        "x": 658,
+        "y": 665,
+        "w": 581,
+        "h": 545
+      },
+      "rotated": false,
+      "trimmed": false
+    }
+  },
+  "meta": {
+    "image": "caretaker.png",
+    "size": {
+      "w": 1254,
+      "h": 1254
+    },
+    "scale": "1"
+  }
+}

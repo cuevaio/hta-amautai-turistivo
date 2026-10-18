@@ -340,4 +340,39 @@ export const landingRows: readonly (readonly [string, string, string])[] = [
     "Yupay yachay sapa aylluwan tinkusqa",
     "Jakhu yatiqawi sapa ayllumpi mayachata",
   ],
+  [
+    "Para familias y docentes · Matemáticas · Primaria · Perú",
+    "Ayllukunapaq, yachachiqkunapaq · Yupay yachay · Qallariy yachay · Piruw",
+    "Familianakataki, yatichirinakataki · Jakhu yatiqawi · Qallta yatiqawi · Perú",
+  ],
+  [
+    "¡Matemáticas que dan ganas de jugar!",
+    "Yupay yachayqa pukllayman munachisunkim!",
+    "Jakhu yatiqawixa anataña munaytʼayi!",
+  ],
+  [
+    "Docentes preparan sesiones conectadas con su grupo; las familias pueden probar nuestro juego de multiplicación para segundo grado.",
+    "Yachachiqkuna qutunkuwan tupaq yachay qutukunata wakichinku; ayllukuna iskay ñiqipaq yupay kutichiy pukllayta qawariyta atinku.",
+    "Yatichirinakaxa tamapampi chiktʼata yatiqawi tantachawinaka wakichapxi; familianakaxa payïri tʼaqataki jakhu mirayaña anatawi uñjapxaspa.",
+  ],
+  [
+    "Para familias y docentes",
+    "Ayllukunapaq, yachachiqkunapaq",
+    "Familianakataki, yatichirinakataki",
+  ],
+  [
+    "Matemáticas de primaria",
+    "Qallariy yachaypa yupay yachaynin",
+    "Qallta yatiqawina jakhu yatiqawi",
+  ],
+  [
+    "Los niños aprenden mejor jugando.",
+    "Wawakuna pukllaspa aswan allinta yachanku.",
+    "Wawanakax anatasa jukʼamp sum yatiqapxi.",
+  ],
+  [
+    "Matemáticas de primaria con sesiones contextualizadas y un juego de multiplicación para segundo grado.",
+    "Qallariy yachaypa yupay yachaynin, qutupa kawsayninwan tupaq yachay qutukunawan, iskay ñiqipaq yupay kutichiy pukllaywan ima.",
+    "Qallta yatiqawina jakhu yatiqawi, tamana jakawipampi chiktʼata tantachawinakampi ukhamaraki payïri tʼaqatak jakhu mirayaña anatawimpi.",
+  ],
 ]

@@ -41,7 +41,7 @@ export function EvidencePage() {
   const { m } = useMessages()
   return (
     <div className="min-h-svh bg-background text-foreground">
-      <title>{[m("Personas registradas"), "Amautai"].join(" · ")}</title>
+      <title>{[m("Lista de espera"), "Amautai"].join(" · ")}</title>
       <header className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-5 py-5 sm:px-8 lg:px-12">
         <Link to="/" aria-label={m("Amautai")}>
           <BrandLogo />
@@ -53,7 +53,7 @@ export function EvidencePage() {
       </header>
       <main className="mx-auto max-w-6xl px-5 pt-7 pb-14 sm:px-8 sm:pt-10 lg:px-12 lg:pb-20">
         <h1 className="text-3xl leading-tight font-semibold sm:text-4xl">
-          {m("Personas registradas")}
+          {m("Lista de espera")}
         </h1>
         <div className="mt-7 grid items-start gap-5 md:grid-cols-2">
           <NameColumn title="Familias" names={familyRegistrantNames} />

@@ -74,15 +74,20 @@ export function LandingPage() {
       <main id="contenido">
         <section className="mx-auto grid max-w-7xl items-center gap-8 px-5 pt-8 pb-12 sm:gap-10 sm:px-8 sm:pt-12 sm:pb-16 md:grid-cols-[1.1fr_0.9fr] lg:min-h-[calc(100svh-5rem)] lg:gap-16 lg:px-12 lg:py-8">
           <div className="flex min-w-0 flex-col items-start gap-6 lg:gap-8">
-            <p className="text-sm font-medium">
-              {m("Matemáticas · Primaria · Perú")}
-            </p>
+            <div className="flex flex-wrap gap-2">
+              <span className="rounded-full border border-primary/20 bg-primary/10 px-3 py-1.5 text-sm font-medium text-primary">
+                {m("Para familias y docentes")}
+              </span>
+              <span className="rounded-full border border-border bg-muted/40 px-3 py-1.5 text-sm text-muted-foreground">
+                {m("Matemáticas de primaria")}
+              </span>
+            </div>
             <h1 className="w-full max-w-2xl text-4xl leading-[1.08] font-semibold text-balance break-words sm:text-5xl lg:text-6xl xl:text-7xl">
-              {m("Enseña matemáticas desde tu aula.")}
+              {m("Los niños aprenden mejor jugando.")}
             </h1>
             <p className="max-w-md text-base leading-relaxed text-muted-foreground sm:text-lg">
               {m(
-                "Amautai te ayuda a enseñar y aprender matemáticas de primaria con experiencias cercanas al contexto de cada grupo."
+                "Matemáticas de primaria con sesiones contextualizadas y un juego de multiplicación para segundo grado."
               )}
             </p>
             <div className="flex w-full flex-wrap items-center gap-3 sm:w-auto">

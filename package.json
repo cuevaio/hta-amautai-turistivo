@@ -10,7 +10,7 @@
     "typecheck": "turbo typecheck",
     "check:architecture": "node scripts/check-architecture.mjs",
     "test:architecture": "node --test scripts/check-architecture.test.mjs",
-    "check": "pnpm run lint && pnpm run test:architecture && pnpm run typecheck && pnpm --filter @amautai/worker run test && pnpm --filter web run test && pnpm --filter @amautai/whatsapp-gateway run test && pnpm run build"
+    "check": "pnpm run lint && pnpm run test:architecture && node --test infra/domain-proxy/worker.test.mjs && pnpm run typecheck && pnpm --filter @amautai/worker run test && pnpm --filter web run test && pnpm --filter @amautai/whatsapp-gateway run test && pnpm run build"
   },
   "devDependencies": {
     "prettier": "^3.9.10",

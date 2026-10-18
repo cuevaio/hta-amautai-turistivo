@@ -38,7 +38,7 @@ function setup(result = { status: "accepted" }) {
         id: "pr_fixture",
         email: "account@example.test",
         passwordResetUrl:
-          "https://amautai.urday.dev/api/auth/password-reset/start?token=fixture-token",
+          "https://amautai.turistivo.com/api/auth/password-reset/start?token=fixture-token",
       }
     },
   }
@@ -86,7 +86,7 @@ test("recovery mail uses only provider-returned recipient and an approved Amauta
   assert.equal(s.messages[0].email, "account@example.test")
   assert.match(
     s.messages[0].body,
-    /https:\/\/amautai.urday.dev\/api\/auth\/password-reset\/start\?token=fixture-token/
+    /https:\/\/amautai.turistivo.com\/api\/auth\/password-reset\/start\?token=fixture-token/
   )
   await assert.rejects(
     authMailer(s.provider).recovery({

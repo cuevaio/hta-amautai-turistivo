@@ -1,3 +1,4 @@
+import { useMessages } from "@/shared/i18n/use-messages"
 import { useState } from "react"
 import { Link } from "react-router"
 import { Button } from "@workspace/ui/components/button"
@@ -28,6 +29,8 @@ export function NavUser({
 }: {
   user: { name: string; email: string; avatar: string }
 }) {
+  const { m, errorMessage } = useMessages()
+
   const { isMobile } = useSidebar()
   const { signOut } = useAuth()
   const [busy, setBusy] = useState(false)
@@ -49,10 +52,10 @@ export function NavUser({
       {error && (
         <SidebarMenuItem>
           <p role="alert" className="px-2 text-sm text-destructive">
-            {error}
+            {errorMessage(error)}
           </p>
           <Button variant="link" disabled={busy} onClick={() => void logout()}>
-            Reintentar cierre
+            {m("Reintentar cierre")}
           </Button>
         </SidebarMenuItem>
       )}
@@ -81,14 +84,14 @@ export function NavUser({
             sideOffset={4}
           >
             <DropdownMenuGroup>
-              <DropdownMenuLabel>Mi cuenta</DropdownMenuLabel>
+              <DropdownMenuLabel>{m("Mi cuenta")}</DropdownMenuLabel>
               <DropdownMenuItem render={<Link to="/dashboard/account" />}>
                 <UserIcon />
-                Mi cuenta
+                {m("Mi cuenta")}
               </DropdownMenuItem>
               <DropdownMenuItem disabled={busy} onClick={() => void logout()}>
                 <LogOutIcon />
-                {busy ? "Cerrando sesión…" : "Cerrar sesión"}
+                {busy ? m("Cerrando sesión…") : m("Cerrar sesión")}
               </DropdownMenuItem>
             </DropdownMenuGroup>
           </DropdownMenuContent>

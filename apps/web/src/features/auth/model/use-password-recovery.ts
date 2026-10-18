@@ -1,3 +1,4 @@
+import { recoveryInput, resetPasswordInput } from "@amautai/contracts"
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router"
 import { ApiError } from "@/shared/api/client"
@@ -35,6 +36,21 @@ export function usePasswordRecovery(reset: boolean) {
     if (reset && data.get("newPassword") !== data.get("confirm")) {
       setInvalid(true)
       setError("Las contraseñas no coinciden.")
+      return
+    }
+    const input = reset
+      ? { newPassword: String(data.get("newPassword") || "") }
+      : { email: String(data.get("email") || "").trim() }
+    const parsed = reset
+      ? resetPasswordInput.safeParse(input)
+      : recoveryInput.safeParse(input)
+    if (!parsed.success) {
+      setInvalid(true)
+      setError(
+        reset
+          ? "La nueva contraseña debe tener al menos 12 caracteres."
+          : "Escribe un correo electrónico válido."
+      )
       return
     }
     setPending(true)

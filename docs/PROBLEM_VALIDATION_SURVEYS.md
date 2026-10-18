@@ -60,8 +60,6 @@ No response results are recorded in this file; inspect current submissions befor
 
 ## Product context and history
 
-[Shared product document](https://docs.google.com/document/d/16DhBCPXhS6Wyuar9op7BviHpD2T06TSzRprB9iZlWjg/edit) (Spanish; includes these survey links). At this review it still describes the original seven-item survey with optional contact. That differs from the current seven substantive questions plus two required contact fields. The user's latest explicit instructions authorize the version documented here.
-
 On October 17, the original two-section forms were merged into one page. The original seven-question wording was initially preserved. Later, the ineligible-respondent options were removed. An intermediate revision added time spent, converted the combined contact question into explicit consent, added two initially optional contact fields, and made the eight numbered questions required. A subsequent revision made both contact fields mandatory, kept them last, and shortened the descriptions. Superseded PDFs and screenshots do not describe the current version.
 
 The latest neutral revision removes the former authorization question 8 from both forms and the family print copy, removes product branding and product-test invitations, and preserves questions 1-7 plus the two required contact fields. WhatsApp invitations describe the audience and recent mathematics experience without promising a product benefit.

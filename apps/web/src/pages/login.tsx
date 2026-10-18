@@ -1,3 +1,6 @@
+import { ThemeToggle } from "@/shared/ui/theme-toggle"
+import { AuthArtwork } from "@/shared/ui/auth-artwork"
+import { LanguageSelector } from "@/shared/ui/language-selector"
 import { BrandLogo } from "@/shared/ui/brand-logo"
 import { PageLoading } from "@/shared/ui/page-loading"
 import { useAuth } from "@/features/auth"
@@ -19,12 +22,16 @@ export function LoginPage({
   return (
     <div className="grid min-h-svh lg:grid-cols-2">
       <div className="flex flex-col gap-4 p-6 md:p-10">
-        <div className="flex justify-center gap-2 md:justify-start">
-          <Link to="/login" className="flex items-center gap-2 font-medium">
+        <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-3">
+          <Link to="/" className="flex items-center gap-2 font-medium">
             <BrandLogo />
           </Link>
+          <div className="ml-auto flex shrink-0 items-center gap-1">
+            <LanguageSelector compact />
+            <ThemeToggle className="size-9" />
+          </div>
         </div>
-        <div className="flex flex-1 items-center justify-center">
+        <div className="flex flex-1 items-center justify-center py-12">
           <div className="w-full max-w-xs">
             {mode === "verify" ? (
               <VerifyEmailForm />
@@ -36,13 +43,7 @@ export function LoginPage({
           </div>
         </div>
       </div>
-      <div className="relative hidden bg-muted lg:block">
-        <img
-          src="/login-amautai.webp"
-          alt="Cumbres de los Andes al amanecer"
-          className="absolute inset-0 size-full object-cover"
-        />
-      </div>
+      <AuthArtwork />
     </div>
   )
 }

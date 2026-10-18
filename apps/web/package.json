@@ -13,14 +13,16 @@
     "test": "node --experimental-strip-types --test test/*.test.mjs"
   },
   "dependencies": {
+    "@amautai/contracts": "workspace:*",
     "@workspace/ui": "workspace:*",
+    "i18next": "^26.4.7",
     "lucide-react": "^1.58.0",
     "motion": "^14.3.0",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
+    "react-i18next": "^17.0.20",
     "react-router": "^8.4.0",
-    "zod": "^4.6.6",
-    "@amautai/contracts": "workspace:*"
+    "zod": "^4.6.6"
   },
   "devDependencies": {
     "@eslint/js": "^10",

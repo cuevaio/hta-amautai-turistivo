@@ -1,3 +1,4 @@
+import { useMessages } from "@/shared/i18n/use-messages"
 import { PageLoading } from "@/shared/ui/page-loading"
 import type { ReactNode } from "react"
 import { useAuth } from "../model/auth-provider"
@@ -12,6 +13,8 @@ import {
 } from "@workspace/ui/components/empty"
 
 export function AuthGuard({ children }: { children: ReactNode }) {
+  const { m, errorMessage } = useMessages()
+
   const { isLoading, user, error } = useAuth()
   if (isLoading)
     return <PageLoading layout="dashboard" message="Comprobando tu sesión…" />
@@ -20,11 +23,15 @@ export function AuthGuard({ children }: { children: ReactNode }) {
       <main className="flex min-h-svh items-center p-6">
         <Empty>
           <EmptyHeader>
-            <EmptyTitle>No pudimos comprobar tu sesión</EmptyTitle>
-            <EmptyDescription role="alert">{error}</EmptyDescription>
+            <EmptyTitle>{m("No pudimos comprobar tu sesión")}</EmptyTitle>
+            <EmptyDescription role="alert">
+              {errorMessage(error)}
+            </EmptyDescription>
           </EmptyHeader>
           <EmptyContent>
-            <Button onClick={() => window.location.reload()}>Reintentar</Button>
+            <Button onClick={() => window.location.reload()}>
+              {m("Reintentar")}
+            </Button>
           </EmptyContent>
         </Empty>
       </main>

@@ -45,6 +45,6 @@ This section is our interpretation, not an additional organizer requirement.
 
 - Public scaffold exists at https://amautai.urday.dev; authentication and project CRUD were verified.
 - Learning-game flows, validated multilingual catalog, and offline play remain goals until implemented and verified.
-- GitHub delivery is pending because the user declined repository creation/upload. Preserve that decision until explicitly changed.
+- The code is backed up at https://github.com/turistivo/amautai, a private organization repository. Judge access and submission of its URL have not been verified. The local teacher-onboarding/session-draft changes have not been committed, pushed or deployed.
 
 Architecture: [backend skill](../.agents/skills/amautai-backend/SKILL.md), [frontend skill](../.agents/skills/amautai-frontend/SKILL.md).

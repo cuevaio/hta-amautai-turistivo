@@ -6,9 +6,50 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Amautai</title>
     <style>
-      #boot-screen { min-height: 100svh; display: grid; place-content: center; justify-items: center; gap: 16px; margin: 0; background: var(--background, Canvas); color: var(--foreground, CanvasText); font: 500 14px system-ui, sans-serif; }
-      body:has(#boot-screen) { margin: 0; }
-      #boot-screen img { width: 40px; height: 40px; }
+      #boot-screen {
+        min-height: 100svh;
+        display: grid;
+        place-content: center;
+        justify-items: center;
+        gap: 16px;
+        margin: 0;
+        background: var(--background, Canvas);
+        color: var(--foreground, CanvasText);
+        font:
+          500 14px system-ui,
+          sans-serif;
+      }
+      body:has(#boot-screen) {
+        margin: 0;
+      }
+      #boot-screen img {
+        width: 80px;
+        height: 80px;
+      }
+      #boot-screen .boot-status {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      #boot-screen .boot-spinner {
+        width: 18px;
+        height: 18px;
+        flex-shrink: 0;
+        border: 2px solid currentColor;
+        border-right-color: transparent;
+        border-radius: 50%;
+        animation: boot-spin 800ms linear infinite;
+      }
+      @keyframes boot-spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        #boot-screen .boot-spinner {
+          animation: none;
+        }
+      }
     </style>
     <script>
       ;(() => {
@@ -30,7 +71,30 @@
     </script>
   </head>
   <body>
-    <div id="root"><div id="boot-screen" role="status" aria-live="polite"><img src="/favicon.svg" alt="" /><span>Preparando Amautai…</span></div></div>
+    <div id="root">
+      <div id="boot-screen" role="status" aria-live="polite">
+        <img src="/favicon.svg" alt="" /><span class="boot-status"
+          ><span class="boot-spinner" aria-hidden="true"></span
+          ><span id="boot-message">Preparando Amautai…</span></span
+        >
+      </div>
+    </div>
+    <script>
+      ;(() => {
+        const labels = {
+          "es-PE": "Preparando Amautai…",
+          "quy-PE": "Amautaita allichachkan…",
+          "ay-PE": "Amautai wakichaskiwa…",
+        }
+        let locale = "es-PE"
+        try {
+          const saved = localStorage.getItem("amautai-ui-language")
+          if (Object.hasOwn(labels, saved)) locale = saved
+        } catch {}
+        document.documentElement.lang = locale
+        document.getElementById("boot-message").textContent = labels[locale]
+      })()
+    </script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

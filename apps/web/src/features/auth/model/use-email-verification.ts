@@ -9,11 +9,15 @@ export function useEmailVerification() {
   const [error, setError] = useState("")
   async function submit(event: React.SubmitEvent<HTMLFormElement>) {
     event.preventDefault()
-    setPending(true)
     setError("")
     const code = String(
       new FormData(event.currentTarget).get("code") || ""
     ).trim()
+    if (!/^\d{6}$/.test(code)) {
+      setError("Escribe el código de 6 dígitos.")
+      return
+    }
+    setPending(true)
     try {
       await authApi.verify(code)
       if (await reloadSession())

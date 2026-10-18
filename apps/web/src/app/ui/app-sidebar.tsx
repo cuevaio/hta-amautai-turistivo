@@ -1,8 +1,10 @@
+import { useMessages } from "@/shared/i18n/use-messages"
 import { BrandLogo } from "@/shared/ui/brand-logo"
 import { useAuth } from "@/features/auth"
 import type { ComponentProps } from "react"
 import {
   LayoutDashboardIcon,
+  BookOpenIcon,
   BellIcon,
   SettingsIcon,
   UserIcon,
@@ -30,9 +32,10 @@ const navMain = [
     isActive: true,
     items: [
       { title: "Vista general", url: "/dashboard" },
-      { title: "Proyectos", url: "/dashboard/projects" },
+      { title: "Sesiones de aprendizaje", url: "/dashboard/sessions" },
     ],
   },
+  { title: "Proyectos", url: "/dashboard/projects", icon: <BookOpenIcon /> },
   {
     title: "Notificaciones",
     url: "/dashboard/notifications",
@@ -54,15 +57,22 @@ const navSecondary = [
 ]
 
 export function AppSidebar(props: ComponentProps<typeof Sidebar>) {
+  const { m } = useMessages()
   const { user } = useAuth()
   return (
-    <Sidebar variant="inset" {...props}>
+    <Sidebar
+      variant="inset"
+      mobileTitle={m("Navegación")}
+      mobileDescription={m("Menú de navegación")}
+      closeLabel={m("Cerrar")}
+      {...props}
+    >
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton
               size="lg"
-              aria-label="Amautai"
+              aria-label={m("Amautai")}
               render={<Link to="/dashboard" />}
             >
               <BrandLogo className="group-data-[collapsible=icon]:hidden" />
@@ -86,7 +96,7 @@ export function AppSidebar(props: ComponentProps<typeof Sidebar>) {
           user={{
             name:
               [user?.firstName, user?.lastName].filter(Boolean).join(" ") ||
-              "Mi cuenta",
+              m("Mi cuenta"),
             email: user?.email || "",
             avatar: user?.profilePictureUrl || "/avatar.svg",
           }}

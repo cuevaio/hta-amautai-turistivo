@@ -1,3 +1,4 @@
+import { useMessages } from "@/shared/i18n/use-messages"
 import { useEmailVerification } from "../model/use-email-verification"
 import { Link } from "react-router"
 import { Button } from "@workspace/ui/components/button"
@@ -10,20 +11,22 @@ import {
 } from "@workspace/ui/components/field"
 
 export function VerifyEmailForm() {
+  const { m, errorMessage } = useMessages()
+
   const { pending, error, submit } = useEmailVerification()
   return (
-    <form onSubmit={submit} className="flex flex-col gap-6">
+    <form noValidate onSubmit={submit} className="flex flex-col gap-6">
       <FieldGroup>
         <div className="flex flex-col gap-2">
-          <h1 className="text-3xl font-semibold">
-            Revisa tu correo
-          </h1>
+          <h1 className="text-3xl font-semibold">{m("Revisa tu correo")}</h1>
           <p className="text-sm text-muted-foreground">
-            Escribe el código de verificación que recibiste para continuar.
+            {m(
+              "Escribe el código de verificación que recibiste para continuar."
+            )}
           </p>
         </div>
         <Field data-invalid={!!error}>
-          <FieldLabel htmlFor="code">Código de verificación</FieldLabel>
+          <FieldLabel htmlFor="code">{m("Código de verificación")}</FieldLabel>
           <Input
             id="code"
             name="code"
@@ -38,18 +41,22 @@ export function VerifyEmailForm() {
             aria-describedby="code-help"
           />
           <FieldDescription id="code-help">
-            El código tiene 6 dígitos.
+            {m("El código tiene 6 dígitos.")}
           </FieldDescription>
         </Field>
-        {error && <FieldDescription role="alert">{error}</FieldDescription>}
+        {error && (
+          <FieldDescription role="alert">
+            {errorMessage(error)}
+          </FieldDescription>
+        )}
         <Field>
           <Button type="submit" disabled={pending}>
-            {pending ? "Verificando…" : "Verificar y continuar"}
+            {pending ? m("Verificando…") : m("Verificar y continuar")}
           </Button>
           <FieldDescription>
-            Si no llega, revisa spam o{" "}
-            <Link to="/login">inicia sesión otra vez</Link> para solicitar un
-            nuevo código.
+            {m("Si no llega, revisa spam o")}{" "}
+            <Link to="/login">{m("inicia sesión otra vez")}</Link>
+            {m("para solicitar un nuevo código.")}
           </FieldDescription>
         </Field>
       </FieldGroup>

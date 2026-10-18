@@ -1,5 +1,7 @@
 "use client"
 
+import { useMessages } from "@/shared/i18n/use-messages"
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -33,10 +35,12 @@ export function NavProjects({
     icon: React.ReactNode
   }[]
 }) {
+  const { m } = useMessages()
+
   const { isMobile } = useSidebar()
   return (
     <SidebarGroup className="group-data-[collapsible=icon]:hidden">
-      <SidebarGroupLabel>Projects</SidebarGroupLabel>
+      <SidebarGroupLabel>{m("Projects")}</SidebarGroupLabel>
       <SidebarMenu>
         {projects.map((item) => (
           <SidebarMenuItem key={item.name}>
@@ -54,7 +58,7 @@ export function NavProjects({
                 }
               >
                 <MoreHorizontalIcon />
-                <span className="sr-only">More</span>
+                <span className="sr-only">{m("More")}</span>
               </DropdownMenuTrigger>
               <DropdownMenuContent
                 className="w-48"
@@ -64,16 +68,16 @@ export function NavProjects({
                 <DropdownMenuGroup>
                   <DropdownMenuItem>
                     <FolderIcon className="text-muted-foreground" />
-                    <span>View Project</span>
+                    <span>{m("View Project")}</span>
                   </DropdownMenuItem>
                   <DropdownMenuItem>
                     <ShareIcon className="text-muted-foreground" />
-                    <span>Share Project</span>
+                    <span>{m("Share Project")}</span>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem>
                     <Trash2Icon className="text-muted-foreground" />
-                    <span>Delete Project</span>
+                    <span>{m("Delete Project")}</span>
                   </DropdownMenuItem>
                 </DropdownMenuGroup>
               </DropdownMenuContent>
@@ -83,7 +87,7 @@ export function NavProjects({
         <SidebarMenuItem>
           <SidebarMenuButton>
             <MoreHorizontalIcon />
-            <span>More</span>
+            <span>{m("More")}</span>
           </SidebarMenuButton>
         </SidebarMenuItem>
       </SidebarMenu>

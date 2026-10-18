@@ -1,11 +1,19 @@
 import { RouteLoading } from "./ui/route-loading"
+import { LanguageTransition } from "./ui/language-transition"
 import { lazy, Suspense } from "react"
 import { NotFoundPage } from "@/pages/not-found"
 import { BrowserRouter, Navigate, Route, Routes } from "react-router"
 import { MotionConfig } from "motion/react"
 import { TooltipProvider } from "@workspace/ui/components/tooltip"
 import { AuthGuard } from "@/features/auth"
+import { EducationGate, Onboarding } from "@/features/education"
 
+const LandingPage = lazy(() =>
+  import("@/pages/landing").then((module) => ({ default: module.LandingPage }))
+)
+const LegalPage = lazy(() =>
+  import("@/pages/legal").then((module) => ({ default: module.LegalPage }))
+)
 const LoginPage = lazy(() =>
   import("@/pages/login").then((module) => ({ default: module.LoginPage }))
 )
@@ -18,11 +26,17 @@ const DashboardPage = lazy(() =>
 export function App() {
   return (
     <MotionConfig reducedMotion="user">
+      <LanguageTransition />
       <TooltipProvider>
         <BrowserRouter>
           <Suspense fallback={<RouteLoading />}>
             <Routes>
-              <Route path="/" element={<Navigate to="/login" replace />} />
+              <Route path="/" element={<LandingPage />} />
+              <Route
+                path="/privacy"
+                element={<LegalPage document="privacy" />}
+              />
+              <Route path="/terms" element={<LegalPage document="terms" />} />
               <Route
                 path="/callback"
                 element={
@@ -32,6 +46,16 @@ export function App() {
                 }
               />
               <Route path="/login" element={<LoginPage />} />
+              <Route
+                path="/onboarding"
+                element={
+                  <AuthGuard>
+                    <EducationGate onboarding>
+                      <Onboarding />
+                    </EducationGate>
+                  </AuthGuard>
+                }
+              />
               <Route
                 path="/forgot-password"
                 element={<LoginPage mode="forgot" />}
@@ -49,7 +73,9 @@ export function App() {
                 path="/dashboard"
                 element={
                   <AuthGuard>
-                    <DashboardPage />
+                    <EducationGate>
+                      <DashboardPage />
+                    </EducationGate>
                   </AuthGuard>
                 }
               />
@@ -57,7 +83,19 @@ export function App() {
                 path="/dashboard/:section"
                 element={
                   <AuthGuard>
-                    <DashboardPage />
+                    <EducationGate>
+                      <DashboardPage />
+                    </EducationGate>
+                  </AuthGuard>
+                }
+              />
+              <Route
+                path="/dashboard/sessions/:sessionId"
+                element={
+                  <AuthGuard>
+                    <EducationGate>
+                      <DashboardPage sectionOverride="sessions" />
+                    </EducationGate>
                   </AuthGuard>
                 }
               />

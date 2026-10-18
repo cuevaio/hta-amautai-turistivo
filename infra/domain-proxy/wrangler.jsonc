@@ -1,0 +1,18 @@
+{
+  "name": "amautai-domain",
+  "main": "worker.mjs",
+  "compatibility_date": "2026-10-17",
+  "account_id": "49d9cc4a3f40d7228ed3593263d35588",
+  "workers_dev": false,
+  "preview_urls": false,
+  "routes": [
+    {
+      "pattern": "amautai.turistivo.com",
+      "custom_domain": true
+    },
+    {
+      "pattern": "amautai.turistivo.com/*",
+      "zone_name": "turistivo.com"
+    }
+  ]
+}

@@ -1,12 +1,18 @@
 # Amautai
 
+Mail transition (October 18, 2026): Stalwart domain `amautai.turistivo.com` and mailbox `notificaciones@amautai.turistivo.com` is created and authenticates Stalwart. The active sender is `amautai@turistivo.com`, an alias on the existing `turistivo.com` mail domain; `soporte@amautai.turistivo.com` and `postmaster@amautai.turistivo.com` remain aliases on the new domain. MX, SPF and DMARC for `turistivo.com` are published. The Worker uses the sender through four EMAIL_* secrets; a generic sender test and a real WorkOS password-reset email were delivered to the owner’s Outlook inbox from `amautai@turistivo.com`. The Worker JMAP secrets were corrected and the recovery flow now succeeds. The previous mailbox is retained. WorkOS Admin Portal invitations now use this address as their reply-to; Amautai verification/reset emails use it as the sender. WorkOS-hosted Magic Auth emails still use WorkOS delivery.
+
+Local `/privacy` and `/terms` pages are review drafts, not effective or published policies. They propose Diego Urday as the individual operator; full legal identity/address, retention/response periods and governing law remain unconfirmed. Spanish, Chanka Quechua and Peruvian Aymara text is draft content requiring legal and bilingual review. Google OAuth developer notifications now include `amautai@turistivo.com`; its user-support selector still requires an eligible Google account or managed Google Group. Public Google own-brand activation remains pending approval and publication of these pages.
+
 Development handoff: [messaging architecture, WhatsApp and email](docs/MESSAGING_HANDOFF.md).
 
 <img src="apps/web/public/favicon.svg" alt="Amautai" width="48" />
 
-An Amautai scaffold for Hack the Andes with in-app authentication, a tenant-scoped project workspace, and email/WhatsApp notification settings. Learning-game flows are not yet implemented.
+Amautai is a multilingual math-learning platform for primary-school teachers and families. It includes WorkOS authentication, a localized public landing page, teacher onboarding, persisted learning-session drafts for second-grade Mathematics, a tenant-scoped project workspace, and email/WhatsApp notification settings. Interactive learning games and measured learning outcomes remain future work.
 
-The latest recorded public Worker is `b438d08f-2d46-4063-967c-d9f3608fc5bd` (October 17, 2026). It includes D1 migration `0005`, automatic notification preferences and custom authentication mail. See [project status](PROJECT_STATUS.md) for verified behavior and remaining work.
+The public Worker is `acee3d1e-c003-4b50-96ab-9d7839802dd8` (October 18, 2026; mail-secret update only), with D1 migration `0006`. The domain entry Worker is `610d9376-2822-41fe-8d2e-e0a1910cab66`. See [project status](PROJECT_STATUS.md) for verified behavior and remaining work.
+
+The public code includes teacher onboarding and persisted learning-session drafts for second-grade primary Mathematics, the localized landing page and static login artwork. See [teacher onboarding and session drafts](docs/TEACHER_ONBOARDING.md).
 
 ## Stack
 
@@ -31,13 +37,13 @@ Local development uses the dedicated WorkOS environment currently labeled **Ande
 | Custom audience | None; this environment does not inherit the Walpia JWT template |
 | Local login | http://localhost:5173/login |
 | Local signup | http://localhost:5173/signup |
-| OAuth callbacks | `https://amautai.urday.dev/callback` (default), `http://localhost:5173/callback` |
-| Password reset entry | `https://amautai.urday.dev/api/auth/password-reset/start` |
-| Public login / signup | https://amautai.urday.dev/login / https://amautai.urday.dev/signup |
+| OAuth callbacks | `https://amautai.turistivo.com/callback` (default), `http://localhost:5173/callback` |
+| Password reset entry | `https://amautai.turistivo.com/api/auth/password-reset/start` |
+| Public login / signup | https://amautai.turistivo.com/login / https://amautai.turistivo.com/signup |
 
 The isolated environment was created on October 17, 2026 with no users. The original user and Turistivo membership remain in the shared WorkOS environment. Signing up here creates a separate account, even when using the same email.
 
-Amautai is configured for deployment at https://amautai.urday.dev using the dedicated WorkOS environment above. The older demo at https://andes.urday.dev remains on the previous Worker and shared environment; it is not modified by this deployment.
+Amautai is deployed at https://amautai.turistivo.com using the dedicated WorkOS environment above. The older demo at https://andes.urday.dev remains on the previous Worker and shared environment; it is not modified by this deployment.
 
 ## Local development in WSL
 
@@ -48,12 +54,14 @@ cd /home/diegourday/code/amautai
 pnpm install
 # Configure apps/worker/.dev.vars with the server secrets below.
 pnpm --filter @amautai/worker exec wrangler d1 migrations apply andes-app-db --local
-pnpm run dev --ui=stream
+pnpm exec turbo dev --filter=web --filter=@amautai/worker --ui=stream
 ```
 
 Vite runs at port 5173 and proxies `/api/*` and `/callback` to the Worker at port 8787. Both processes must be running. The Worker uses an explicit local upstream to preserve the origin used for CSRF and cookie handling.
 
-The current development processes are supervised by the transient WSL user service `amautai-dev.service`:
+The filtered command starts the web app and Worker without the standalone WhatsApp gateway, which has separate runtime configuration. Root `pnpm run dev` includes the gateway too.
+
+Earlier sessions used the transient WSL user service `amautai-dev.service`. If that service exists, inspect or stop it before starting another instance:
 
 ```bash
 systemctl --user status amautai-dev
@@ -61,7 +69,7 @@ systemctl --user restart amautai-dev
 systemctl --user stop amautai-dev
 ```
 
-Stop the service before running `pnpm run dev` manually. It is not enabled at boot. Port 8788 is an optional built-assets preview; authentication in the isolated environment is configured for 5173.
+The transient service is not enabled at boot and may no longer exist. Port 8788 is an optional built-assets preview; authentication in the isolated environment is configured for 5173.
 
 ### Server configuration
 
@@ -126,7 +134,7 @@ Before the architecture migration, 38 backend tests, type checking, lint, and th
 
 ## Deployment status
 
-Worker: amautai. Custom domain: https://amautai.urday.dev. D1: andes-app-db (the existing database is preserved). Personal Cloudflare account: 6f820062b903f496de6330e4c926675e.
+Worker: amautai. Upstream domain: https://amautai.urday.dev. Public domain: https://amautai.turistivo.com. D1: andes-app-db (the existing database is preserved). Personal Cloudflare account: 6f820062b903f496de6330e4c926675e.
 
 Deployment completed on October 17, 2026. Initial deployment version: 7dc1712b-286e-48f6-8ddc-400f4b334933. Both local and public origins are allowed. WorkOS uses the public callback by default and keeps the local callback registered. Initiate login, signup, sign-out, and password recovery use the public domain. WorkOS has a single password reset URL per application: recovery emails requested locally now open the public app.
 
@@ -256,3 +264,19 @@ Authentication mail is separate from activity preferences and opt-out: verificat
 Activation order: deploy the custom mail implementation and AUTH_EMAIL_MODE=custom, then disable only Email verification and Password reset in WorkOS Andes Staging → Emails → Configuration. Other environment emails remain unchanged. Local development must explicitly use AUTH_EMAIL_MODE=custom and protected EMAIL_* variables once WorkOS default delivery is disabled. Keep the WorkOS-issued verification and reset flows; changing the transport does not replace authentication.
 
 The custom-mail release was published as Worker b438d08f-2d46-4063-967c-d9f3608fc5bd with migration 0005 on October 17, 2026. WorkOS delivery for verification/reset is disabled in the isolated environment. A real public recovery request arrived in Outlook Inbox from the Amautai sender at 16:41:02 Lima. No password was changed. Verification challenge delivery is covered by automated password/signup/OAuth tests; a fresh real signup remains untested in this release.
+
+## Public domain migration
+
+Canonical URL: https://amautai.turistivo.com. The `amautai-domain` Worker in the Turistivo Cloudflare account (`49d9cc4a3f40d7228ed3593263d35588`) forwards requests to the existing `amautai` Worker at https://amautai.urday.dev in the personal account. D1, secrets, scheduled jobs and the `notificaciones@amautai.urday.dev` mail identity remain there. OAuth redirects are forwarded without following them; host-only cookies stay on the public host. The previous callback remains allowed during migration.
+
+Deploy the application first, then the entry Worker:
+
+```bash
+pnpm --filter @amautai/worker exec wrangler d1 migrations apply andes-app-db --remote
+pnpm --filter @amautai/worker exec wrangler deploy
+pnpm --filter @amautai/worker exec wrangler deploy --config ../../infra/domain-proxy/wrangler.jsonc
+```
+
+Migration is deployed and verified: HTTPS root/login/artwork return 200, D1 reports connected, anonymous protected APIs return 401, both provider authorization redirects use the new callback with Secure/HttpOnly state cookies, and Google login returned to authenticated onboarding with session persistence after reload. Recovery entry redirects to the new host with an encrypted secure cookie; allowed-origin/CSRF rejection remains enforced. No real password reset or GitHub account login was completed during this migration. Published changes include the localized landing page, static login illustration, theme toggle, teacher onboarding and session drafts. The Google OAuth client exists but WorkOS still uses demo Google credentials; own-brand activation remains pending public privacy/terms pages and Google verification.
+
+The entry Worker also owns the exact `amautai.turistivo.com/*` route, which takes precedence over the existing Turistivo wildcard router. Keep both its custom domain and exact route.

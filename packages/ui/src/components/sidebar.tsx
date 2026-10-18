@@ -151,6 +151,9 @@ function Sidebar({
   side = "left",
   variant = "sidebar",
   collapsible = "offcanvas",
+  mobileTitle = "Navegación",
+  mobileDescription = "Menú de navegación",
+  closeLabel = "Cerrar",
   className,
   children,
   dir,
@@ -158,6 +161,9 @@ function Sidebar({
 }: React.ComponentProps<"div"> & {
   side?: "left" | "right"
   variant?: "sidebar" | "floating" | "inset"
+  mobileTitle?: string
+  mobileDescription?: string
+  closeLabel?: string
   collapsible?: "offcanvas" | "icon" | "none"
 }) {
   const { isMobile, state, openMobile, setOpenMobile } = useSidebar()
@@ -182,6 +188,7 @@ function Sidebar({
       <Sheet open={openMobile} onOpenChange={setOpenMobile} {...props}>
         <SheetContent
           dir={dir}
+          closeLabel={closeLabel}
           data-sidebar="sidebar"
           data-slot="sidebar"
           data-mobile="true"
@@ -194,8 +201,8 @@ function Sidebar({
           side={side}
         >
           <SheetHeader className="sr-only">
-            <SheetTitle>Sidebar</SheetTitle>
-            <SheetDescription>Displays the mobile sidebar.</SheetDescription>
+            <SheetTitle>{mobileTitle}</SheetTitle>
+            <SheetDescription>{mobileDescription}</SheetDescription>
           </SheetHeader>
           <div className="flex h-full w-full flex-col">{children}</div>
         </SheetContent>
@@ -270,7 +277,9 @@ function SidebarTrigger({
       {...props}
     >
       <PanelLeftIcon />
-      <span className="sr-only">Toggle Sidebar</span>
+      <span className="sr-only">
+        {props["aria-label"] || "Abrir o cerrar navegación"}
+      </span>
     </Button>
   )
 }

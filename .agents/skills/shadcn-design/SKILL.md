@@ -5,7 +5,7 @@ metadata:
   owner: Diego Urday
   origin: Adapted for Amautai from Diego Urday's global shadcn-design skill on 2026-10-17.
   authorship: unverified
-  sources: Diego Urday's global shadcn-design skill and explicit Amautai typography preference.
+  sources: Diego Urday's global shadcn-design skill and explicit instructions on Amautai typography, preserving the established UI, and using shadcn Select with MCP guidance.
 ---
 
 # Design applications with shadcn
@@ -14,10 +14,13 @@ Preserve the project's existing design decisions unless the user requests a chan
 
 ## Context and components
 
+- Do not change button dimensions or navbar height unless the user explicitly requests it. Copy, animation, and accessibility work must preserve them; check inherited `min-height`, padding, icon-button sizes, and language selectors before and after.
 - Inspect the current screen, components.json, installed components, and tokens. Identify the primary task and action.
 - Use the technical shadcn skill and MCP for integration and examples. If unavailable, use the CLI and official documentation and report the limitation.
 - Use pnpm and preserve the lockfile. Do not reinstall existing components or overwrite local variants when changing presets.
 - Preserve typography, colors, radius, and supported themes. Apply a different preset only when requested.
+- Integrate each new component without disrupting the established layout, styling, or interactions. Compare before and after in the browser at desktop and mobile widths; fix regressions before delivery.
+- For selects, use shadcn Select instead of HTML <select> or NativeSelect. Consult the shadcn MCP for the component and examples; follow the project's installed Base UI/Radix API.
 
 ## Visual direction
 

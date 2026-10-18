@@ -32,10 +32,19 @@ export async function api<T>(
       window.location.replace("/login")
     const body = (await response.json().catch(() => ({}))) as { error?: string }
     const authMessages: Record<string, string> = {
+      invalid_education_input:
+        "Revisa los datos. Esta versión solo admite Matemática de 2.º de Primaria y su catálogo curricular.",
+      education_not_found: "No encontramos este borrador o no tienes acceso.",
+      education_profile_required:
+        "Completa tu perfil docente antes de crear una sesión.",
+      education_version_conflict:
+        "Este borrador cambió en otra pestaña. Tus cambios se conservaron; revisa la versión guardada.",
       email_not_configured: "El envío de email aún no está habilitado.",
       email_disabled: "Los avisos por email están desactivados.",
-      email_verification_required: "La verificación de tu correo se completa al iniciar sesión.",
-      email_verification_in_login: "La verificación ahora se completa al iniciar sesión. Actualiza esta página.",
+      email_verification_required:
+        "La verificación de tu correo se completa al iniciar sesión.",
+      email_verification_in_login:
+        "La verificación ahora se completa al iniciar sesión. Actualiza esta página.",
       email_rate_limited:
         "Alcanzaste el límite diario de 20 avisos para tu cuenta o número.",
       email_request_conflict:

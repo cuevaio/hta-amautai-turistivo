@@ -1,3 +1,4 @@
+import { useMessages } from "@/shared/i18n/use-messages"
 import { useState } from "react"
 import {
   notificationPhoneInput,
@@ -16,9 +17,13 @@ import {
   FieldError,
 } from "@workspace/ui/components/field"
 import {
-  NativeSelect,
-  NativeSelectOption,
-} from "@workspace/ui/components/native-select"
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@workspace/ui/components/select"
 import { Separator } from "@workspace/ui/components/separator"
 import { Skeleton } from "@workspace/ui/components/skeleton"
 const types = {
@@ -36,6 +41,8 @@ const types = {
   },
 }
 export function Notifications() {
+  const { m, errorMessage } = useMessages()
+
   const n = useNotifications(),
     email = useEmailNotifications(),
     settings = useActivitySettings()
@@ -48,28 +55,26 @@ export function Notifications() {
   return (
     <section className="flex max-w-4xl flex-col gap-6 py-4">
       <div className="flex flex-col gap-1">
-        <h1 className="text-2xl font-semibold">
-          Notificaciones
-        </h1>
+        <h1 className="text-2xl font-semibold">{m("Notificaciones")}</h1>
         <p className="text-sm text-muted-foreground">
-          Elige cómo recibir cada aviso automático.
+          {m("Elige cómo recibir cada aviso automático.")}
         </p>
       </div>
       {error && (
         <p role="alert" className="text-sm text-destructive">
-          {error}
+          {errorMessage(error)}
         </p>
       )}
       {notice && (
         <p role="status" className="text-sm">
-          {notice}
+          {m(notice)}
         </p>
       )}
       {!settings.data || !n.data || !email.data ? (
         <>
           <Skeleton
             className="h-48 w-full"
-            aria-label="Cargando preferencias"
+            aria-label={m("Cargando preferencias")}
           />
           {error && (
             <Button
@@ -80,7 +85,7 @@ export function Notifications() {
                 void email.refresh()
               }}
             >
-              Reintentar
+              {m("Reintentar")}
             </Button>
           )}
         </>
@@ -95,66 +100,95 @@ export function Notifications() {
               >
                 <div className="flex flex-1 flex-col gap-1">
                   <FieldLabel htmlFor={"channel-" + preference.type}>
-                    {types[preference.type].title}
+                    {m(types[preference.type].title)}
                   </FieldLabel>
                   <FieldDescription>
-                    {types[preference.type].description}
+                    {m(types[preference.type].description)}
                   </FieldDescription>
                 </div>
-                <NativeSelect
-                  id={"channel-" + preference.type}
-                  className="w-full sm:w-64"
-                  value={preference.channel}
-                  disabled={busy}
-                  onChange={(e) =>
-                    void settings.save({
-                      ...preference,
-                      channel: e.target.value as ActivityPreference["channel"],
-                    })
-                  }
-                >
-                  <NativeSelectOption value="email" disabled={!emailReady}>
-                    Recibir por email
-                  </NativeSelectOption>
-                  <NativeSelectOption
-                    value="whatsapp"
-                    disabled={!whatsappReady}
+                <div className="w-full sm:w-64">
+                  <Select
+                    items={[
+                      { value: "email", label: m("Recibir por email") },
+                      { value: "whatsapp", label: m("Recibir por WhatsApp") },
+                      { value: "both", label: m("Recibir por ambos") },
+                      { value: "none", label: m("No recibir notificaciones") },
+                    ]}
+                    value={preference.channel}
+                    disabled={busy}
+                    onValueChange={(channel) => {
+                      if (channel !== null)
+                        void settings.save({
+                          ...preference,
+                          channel: channel as ActivityPreference["channel"],
+                        })
+                    }}
                   >
-                    Recibir por WhatsApp
-                  </NativeSelectOption>
-                  <NativeSelectOption
-                    value="both"
-                    disabled={!emailReady || !whatsappReady}
-                  >
-                    Recibir por ambos
-                  </NativeSelectOption>
-                  <NativeSelectOption value="none">
-                    No recibir notificaciones
-                  </NativeSelectOption>
-                </NativeSelect>
+                    <SelectTrigger
+                      id={"channel-" + preference.type}
+                      className="w-full min-w-0 sm:w-52"
+                    >
+                      <SelectValue className="min-w-0 truncate" />
+                    </SelectTrigger>
+                    <SelectContent alignItemWithTrigger={false}>
+                      <SelectGroup>
+                        <SelectItem value="email" disabled={!emailReady}>
+                          <span className="whitespace-normal">
+                            {m("Recibir por email")}
+                          </span>
+                        </SelectItem>
+                        <SelectItem value="whatsapp" disabled={!whatsappReady}>
+                          <span className="whitespace-normal">
+                            {m("Recibir por WhatsApp")}
+                          </span>
+                        </SelectItem>
+                        <SelectItem
+                          value="both"
+                          disabled={!emailReady || !whatsappReady}
+                        >
+                          <span className="whitespace-normal">
+                            {m("Recibir por ambos")}
+                          </span>
+                        </SelectItem>
+                        <SelectItem value="none">
+                          <span className="whitespace-normal">
+                            {m("No recibir notificaciones")}
+                          </span>
+                        </SelectItem>
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                </div>
               </Field>
             ))}
           </FieldGroup>
           <p className="text-sm text-muted-foreground">
-            Tus preferencias quedan guardadas. Los avisos comenzarán cuando
-            estén disponibles los módulos de tareas y mensajería.
+            {m(
+              "Tus preferencias quedan guardadas. Los avisos comenzarán cuando estén disponibles los módulos de tareas y mensajería."
+            )}
           </p>
           <Separator />
           <div className="flex flex-col gap-2">
-            <h2 className="font-medium">Datos de contacto</h2>
-            <p className="text-sm">Email: {email.data.contact.email}</p>
+            <h2 className="font-medium">{m("Datos de contacto")}</h2>
+            <p className="text-sm">
+              {m("Email:")}
+              {email.data.contact.email}
+            </p>
             {!emailReady && (
               <p className="text-sm text-muted-foreground">
-                El email necesita estar verificado en el acceso y el servicio de
-                correo disponible.
+                {m(
+                  "El email necesita estar verificado en el acceso y el servicio de correo disponible."
+                )}
               </p>
             )}
             <p className="text-sm text-muted-foreground">
-              Los correos de verificación y recuperación de contraseña se envían
-              siempre, independientemente de estas preferencias.
+              {m(
+                "Los correos de verificación y recuperación de contraseña se envían siempre, independientemente de estas preferencias."
+              )}
             </p>
           </div>
           <form
+            noValidate
             onSubmit={async (e) => {
               e.preventDefault()
               setPhoneError("")
@@ -173,7 +207,7 @@ export function Notifications() {
             <FieldGroup>
               <Field data-invalid={!!phoneError}>
                 <FieldLabel htmlFor="whatsapp-phone">
-                  Número de WhatsApp
+                  {m("Número de WhatsApp")}
                 </FieldLabel>
                 <Input
                   id="whatsapp-phone"
@@ -188,20 +222,24 @@ export function Notifications() {
                   aria-invalid={!!phoneError}
                 />
                 <FieldDescription>
-                  Al guardar aceptas recibir los avisos que elijas en este
-                  número. Incluye el código de país.
+                  {m(
+                    "Al guardar aceptas recibir los avisos que elijas en este número. Incluye el código de país."
+                  )}
                 </FieldDescription>
-                {phoneError && <FieldError>{phoneError}</FieldError>}
+                {phoneError && (
+                  <FieldError>{errorMessage(phoneError)}</FieldError>
+                )}
               </Field>
               <Button type="submit" disabled={busy}>
-                Guardar número
+                {m("Guardar número")}
               </Button>
             </FieldGroup>
           </form>
           {n.data.connection !== "connected" && (
             <p className="text-sm text-muted-foreground">
-              WhatsApp está temporalmente en pausa. Tus preferencias se
-              conservan.
+              {m(
+                "WhatsApp está temporalmente en pausa. Tus preferencias se conservan."
+              )}
             </p>
           )}
         </>

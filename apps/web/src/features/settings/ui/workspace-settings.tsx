@@ -1,3 +1,5 @@
+import { useMessages } from "@/shared/i18n/use-messages"
+import { LanguageSelector } from "@/shared/ui/language-selector"
 import { useWorkspaceHealth } from "../model/use-workspace-health"
 import { Link } from "react-router"
 import { useAuth } from "@/features/auth"
@@ -11,12 +13,18 @@ import {
 } from "@workspace/ui/components/field"
 import { Input } from "@workspace/ui/components/input"
 import {
-  NativeSelect,
-  NativeSelectOption,
-} from "@workspace/ui/components/native-select"
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@workspace/ui/components/select"
 import { Separator } from "@workspace/ui/components/separator"
 
 export function WorkspaceSettings({ account = false }: { account?: boolean }) {
+  const { m } = useMessages()
+
   const { user, tenant } = useAuth()
   const { theme, setTheme } = useTheme()
   const { health, retry } = useWorkspaceHealth(account)
@@ -24,19 +32,19 @@ export function WorkspaceSettings({ account = false }: { account?: boolean }) {
     <section className="flex max-w-2xl flex-col gap-6 py-4">
       <div className="flex flex-col gap-1">
         <h1 className="text-2xl font-semibold">
-          {account ? "Mi cuenta" : "Configuración"}
+          {account ? m("Mi cuenta") : m("Configuración")}
         </h1>
         <p className="text-sm text-muted-foreground">
           {account
-            ? "Tus datos de acceso y seguridad."
-            : "Tu espacio de trabajo y preferencias."}
+            ? m("Tus datos de acceso y seguridad.")
+            : m("Tu espacio de trabajo y preferencias.")}
         </p>
       </div>
       <FieldGroup>
         {account ? (
           <>
             <Field>
-              <FieldLabel htmlFor="account-name">Nombre</FieldLabel>
+              <FieldLabel htmlFor="account-name">{m("Nombre")}</FieldLabel>
               <Input
                 id="account-name"
                 readOnly
@@ -44,11 +52,13 @@ export function WorkspaceSettings({ account = false }: { account?: boolean }) {
                   .filter(Boolean)
                   .join(" ")}
               />
-              <FieldDescription>Nombre asociado a tu cuenta.</FieldDescription>
+              <FieldDescription>
+                {m("Nombre asociado a tu cuenta.")}
+              </FieldDescription>
             </Field>
             <Field>
               <FieldLabel htmlFor="account-email">
-                Correo electrónico
+                {m("Correo electrónico")}
               </FieldLabel>
               <Input id="account-email" readOnly value={user?.email || ""} />
             </Field>
@@ -56,63 +66,79 @@ export function WorkspaceSettings({ account = false }: { account?: boolean }) {
         ) : (
           <>
             <Field>
-              <FieldLabel htmlFor="workspace-name">Espacio</FieldLabel>
+              <FieldLabel htmlFor="workspace-name">{m("Espacio")}</FieldLabel>
               <Input id="workspace-name" readOnly value={tenant?.name || ""} />
               <FieldDescription>
                 {tenant?.kind === "organization"
-                  ? "Espacio compartido con tu equipo."
-                  : "Espacio personal asociado a tu cuenta."}
+                  ? m("Espacio compartido con tu equipo.")
+                  : m("Espacio personal asociado a tu cuenta.")}
               </FieldDescription>
             </Field>
             <Field>
-              <FieldLabel htmlFor="theme">Apariencia</FieldLabel>
-              <NativeSelect
-                id="theme"
+              <FieldLabel htmlFor="theme">{m("Apariencia")}</FieldLabel>
+              <Select
+                items={[
+                  { value: "dark", label: m("Oscuro") },
+                  { value: "light", label: m("Claro") },
+                  { value: "system", label: m("Según tu dispositivo") },
+                ]}
                 value={theme}
-                onChange={(event) =>
-                  setTheme(event.target.value as "dark" | "light" | "system")
-                }
+                onValueChange={(value) => {
+                  if (value !== null)
+                    setTheme(value as "dark" | "light" | "system")
+                }}
               >
-                <NativeSelectOption value="dark">Oscuro</NativeSelectOption>
-                <NativeSelectOption value="light">Claro</NativeSelectOption>
-                <NativeSelectOption value="system">
-                  Según tu dispositivo
-                </NativeSelectOption>
-              </NativeSelect>
-              <FieldDescription>Se guarda en este navegador.</FieldDescription>
+                <SelectTrigger id="theme" className="w-full min-w-0">
+                  <SelectValue className="min-w-0 truncate" />
+                </SelectTrigger>
+                <SelectContent alignItemWithTrigger={false}>
+                  <SelectGroup>
+                    <SelectItem value="dark">{m("Oscuro")}</SelectItem>
+                    <SelectItem value="light">{m("Claro")}</SelectItem>
+                    <SelectItem value="system">
+                      {m("Según tu dispositivo")}
+                    </SelectItem>
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+              <FieldDescription>
+                {m("Se guarda en este navegador.")}
+              </FieldDescription>
             </Field>
+            <LanguageSelector />
           </>
         )}
       </FieldGroup>
       <Separator />
       {account ? (
         <div className="flex flex-col items-start gap-3">
-          <h2 className="font-medium">Seguridad</h2>
+          <h2 className="font-medium">{m("Seguridad")}</h2>
           <p className="text-sm text-muted-foreground">
-            Solicita un enlace por correo para elegir una nueva contraseña. Al
-            cambiarla se cerrarán tus sesiones activas.
+            {m(
+              "Solicita un enlace por correo para elegir una nueva contraseña. Al cambiarla se cerrarán tus sesiones activas."
+            )}
           </p>
           <Button
             nativeButton={false}
             variant="outline"
             render={<Link to="/forgot-password" />}
           >
-            Recuperar contraseña
+            {m("Recuperar contraseña")}
           </Button>
         </div>
       ) : (
         <div className="flex flex-col items-start gap-3">
-          <h2 className="font-medium">Conexión del espacio</h2>
+          <h2 className="font-medium">{m("Conexión del espacio")}</h2>
           <p role="status" className="text-sm text-muted-foreground">
             {health === "checking"
-              ? "Comprobando conexión…"
+              ? m("Comprobando conexión…")
               : health === "ok"
-                ? "Base de datos disponible."
-                : "No pudimos conectar con la base de datos."}
+                ? m("Base de datos disponible.")
+                : m("No pudimos conectar con la base de datos.")}
           </p>
           {health === "error" && (
             <Button variant="outline" onClick={retry}>
-              Reintentar
+              {m("Reintentar")}
             </Button>
           )}
         </div>

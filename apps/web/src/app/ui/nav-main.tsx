@@ -1,3 +1,4 @@
+import { useMessages } from "@/shared/i18n/use-messages"
 import { Link, useLocation } from "react-router"
 import {
   Collapsible,
@@ -34,11 +35,13 @@ export function NavMain({
     }[]
   }[]
 }) {
+  const { m } = useMessages()
+
   const { pathname } = useLocation()
   const { setOpenMobile } = useSidebar()
   return (
     <SidebarGroup>
-      <SidebarGroupLabel>{label}</SidebarGroupLabel>
+      <SidebarGroupLabel>{m(label)}</SidebarGroupLabel>
       <SidebarMenu>
         {items.map((item) => (
           <Collapsible
@@ -47,7 +50,7 @@ export function NavMain({
             render={<SidebarMenuItem />}
           >
             <SidebarMenuButton
-              tooltip={item.title}
+              tooltip={m(item.title)}
               isActive={pathname === item.url}
               onClick={() => setOpenMobile(false)}
               render={
@@ -59,7 +62,7 @@ export function NavMain({
               }
             >
               {item.icon}
-              <span>{item.title}</span>
+              <span>{m(item.title)}</span>
             </SidebarMenuButton>
             {item.items?.length ? (
               <>
@@ -69,18 +72,18 @@ export function NavMain({
                   }
                 >
                   <ChevronRightIcon />
-                  <span className="sr-only">Toggle</span>
+                  <span className="sr-only">{m("Toggle")}</span>
                 </CollapsibleTrigger>
                 <CollapsibleContent>
                   <SidebarMenuSub>
                     {item.items?.map((subItem) => (
-                      <SidebarMenuSubItem key={subItem.title}>
+                      <SidebarMenuSubItem key={m(subItem.title)}>
                         <SidebarMenuSubButton
                           onClick={() => setOpenMobile(false)}
                           render={<Link to={subItem.url} />}
                           isActive={pathname === subItem.url}
                         >
-                          <span>{subItem.title}</span>
+                          <span>{m(subItem.title)}</span>
                         </SidebarMenuSubButton>
                       </SidebarMenuSubItem>
                     ))}

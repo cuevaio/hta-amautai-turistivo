@@ -1,6 +1,8 @@
 # Primary mathematics: curriculum and game-design reference
 
-Scope: Peruvian primary school, grades 1-6. This is a source-backed product reference for Amautai, not an official Minedu lesson plan or proof of curricular compliance. Official Spanish terminology is retained for teacher-facing fields. Product proposals below are explicitly distinguished from source requirements.
+Scope: Peruvian primary school, grades 1-6. This is a source-backed product reference for Amautai, not an official Minedu lesson plan or proof of curricular compliance. The original catalog and source terminology remain in Spanish; interface labels and summary headings are localized for the selected UI language. These translations are not official Minedu translations. Product proposals below are explicitly distinguished from source requirements.
+
+Local implementation checkpoint: the first teacher onboarding/session-draft slice enables only second-grade primary Mathematics (cycle III). Other grades are visible but disabled. It uses the four CNEB competencies and their capacities, optional teacher-provided performance text and editable session timing; it does not generate a game or claim official per-grade performance alignment. The broader primary scope below remains the roadmap. See [implementation and API](TEACHER_ONBOARDING.md).
 
 ## Sources and how to locate evidence
 

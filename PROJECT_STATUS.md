@@ -1,8 +1,20 @@
 # Amautai project status
 
-Current delivery: Worker b438d08f-2d46-4063-967c-d9f3608fc5bd with migration 0005, automatic notification preferences, and custom authentication email. The VPS Baileys sender is linked and reconnects after restart. Private GitHub repository: https://github.com/turistivo/amautai. Latest full gate: 72 backend, 3 web, 4 gateway, 10 architecture tests; lint/types/build passed. Learning-task and messaging event producers remain pending.
+October 18 mail update: Stalwart authenticates as `notificaciones@amautai.turistivo.com`; the active sender is `amautai@turistivo.com` (alias on existing domain `turistivo.com`). The support and postmaster aliases remain on `amautai.turistivo.com`. Four running Worker EMAIL_* secrets and protected local/VPS sender settings updated; previous mailbox retained. SMTP authentication passed and a test email arrived in the owner’s Outlook inbox. WorkOS Admin Portal reply-to is `amautai@turistivo.com`; Amautai verification/reset emails use the custom sender. WorkOS Magic Auth and invitations still use WorkOS delivery.
+
+Legal review: local `/privacy` and `/terms` drafts, es-PE/quy-PE/ay-PE. Full legal identity/address, retention/response periods, jurisdiction and human translation review pending. Root check passed (79 backend, 13 web, 4 gateway, 10 architecture, 2 proxy tests, lint/types/build). These pages are not published and own-brand Google OAuth remains inactive pending review.
+
+Current delivery (October 17, 2026): https://amautai.turistivo.com. Application Worker `acee3d1e-c003-4b50-96ab-9d7839802dd8` (mail-secret update on October 18, 2026; existing code/assets retained), remote D1 migration `0006`, entry Worker `610d9376-2822-41fe-8d2e-e0a1910cab66`. Entry Worker belongs to the Turistivo account and overrides its wildcard router only for Amautai; original Worker, database, secrets and email sender remain in the personal account.
+
+Published features include the localized landing page, static login artwork, light-theme navy text, login theme toggle, teacher onboarding and grade-2 Mathematics session drafts. Full gate passed: 79 backend, 13 web, 4 gateway, 10 architecture and 2 domain proxy tests; lint, types and builds passed.
+
+Live verification: HTTPS root/login/artwork 200; D1 connected; anonymous protected endpoints 401; Google/GitHub authorization use the new callback and secure state cookies. Real Google login reached authenticated onboarding and persisted after reload. Recovery entry keeps its secure encrypted cookie and redirects to the new domain; allowed-origin/CSRF checks remain enforced. Actual password reset and a full GitHub login were not repeated. WorkOS callback, login, signup, sign-out and reset URLs use the new host; localhost and previous callbacks remain allowed for continuity. Google Cloud developer notifications now include `amautai@turistivo.com`. The user-support email remains the Google account because the selector only offers eligible Google accounts or managed groups. Own-brand Google credentials remain inactive pending review of the legal pages.
+
+Git audit: origin git@github.com:turistivo/amautai.git is private; current HEAD matches upstream, with uncommitted implementation changes. Commit/push requires the user's answer; deployment is not a remote backup.
 
 Snapshot: 2026-10-17. Read this file when resuming; verify runtime and external state again.
+
+Teacher onboarding and learning-session drafts for second-grade primary Mathematics (cycle III) are now deployed with migration 0006. Only grade 2 is selectable; all six grades remain visible. See [teacher onboarding](docs/TEACHER_ONBOARDING.md). Historical checkpoints below retain their original local/deployment status.
 
 Repository transfer: Amautai moved from diegourday to the Turistivo organization and was set to private. Origin uses git@github.com:turistivo/amautai.git. ErikJhonatan has admin access through active organization membership; the earlier personal collaborator invitation was withdrawn. Historical notes below retain the original repository URL as a record of its creation.
 
@@ -133,6 +145,10 @@ Diego explicitly chose to connect task/messaging event producers when those modu
 
 Custom authentication email uses Stalwart with the existing protected sender. WorkOS remains responsible for issuing and validating verification/reset credentials. The application retrieves verification details server-side for password/signup/OAuth challenges and sends recovery links only to the WorkOS-returned recipient. Publication and live recovery delivery verification follow the full gate.
 
+## Authentication email sender verification — October 18, 2026
+
+Corrected the production Worker JMAP secrets from the protected Stalwart sender configuration after identifying literal quote characters in the prior values. The public forgot-password flow now returns its generic confirmation and Outlook confirms receipt of `Recupera tu contraseña de Amautai` from `amautai@turistivo.com`. The WorkOS challenge verification and recovery mailer tests pass (3/3); both use the same custom Stalwart sender while WorkOS issues and validates the credentials. The reset link was left unused and no password was changed. A live verification challenge was not generated for the existing verified account.
+
 Published Worker b438d08f-2d46-4063-967c-d9f3608fc5bd after migration 0005 locally/remotely. Full gate passed: 72 backend, 10 architecture, 3 web transport and 4 gateway tests, lint/types/build. The real signed-in public UI exposed the three automatic settings with all four channel options and no test/manual forms; selecting both for deadlines persisted through a full reload. A later optional selector check was blocked by Edge because another extension UI was open.
 
 In the isolated WorkOS Andes Staging environment, disabled only WorkOS delivery for Email verification and Password reset after deploying custom delivery. Other email categories remain enabled. A request through the real public forgot-password page returned success; connected Outlook confirms Recupera tu contraseña de Amautai from notificaciones@amautai.urday.dev at 16:41:02 Lima, specifically in Inbox. No password was changed and reset credentials were not exposed. Custom verification for password/signup/OAuth is covered by automated challenge/continuation tests; a new real signup verification has not been exercised in this deployment.
@@ -140,3 +156,14 @@ In the isolated WorkOS Andes Staging environment, disabled only WorkOS delivery 
 GitHub origin exists and its PRIVATE visibility/description were verified. Existing commits have no divergence from upstream, but this release and concurrent work remain uncommitted. Diego explicitly declined commit/push for this turn; do not treat deployment as a remote backup.
 
 After Diego dismissed the extension UI, the final public screen was visually verified. The temporary deadline selection was restored to the original email default; all three selectors show email. Screenshot: ignored .artifacts/automatic-notifications.png. No commit or push was performed.
+
+## Teacher onboarding and learning-session drafts — local review
+
+- Implemented a two-step teacher onboarding, optional independent location/region/setting/language context, and profile editing in Settings. Existing signed-in accounts without a profile are redirected to onboarding.
+- Added a versioned CNEB catalogue with four Mathematics competencies, associated capacities, seven transversal approaches, primary grade/cycle mappings and sources. This release enables only second grade; the API rejects other grades, levels, areas and invalid curriculum combinations. Pasted performances remain unverified teacher input.
+- Sessions support incomplete drafts with a title, listing, reopening, editing, completeness hints, a copyable summary and explicit resolution of optimistic-version conflicts. Data is scoped to both tenant and user. Each draft persists its own context snapshot.
+- Local migration 0006 succeeded. Full check passed: 79 backend, 10 architecture, 5 web and 4 gateway tests, lint/typecheck/build. Backend tests execute the actual migrations and repository SQL against SQLite. Worker build is a dry run.
+- Real WorkOS local browser session: selected grade 2, completed onboarding with optional context blank, reloaded without repeating onboarding, created an incomplete draft, edited/reloaded it, copied the summary, and triggered/resolved a real 409 from a second tab without losing unsaved input. Profile-context changes persisted and appeared in a new session while the older draft retained its original context. Temporary context was restored to blank; one clearly named local test draft remains for inspection.
+- Checked narrow 550 px and desktop 1280 px layouts without horizontal overflow, light/dark themes and keyboard focus between fields. These are browser viewport checks, not a physical-phone test. Ignored evidence: .artifacts/education-narrow.png and .artifacts/education-desktop-light.png.
+- WorkOS authentication remains in place. Teacher profile is a usage/context record, not a new privileged role. Family onboarding, student records, AI, Phaser, official per-grade performance descriptors, assignment/messaging producers and measured learning outcomes remain future work.
+- Development runs through filtered Turbo web/Worker tasks; the earlier transient amautai-dev service no longer existed. No real WhatsApp gateway was started for this feature. Changes remain local for review, without commit, push or deployment.

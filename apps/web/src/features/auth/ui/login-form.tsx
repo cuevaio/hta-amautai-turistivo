@@ -1,3 +1,21 @@
+import { useMessages } from "@/shared/i18n/use-messages"
+import { useState } from "react"
+import {
+  motion,
+  stagger,
+  useReducedMotion,
+  type Variants,
+  type HTMLMotionProps,
+} from "motion/react"
+import { MailIcon } from "lucide-react"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@workspace/ui/components/dialog"
 import { useLoginForm } from "../model/use-login-form"
 import { Link } from "react-router"
 import { cn } from "@workspace/ui/lib/utils"
@@ -8,37 +26,68 @@ import {
   FieldDescription,
   FieldGroup,
   FieldLabel,
-  FieldSeparator,
 } from "@workspace/ui/components/field"
+
+const MotionButton = motion.create(Button)
+const MotionDescription = motion.create(FieldDescription)
+const entrance: Variants = {
+  hidden: { opacity: 0, y: 12 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.32, ease: "easeOut" },
+  },
+}
+const sequence: Variants = {
+  visible: { transition: { delayChildren: stagger(0.075) } },
+}
 
 export function LoginForm({
   mode = "login",
   className,
   ...props
-}: React.ComponentProps<"form"> & { mode?: "login" | "signup" }) {
+}: HTMLMotionProps<"div"> & { mode?: "login" | "signup" }) {
+  const { m, errorMessage } = useMessages()
+  const reducedMotion = useReducedMotion()
+
   const { signup, pending, error, issues, submit, oauth } = useLoginForm(mode)
+  const [emailOpen, setEmailOpen] = useState(() =>
+    new URLSearchParams(window.location.search).has("password_reset")
+  )
   return (
-    <form
+    <motion.div
       {...props}
       className={cn("flex flex-col gap-6", className)}
-      onSubmit={submit}
+      initial={reducedMotion ? false : "hidden"}
+      animate="visible"
+      variants={sequence}
     >
       <FieldGroup>
         <div className="flex flex-col gap-2">
-          <p className="text-xs font-medium text-muted-foreground">
-            Construye desde aquí
-          </p>
-          <h1 className="text-3xl font-semibold">
-            {signup ? "Crea tu cuenta" : "Bienvenido a Amautai"}
-          </h1>
-          <p className="text-sm text-muted-foreground">
+          <motion.p
+            variants={entrance}
+            className="text-xs font-medium text-muted-foreground"
+          >
+            {m("Aprender empieza aquí")}
+          </motion.p>
+          <motion.h1 variants={entrance} className="text-3xl font-semibold">
+            {signup ? m("Crea tu cuenta") : m("Bienvenido a Amautai")}
+          </motion.h1>
+          <motion.p
+            variants={entrance}
+            className="text-sm text-muted-foreground"
+          >
             {signup
-              ? "Tu próximo proyecto empieza con una cuenta."
-              : "Un espacio para convertir ideas en proyectos."}
-          </p>
+              ? m(
+                  "Crea tu cuenta para acompañar el aprendizaje de matemáticas."
+                )
+              : m("Un espacio para enseñar y aprender matemáticas.")}
+          </motion.p>
         </div>
-        <Field className="grid grid-cols-2 gap-3">
-          <Button
+        <Field>
+          <MotionButton
+            variants={entrance}
+            className="h-auto min-h-9 py-1.5 whitespace-normal"
             variant="outline"
             type="button"
             disabled={pending}
@@ -52,9 +101,13 @@ export function LoginForm({
               aria-hidden="true"
               data-icon="inline-start"
             />
-            Google
-          </Button>
-          <Button
+            {signup
+              ? m("Crear cuenta con Google")
+              : m("Iniciar sesión con Google")}
+          </MotionButton>
+          <MotionButton
+            variants={entrance}
+            className="h-auto min-h-9 py-1.5 whitespace-normal"
             variant="outline"
             type="button"
             disabled={pending}
@@ -78,122 +131,202 @@ export function LoginForm({
               data-icon="inline-start"
               className="hidden dark:block"
             />
-            GitHub
-          </Button>
-        </Field>
-        <FieldSeparator>
-          {signup ? "O regístrate con tu correo" : "O entra con tu correo"}
-        </FieldSeparator>
-        {signup && (
-          <Field data-invalid={!!issues.firstName}>
-            <FieldLabel htmlFor="firstName">Nombre</FieldLabel>
-            <Input
-              id="firstName"
-              name="firstName"
-              autoComplete="given-name"
-              required
-              maxLength={100}
-              aria-invalid={!!issues.firstName}
-              aria-describedby={
-                issues.firstName ? "firstName-error" : undefined
+            {signup
+              ? m("Crear cuenta con GitHub")
+              : m("Iniciar sesión con GitHub")}
+          </MotionButton>
+          <Dialog open={emailOpen} onOpenChange={setEmailOpen}>
+            <DialogTrigger
+              render={
+                <MotionButton
+                  variants={entrance}
+                  className="h-auto min-h-9 py-1.5 whitespace-normal"
+                  variant="outline"
+                  type="button"
+                />
               }
-              disabled={pending}
-            />
-            {issues.firstName && (
-              <FieldDescription id="firstName-error">
-                {issues.firstName}
-              </FieldDescription>
-            )}
-          </Field>
-        )}
-        <Field data-invalid={!!issues.email}>
-          <FieldLabel htmlFor="email">Correo electrónico</FieldLabel>
-          <Input
-            id="email"
-            name="email"
-            type="email"
-            autoComplete="username"
-            placeholder="tu@ejemplo.com"
-            required
-            maxLength={254}
-            aria-invalid={!!issues.email}
-            aria-describedby={issues.email ? "email-error" : undefined}
-            disabled={pending}
-          />
-          {issues.email && (
-            <FieldDescription id="email-error">{issues.email}</FieldDescription>
-          )}
+            >
+              <MailIcon data-icon="inline-start" />
+              {signup
+                ? m("Crear cuenta con correo")
+                : m("Iniciar sesión con correo")}
+            </DialogTrigger>
+            <DialogContent
+              closeLabel={m("Cerrar")}
+              className="max-h-[calc(100svh-2rem)] overflow-y-auto"
+            >
+              <DialogHeader>
+                <DialogTitle>
+                  {signup
+                    ? m("Crea tu cuenta con correo")
+                    : m("Iniciar sesión con correo")}
+                </DialogTitle>
+                {signup && (
+                  <DialogDescription>
+                    {m("Ingresa tus datos para crear tu cuenta en Amautai.")}
+                  </DialogDescription>
+                )}
+              </DialogHeader>
+              <form noValidate onSubmit={submit} aria-busy={pending}>
+                <FieldGroup>
+                  {signup && (
+                    <Field data-invalid={!!issues.firstName}>
+                      <FieldLabel htmlFor="firstName">{m("Nombre")}</FieldLabel>
+                      <Input
+                        id="firstName"
+                        name="firstName"
+                        autoComplete="given-name"
+                        required
+                        maxLength={100}
+                        aria-invalid={!!issues.firstName}
+                        aria-describedby={
+                          issues.firstName ? "firstName-error" : undefined
+                        }
+                        disabled={pending}
+                      />
+                      {issues.firstName && (
+                        <FieldDescription id="firstName-error">
+                          {m(issues.firstName)}
+                        </FieldDescription>
+                      )}
+                    </Field>
+                  )}
+                  <Field data-invalid={!!issues.email}>
+                    <FieldLabel htmlFor="email">
+                      {m("Correo electrónico")}
+                    </FieldLabel>
+                    <Input
+                      id="email"
+                      name="email"
+                      type="email"
+                      autoComplete="username"
+                      placeholder="tu@ejemplo.com"
+                      required
+                      maxLength={254}
+                      aria-invalid={!!issues.email}
+                      aria-describedby={
+                        issues.email ? "email-error" : undefined
+                      }
+                      disabled={pending}
+                    />
+                    {issues.email && (
+                      <FieldDescription id="email-error">
+                        {m(issues.email)}
+                      </FieldDescription>
+                    )}
+                  </Field>
+                  <Field data-invalid={!!issues.password}>
+                    <div className="flex flex-wrap items-center justify-between gap-2">
+                      <FieldLabel htmlFor="password">
+                        {m("Contraseña")}
+                      </FieldLabel>
+                      {!signup && (
+                        <Link
+                          to="/forgot-password"
+                          className="text-sm underline-offset-4 hover:underline"
+                        >
+                          {m("Olvidé mi contraseña")}
+                        </Link>
+                      )}
+                    </div>
+                    <Input
+                      id="password"
+                      name="password"
+                      type="password"
+                      autoComplete={
+                        signup ? "new-password" : "current-password"
+                      }
+                      required
+                      minLength={signup ? 12 : 1}
+                      maxLength={256}
+                      aria-invalid={!!issues.password}
+                      aria-describedby="password-help"
+                      disabled={pending}
+                    />
+                    <FieldDescription id="password-help">
+                      {m(issues.password || "") ||
+                        (signup
+                          ? m(
+                              "Al menos 12 caracteres. Evita contraseñas comunes o reutilizadas."
+                            )
+                          : "")}
+                    </FieldDescription>
+                  </Field>
+                  {signup && (
+                    <Field data-invalid={!!issues.confirm}>
+                      <FieldLabel htmlFor="confirm">
+                        {m("Confirmar contraseña")}
+                      </FieldLabel>
+                      <Input
+                        id="confirm"
+                        name="confirm"
+                        type="password"
+                        autoComplete="new-password"
+                        required
+                        maxLength={256}
+                        aria-invalid={!!issues.confirm}
+                        aria-describedby={
+                          issues.confirm ? "confirm-error" : undefined
+                        }
+                        disabled={pending}
+                      />
+                      {issues.confirm && (
+                        <FieldDescription id="confirm-error">
+                          {m(issues.confirm)}
+                        </FieldDescription>
+                      )}
+                    </Field>
+                  )}
+                  {new URLSearchParams(window.location.search).has(
+                    "password_reset"
+                  ) && (
+                    <FieldDescription role="status">
+                      {m(
+                        "Tu contraseña fue actualizada. Inicia sesión con la nueva contraseña."
+                      )}
+                    </FieldDescription>
+                  )}
+                  {error && (
+                    <FieldDescription role="alert">
+                      {errorMessage(error)}
+                    </FieldDescription>
+                  )}
+                  <Field>
+                    <Button type="submit" disabled={pending}>
+                      {pending
+                        ? signup
+                          ? m("Creando cuenta…")
+                          : m("Entrando…")
+                        : signup
+                          ? m("Crear cuenta")
+                          : m("Iniciar sesión")}
+                    </Button>
+                    <FieldDescription className="text-center">
+                      {signup
+                        ? m("¿Ya tienes una cuenta?")
+                        : m("¿No tienes una cuenta?")}{" "}
+                      <Link to={signup ? "/login" : "/signup"}>
+                        {signup ? m("Inicia sesión") : m("Crear cuenta")}
+                      </Link>
+                    </FieldDescription>
+                  </Field>
+                </FieldGroup>
+              </form>
+            </DialogContent>
+          </Dialog>
         </Field>
-        <Field data-invalid={!!issues.password}>
-          <FieldLabel htmlFor="password">Contraseña</FieldLabel>
-          <Input
-            id="password"
-            name="password"
-            type="password"
-            autoComplete={signup ? "new-password" : "current-password"}
-            required
-            minLength={signup ? 12 : 1}
-            maxLength={256}
-            aria-invalid={!!issues.password}
-            aria-describedby="password-help"
-            disabled={pending}
-          />
-          <FieldDescription id="password-help">
-            {issues.password ||
-              (signup
-                ? "Al menos 12 caracteres. Evita contraseñas comunes o reutilizadas."
-                : "")}
-          </FieldDescription>
-        </Field>
-        {signup && (
-          <Field data-invalid={!!issues.confirm}>
-            <FieldLabel htmlFor="confirm">Confirmar contraseña</FieldLabel>
-            <Input
-              id="confirm"
-              name="confirm"
-              type="password"
-              autoComplete="new-password"
-              required
-              maxLength={256}
-              aria-invalid={!!issues.confirm}
-              aria-describedby={issues.confirm ? "confirm-error" : undefined}
-              disabled={pending}
-            />
-            {issues.confirm && (
-              <FieldDescription id="confirm-error">
-                {issues.confirm}
-              </FieldDescription>
-            )}
-          </Field>
-        )}
-        {new URLSearchParams(window.location.search).has("password_reset") && (
-          <FieldDescription role="status">
-            Tu contraseña fue actualizada. Inicia sesión con la nueva
-            contraseña.
+        {!emailOpen && error && (
+          <FieldDescription role="alert">
+            {errorMessage(error)}
           </FieldDescription>
         )}
-        {error && <FieldDescription role="alert">{error}</FieldDescription>}
-        <Field>
-          <Button type="submit" disabled={pending}>
-            {pending
-              ? signup
-                ? "Creando cuenta…"
-                : "Entrando…"
-              : signup
-                ? "Crear cuenta"
-                : "Iniciar sesión"}
-          </Button>
-          <FieldDescription className="text-center">
-            {signup ? "¿Ya tienes una cuenta? " : "¿No tienes una cuenta? "}
-            <Link to={signup ? "/login" : "/signup"}>
-              {signup ? "Inicia sesión" : "Crear cuenta"}
-            </Link>
-          </FieldDescription>
-        </Field>
-        <FieldDescription className="text-center">
-          <Link to="/forgot-password">Olvidé mi contraseña</Link>
-        </FieldDescription>
+        <MotionDescription variants={entrance} className="text-center">
+          {signup ? m("¿Ya tienes una cuenta?") : m("¿No tienes una cuenta?")}{" "}
+          <Link to={signup ? "/login" : "/signup"}>
+            {signup ? m("Inicia sesión") : m("Crear cuenta")}
+          </Link>
+        </MotionDescription>
       </FieldGroup>
-    </form>
+    </motion.div>
   )
 }

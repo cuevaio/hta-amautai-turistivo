@@ -1,3 +1,4 @@
+import { useMessages } from "@/shared/i18n/use-messages"
 import { useProjects } from "../model/use-projects"
 import type { ProjectInput as Values } from "@amautai/contracts"
 import { Skeleton } from "@workspace/ui/components/skeleton"
@@ -8,9 +9,13 @@ import { Badge } from "@workspace/ui/components/badge"
 import { Input } from "@workspace/ui/components/input"
 import { Textarea } from "@workspace/ui/components/textarea"
 import {
-  NativeSelect,
-  NativeSelectOption,
-} from "@workspace/ui/components/native-select"
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@workspace/ui/components/select"
 import {
   Field,
   FieldGroup,
@@ -54,6 +59,8 @@ import {
 
 const labels = { idea: "Idea", building: "En desarrollo", ready: "Listo" }
 export function Projects() {
+  const { m, errorMessage, formatDate } = useMessages()
+
   const { tenant } = useAuth()
   const {
     projects,
@@ -83,32 +90,32 @@ export function Projects() {
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div className="flex flex-col gap-1">
           <p className="text-sm text-muted-foreground">{tenant?.name}</p>
-          <h1 className="text-2xl font-semibold">Proyectos</h1>
+          <h1 className="text-2xl font-semibold">{m("Proyectos")}</h1>
           <p className="text-sm text-muted-foreground">
-            De la primera idea a algo que puedas mostrar.
+            {m("De la primera idea a algo que puedas mostrar.")}
           </p>
         </div>
         <Button onClick={() => edit("new")}>
           <PlusIcon data-icon="inline-start" />
-          Nuevo proyecto
+          {m("Nuevo proyecto")}
         </Button>
       </div>
       {notice && (
         <p role="status" className="text-sm text-muted-foreground">
-          {notice}
+          {m(notice)}
         </p>
       )}
       {error ? (
         <div className="flex flex-col items-start gap-3">
-          <p role="alert">{error}</p>
+          <p role="alert">{errorMessage(error)}</p>
           <Button variant="outline" onClick={() => void load()}>
-            Reintentar
+            {m("Reintentar")}
           </Button>
         </div>
       ) : loading ? (
         <div
           role="status"
-          aria-label="Cargando proyectos"
+          aria-label={m("Cargando proyectos")}
           className="flex flex-col gap-3"
         >
           <Skeleton className="h-12 w-full" />
@@ -121,24 +128,24 @@ export function Projects() {
             <EmptyMedia variant="icon">
               <FolderIcon />
             </EmptyMedia>
-            <EmptyTitle>Tu primera idea empieza aquí</EmptyTitle>
+            <EmptyTitle>{m("Tu primera idea empieza aquí")}</EmptyTitle>
             <EmptyDescription>
-              Crea un proyecto y organiza lo que vas a construir.
+              {m("Crea un proyecto y organiza lo que vas a construir.")}
             </EmptyDescription>
           </EmptyHeader>
           <Button variant="outline" onClick={() => edit("new")}>
-            Crear mi primer proyecto
+            {m("Crear mi primer proyecto")}
           </Button>
         </Empty>
       ) : (
         <Table>
-          <TableCaption>Hasta 100 proyectos de tu espacio.</TableCaption>
+          <TableCaption>{m("Hasta 100 proyectos de tu espacio.")}</TableCaption>
           <TableHeader>
             <TableRow>
-              <TableHead>Proyecto</TableHead>
-              <TableHead>Estado</TableHead>
-              <TableHead>Actualizado</TableHead>
-              <TableHead className="text-right">Acciones</TableHead>
+              <TableHead>{m("Proyecto")}</TableHead>
+              <TableHead>{m("Estado")}</TableHead>
+              <TableHead>{m("Actualizado")}</TableHead>
+              <TableHead className="text-right">{m("Acciones")}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -155,32 +162,34 @@ export function Projects() {
                       project.status === "ready" ? "default" : "secondary"
                     }
                   >
-                    {labels[project.status]}
+                    {m(labels[project.status])}
                   </Badge>
                 </TableCell>
                 <TableCell>
-                  {new Date(project.updated_at).toLocaleDateString("es-PE")}
+                  {formatDate(project.updated_at, { dateStyle: "short" })}
                 </TableCell>
                 <TableCell>
                   <div className="flex justify-end gap-2">
                     <Button
                       variant="ghost"
                       size="sm"
-                      aria-label={"Editar " + project.name}
+                      aria-label={m("Editar {{name}}", { name: project.name })}
                       onClick={() => edit(project)}
                     >
-                      Editar
+                      {m("Editar")}
                     </Button>
                     <Button
                       variant="ghost"
                       size="sm"
-                      aria-label={"Eliminar " + project.name}
+                      aria-label={m("Eliminar {{name}}", {
+                        name: project.name,
+                      })}
                       onClick={() => {
                         setRemoving(project)
                         setFormError("")
                       }}
                     >
-                      Eliminar
+                      {m("Eliminar")}
                     </Button>
                   </div>
                 </TableCell>
@@ -195,19 +204,19 @@ export function Projects() {
           if (!open && !busy) setEditor(null)
         }}
       >
-        <DialogContent>
+        <DialogContent closeLabel={m("Cerrar")}>
           <DialogHeader>
             <DialogTitle>
-              {editor === "new" ? "Nuevo proyecto" : "Editar proyecto"}
+              {editor === "new" ? m("Nuevo proyecto") : m("Editar proyecto")}
             </DialogTitle>
             <DialogDescription>
-              Define tu idea y su estado actual.
+              {m("Define tu idea y su estado actual.")}
             </DialogDescription>
           </DialogHeader>
-          <form onSubmit={save} className="flex flex-col gap-6">
+          <form noValidate onSubmit={save} className="flex flex-col gap-6">
             <FieldGroup>
               <Field data-invalid={!!issues.name}>
-                <FieldLabel htmlFor="project-name">Nombre</FieldLabel>
+                <FieldLabel htmlFor="project-name">{m("Nombre")}</FieldLabel>
                 <Input
                   id="project-name"
                   value={values.name}
@@ -223,13 +232,13 @@ export function Projects() {
                 />
                 {issues.name && (
                   <FieldDescription id="name-error">
-                    {issues.name}
+                    {m(issues.name)}
                   </FieldDescription>
                 )}
               </Field>
               <Field data-invalid={!!issues.description}>
                 <FieldLabel htmlFor="project-description">
-                  Descripción
+                  {m("Descripción")}
                 </FieldLabel>
                 <Textarea
                   id="project-description"
@@ -242,33 +251,44 @@ export function Projects() {
                   aria-invalid={!!issues.description}
                 />
                 {issues.description && (
-                  <FieldDescription>{issues.description}</FieldDescription>
+                  <FieldDescription>{m(issues.description)}</FieldDescription>
                 )}
               </Field>
               <Field>
-                <FieldLabel htmlFor="project-status">Estado</FieldLabel>
-                <NativeSelect
-                  id="project-status"
+                <FieldLabel htmlFor="project-status">{m("Estado")}</FieldLabel>
+                <Select
+                  items={Object.entries(labels).map(([value, label]) => ({
+                    value,
+                    label: m(label),
+                  }))}
                   value={values.status}
-                  onChange={(e) =>
-                    setValues({
-                      ...values,
-                      status: e.target.value as Values["status"],
-                    })
-                  }
+                  onValueChange={(status) => {
+                    if (status !== null)
+                      setValues({
+                        ...values,
+                        status: status as Values["status"],
+                      })
+                  }}
                   disabled={busy}
                 >
-                  {Object.entries(labels).map(([value, label]) => (
-                    <NativeSelectOption key={value} value={value}>
-                      {label}
-                    </NativeSelectOption>
-                  ))}
-                </NativeSelect>
+                  <SelectTrigger id="project-status" className="w-full min-w-0">
+                    <SelectValue className="min-w-0 truncate" />
+                  </SelectTrigger>
+                  <SelectContent alignItemWithTrigger={false}>
+                    <SelectGroup>
+                      {Object.entries(labels).map(([value, label]) => (
+                        <SelectItem key={value} value={value}>
+                          {m(label)}
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
               </Field>
             </FieldGroup>
             {formError && (
               <p role="alert" className="text-sm text-destructive">
-                {formError}
+                {errorMessage(formError)}
               </p>
             )}
             <DialogFooter>
@@ -278,10 +298,10 @@ export function Projects() {
                 disabled={busy}
                 onClick={() => setEditor(null)}
               >
-                Cancelar
+                {m("Cancelar")}
               </Button>
               <Button type="submit" disabled={busy}>
-                {busy ? "Guardando…" : "Guardar proyecto"}
+                {busy ? m("Guardando…") : m("Guardar proyecto")}
               </Button>
             </DialogFooter>
           </form>
@@ -293,22 +313,26 @@ export function Projects() {
           if (!open) setDetail(null)
         }}
       >
-        <DialogContent>
+        <DialogContent closeLabel={m("Cerrar")}>
           <DialogHeader>
             <DialogTitle>{detail?.name}</DialogTitle>
             <DialogDescription>
-              {detail ? labels[detail.status] : ""}
+              {detail ? m(labels[detail.status]) : ""}
             </DialogDescription>
           </DialogHeader>
           <p className="text-sm break-words whitespace-pre-wrap">
-            {detail?.description || "Sin descripción."}
+            {detail?.description || m("Sin descripción.")}
           </p>
           <p className="text-xs text-muted-foreground">
-            Creado:{" "}
-            {detail && new Date(detail.created_at).toLocaleString("es-PE")}
+            {m("Creado:")}{" "}
+            {detail &&
+              formatDate(detail.created_at, {
+                dateStyle: "short",
+                timeStyle: "short",
+              })}
           </p>
           <DialogFooter>
-            <Button onClick={() => setDetail(null)}>Cerrar</Button>
+            <Button onClick={() => setDetail(null)}>{m("Cerrar")}</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -320,20 +344,24 @@ export function Projects() {
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>¿Eliminar este proyecto?</AlertDialogTitle>
+            <AlertDialogTitle>{m("¿Eliminar este proyecto?")}</AlertDialogTitle>
             <AlertDialogDescription>
-              «{removing?.name}» dejará de aparecer en tu espacio.
+              {m("{{name}} dejará de aparecer en tu espacio.", {
+                name: removing?.name,
+              })}
             </AlertDialogDescription>
           </AlertDialogHeader>
-          {formError && <p role="alert">{formError}</p>}
+          {formError && <p role="alert">{errorMessage(formError)}</p>}
           <AlertDialogFooter>
-            <AlertDialogCancel disabled={busy}>Cancelar</AlertDialogCancel>
+            <AlertDialogCancel disabled={busy}>
+              {m("Cancelar")}
+            </AlertDialogCancel>
             <AlertDialogAction
               variant="destructive"
               disabled={busy}
               onClick={() => void remove()}
             >
-              {busy ? "Eliminando…" : "Eliminar proyecto"}
+              {busy ? m("Eliminando…") : m("Eliminar proyecto")}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

@@ -1,4 +1,7 @@
 import { authMailer } from "./modules/auth/infrastructure/auth-mailer.ts"
+import { educationService } from "./modules/education/application/service.ts"
+import { d1Education } from "./modules/education/infrastructure/d1-education.ts"
+import { registerEducationRoutes } from "./modules/education/http/routes.ts"
 import { activityPreferences } from "./modules/notifications/application/activity-service.ts"
 import { d1Activity } from "./modules/notifications/infrastructure/d1-activity.ts"
 import { registerActivityRoutes } from "./modules/notifications/http/activity-routes.ts"
@@ -71,6 +74,11 @@ export function createApp(
       await ensureTenant(c)
     }
   )
+  registerEducationRoutes(app, {
+    service: (c) =>
+      educationService(d1Education(c.env.DB), () => crypto.randomUUID()),
+    ensure: ensureTenant,
+  })
   registerNotificationRoutes(
     app,
     (c) =>

@@ -85,7 +85,7 @@ export function emailService(
           ? "Tus notificaciones por email están activas."
           : (input.eventType ? "Amautai · " : "Amautai · Recordatorio: ") +
             title +
-            "\nRevisa tus actividades en https://amautai.urday.dev/dashboard",
+            "\nRevisa tus actividades en https://amautai.turistivo.com/dashboard",
         scheduled_at: at,
         expires_at: at + 3600000,
         created_at: now,

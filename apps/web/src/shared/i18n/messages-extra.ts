@@ -1,0 +1,520 @@
+// Initial UI translations, including localized curriculum display labels.
+// Original curriculum data and user-authored content remain unchanged.
+export const additionalRows: readonly (readonly [string, string, string])[] = [
+  [
+    "Revisa los datos. Esta versión solo admite Matemática de 2.º de Primaria y su catálogo curricular.",
+    "Willakuykunata qaway. Kay kaqqa 2 ñiqi Qallariy yachaypa yupay yachayninllatam chaskin.",
+    "Yatiyawinaka uñakipam. Akaxa Qallta yatiqawina 2 tʼaqapa jakhu yatiqawipatakikiwa.",
+  ],
+  [
+    "No encontramos este borrador o no tienes acceso.",
+    "Kay ñawpaq qillqasqata mana tarirqanikuchu utaq mana yaykuyta atinkichu.",
+    "Aka nayrïr qillqata janiwa jikxatapkti jan ukaxa janiwa mantasma ukhamäkiti.",
+  ],
+  [
+    "Completa tu perfil docente antes de crear una sesión.",
+    "Manaraq qututa ruraspa yachachiq willakuyniykita huntay.",
+    "Janïra tantachawi lurkasaxa yatichirina yatiyawim phuqacham.",
+  ],
+  [
+    "Este borrador cambió en otra pestaña. Tus cambios se conservaron; revisa la versión guardada.",
+    "Kay ñawpaq qillqasqaqa huk raphipi tikrakurun. Tikrasqaykikuna waqaychasqam kachkan; waqaychasqa qillqasqata qaway.",
+    "Aka nayrïr qillqataxa yaqha laphina mayjtʼawayi. Mayjtʼayatanakamaxa imatäskiwa; imata qillqata uñakipam.",
+  ],
+  [
+    "El envío de email aún no está habilitado.",
+    "Llikapi chaski qillqa apachiyqa manaraqmi kachkan.",
+    "Llikana qillqa apayañaxa janïraw utjkiti.",
+  ],
+  [
+    "Los avisos por email están desactivados.",
+    "Llikapi chaski qillqa willakuykunaqa samachisqam kachkan.",
+    "Llikana qillqa yatiyawinakaxa saytʼayatawa.",
+  ],
+  [
+    "La verificación de tu correo se completa al iniciar sesión.",
+    "Yaykuspa chaski qillqaykipa chiqapchayninta huntanki.",
+    "Mantasaxa llikana qillqamana chiqanchawipa phuqachäta.",
+  ],
+  [
+    "La verificación ahora se completa al iniciar sesión. Actualiza esta página.",
+    "Kunanqa yaykuspam chiqapchayta huntanki. Kay raphita musuqchay.",
+    "Jichhaxa mantasawa chiqanchawi phuqasi. Aka laphi machaqtʼayam.",
+  ],
+  [
+    "Alcanzaste el límite diario de 20 avisos para tu cuenta o número.",
+    "Yaykunaykipaq utaq yupaynikipaq sapa punchaw 20 willakuyman chayarunkiñam.",
+    "Mantawimataki jan ukaxa jakhumataki sapüru 20 yatiyawiru purxtawa.",
+  ],
+  [
+    "La solicitud ya existe con otros datos. Actualiza el historial.",
+    "Mañakusqaqa huk willakuykunawan kachkanñam. Ñawpaq ruraykunata musuqchay.",
+    "Mayiwixa yaqha yatiyawinakampi utjxiwa. Nayra lurawinaka machaqtʼayam.",
+  ],
+  [
+    "El email ya se está procesando o cambió. Actualiza el historial.",
+    "Chaski qillqaqa apachikuchkanñam utaq tikrakurunñam. Ñawpaq ruraykunata musuqchay.",
+    "Llikana qillqaxa apayasiskxiwa jan ukaxa mayjtʼawayiwa. Nayra lurawinaka machaqtʼayam.",
+  ],
+  [
+    "Revisa los datos del email.",
+    "Chaski qillqapa willakuyninkunata qaway.",
+    "Llikana qillqana yatiyawinakapa uñakipam.",
+  ],
+  [
+    "El emisor de WhatsApp no está conectado. Inténtalo cuando esté disponible.",
+    "WhatsApp apachiq mana tinkisqachu kachkan. Kachkaptin yapamanta ruway.",
+    "WhatsApp apayirixa janiwa mayachatäkiti. Utjxani ukhaxa wasitata yantʼam.",
+  ],
+  [
+    "Registra tu número y activa los avisos para continuar.",
+    "Qatipanapaq yupaynikita qillqay hinaspa willakuykunata kichay.",
+    "Sarantañataki jakhum qillqtʼam ukhamaraki yatiyawinaka qhantayam.",
+  ],
+  [
+    "El código no es válido, venció o agotó sus 5 intentos. Solicita uno nuevo.",
+    "Chiqapchana yupayqa mana allinchu, pachan tukurun utaq 5 yantayñam tukurun. Musuqta mañakuy.",
+    "Chiqanchawi jakhuxa janiwa walïkiti, pachapaxa tukusxiwa jan ukaxa 5 yantʼawipawa tukusxi. Machaqa mayim.",
+  ],
+  [
+    "Revisa el número y los datos del recordatorio.",
+    "Yupayta, yuyachinapaq willakuykunatapas qaway.",
+    "Jakhu ukhamaraki amtayawina yatiyawinakapa uñakipam.",
+  ],
+  [
+    "Elige una fecha dentro de los próximos 30 días.",
+    "Qatiq 30 punchaw ukupi huk punchawta akllay.",
+    "Jutiri 30 urunaka taypina mä uru ajllim.",
+  ],
+  [
+    "El aviso ya se está procesando o cambió. Actualiza el historial.",
+    "Willakuyqa rurasqañam kachkan utaq tikrakurunñam. Ñawpaq ruraykunata musuqchay.",
+    "Yatiyawixa lurasiskiwa jan ukaxa mayjtʼawayiwa. Nayra lurawinaka machaqtʼayam.",
+  ],
+  [
+    "No pudimos cerrar tu sesión. Reintenta en unos momentos.",
+    "Yaykusqaykita mana wisqayta atirqanikuchu. Pisi pachamanta yapamanta ruway.",
+    "Mantawim janiwa jistʼantaña atipkti. Mä jukʼata wasitata yantʼam.",
+  ],
+  [
+    "No pudimos conectar con el servicio de acceso. Inténtalo de nuevo en unos momentos.",
+    "Yaykuna yanapaywan mana tinkiyta atirqanikuchu. Pisi pachamanta yapamanta ruway.",
+    "Mantaña yanaptʼawimpi janiwa mayachaña atipkti. Mä jukʼata wasitata yantʼam.",
+  ],
+  [
+    "Hubo demasiados intentos. Espera unos minutos antes de volver a entrar.",
+    "Ancha achka yantaykunam karun. Pisi minutukunata suyay manaraq yapamanta yaykuspa.",
+    "Walja yantʼawinakawa utjawayi. Janïra wasitata mantkasaxa mä qhawqha minutunaka suytʼam.",
+  ],
+  [
+    "Tu cuenta necesita seleccionar un equipo para continuar.",
+    "Qatipanapaq yaykunayki huk qututa akllananmi.",
+    "Sarantañataki mantawimaxa mä tama ajlliñapawa.",
+  ],
+  [
+    "Escribe un correo electrónico válido.",
+    "Allin llikapi chaski qillqa tiyayta qillqay.",
+    "Wali llikana qillqa utjäwi qillqtʼam.",
+  ],
+  [
+    "La nueva contraseña debe tener al menos 12 caracteres.",
+    "Musuq pakasqa rimayqa 12 sanampamanta aswan kananmi.",
+    "Machaq imantata aruxa 12 chimpunakani jan ukaxa jukʼampiniñapawa.",
+  ],
+  [
+    "El enlace venció. Solicita uno nuevo para recuperar tu contraseña.",
+    "Tinkipa pachan tukurunñam. Pakasqa rimayniykita kutichinapaq musuqta mañakuy.",
+    "Chinuna pachapaxa tukusxiwa. Imantata arum kuttʼayañataki machaqa mayim.",
+  ],
+  [
+    "No pudimos cambiar la contraseña. Elige una contraseña segura o solicita otro enlace si el actual venció.",
+    "Pakasqa rimayta mana tikrayta atirqanikuchu. Allin amachaq pakasqa rimayta akllay utaq tinkipa pachan tukuruptin hukta mañakuy.",
+    "Imantata aru janiwa mayjtʼayaña atipkti. Wali jarkʼaqata imantata aru ajllim jan ukaxa chinuna pachapaxa tukuschi ukhaxa yaqha mayim.",
+  ],
+  [
+    "Espera unos minutos antes de intentarlo de nuevo.",
+    "Manaraq yapamanta yantaspa pisi minutukunata suyay.",
+    "Janïra wasitata yantʼkasaxa mä qhawqha minutunaka suytʼam.",
+  ],
+  [
+    "Revisa tus datos. La contraseña debe tener al menos 12 caracteres.",
+    "Willakuyniykikunata qaway. Pakasqa rimayqa 12 sanampamanta aswan kananmi.",
+    "Yatiyawinakam uñakipam. Imantata aruxa 12 chimpunakani jan ukaxa jukʼampiniñapawa.",
+  ],
+  [
+    "Elige una contraseña más segura, larga y que no hayas utilizado antes.",
+    "Aswan amachaq, hatun, mana ñawpaqta usasqayki pakasqa rimayta akllay.",
+    "Jukʼampi jarkʼaqata, jaya ukhamaraki jan nayra apnaqata imantata aru ajllim.",
+  ],
+  [
+    "No pudimos crear la cuenta. Si ya tienes una, inicia sesión; si no, revisa tus datos e inténtalo de nuevo.",
+    "Yaykunata mana kichayta atirqanikuchu. Yaykunayki kaptinqa yaykuy; mana kaptinqa willakuyniykikunata qaway hinaspa yapamanta ruway.",
+    "Mantawi janiwa jistʼaraña atipkti. Mantawim utjchi ukhaxa mantam; jan utjchi ukhaxa yatiyawinakam uñakipam ukhamaraki wasitata yantʼam.",
+  ],
+  [
+    "La verificación venció. Inicia sesión de nuevo para recibir otro código.",
+    "Chiqapchanapaq pacha tukurunñam. Huk chiqapchana yupayta chaskinapaq yapamanta yaykuy.",
+    "Chiqanchawina pachapaxa tukusxiwa. Yaqha chiqanchawi jakhu katuqañataki wasitata mantam.",
+  ],
+  [
+    "Escribe el código de 6 dígitos.",
+    "6 yupayniyuq chiqapchana yupayta qillqay.",
+    "6 jakhuni chiqanchawi qillqtʼam.",
+  ],
+  [
+    "El código no es válido o venció. Revisa tu correo e inténtalo de nuevo.",
+    "Chiqapchana yupayqa mana allinchu utaq pachan tukurunñam. Chaski qillqaykita qaway hinaspa yapamanta ruway.",
+    "Chiqanchawi jakhuxa janiwa walïkiti jan ukaxa pachapaxa tukusxiwa. Llikana qillqam uñakipam ukhamaraki wasitata yantʼam.",
+  ],
+  [
+    "El servidor de la app no está disponible. Inténtalo de nuevo en unos momentos.",
+    "Rurana yanapaqqa manam kachkanchu. Pisi pachamanta yapamanta ruway.",
+    "Lurawi yanapirixa janiwa utjkiti. Mä jukʼata wasitata yantʼam.",
+  ],
+  [
+    "Este proyecto cambió. Recarga antes de editarlo.",
+    "Kay rurayqa tikrakurunñam. Manaraq allichaspa yapamanta kichay.",
+    "Aka amtawixa mayjtʼawayiwa. Janïra askichkasaxa wasitata jistʼaram.",
+  ],
+  [
+    "No pudimos iniciar sesión. Revisa tus datos o usa Google o GitHub.",
+    "Mana yaykuyta atirqanikuchu. Willakuyniykikunata qaway utaq Googlewan, GitHubwan yaykuy.",
+    "Janiwa mantaña atipkti. Yatiyawinakam uñakipam jan ukaxa Google jani ukaxa GitHub apnaqam.",
+  ],
+  [
+    "No pudimos completar la solicitud. Inténtalo de nuevo.",
+    "Mañakusqaykita mana huntayta atirqanikuchu. Yapamanta ruway.",
+    "Mayiwim janiwa phuqachaña atipkti. Wasitata yantʼam.",
+  ],
+  [
+    "No pudimos comprobar tu sesión. Intenta recargar.",
+    "Yaykusqaykita mana qawayta atirqanikuchu. Yapamanta kichay.",
+    "Mantatam janiwa uñakipaña atipkti. Wasitata jistʼaram.",
+  ],
+  [
+    "No pudimos comprobar tu sesión. Intenta iniciar sesión de nuevo.",
+    "Yaykusqaykita mana qawayta atirqanikuchu. Yapamanta yaykuy.",
+    "Mantatam janiwa uñakipaña atipkti. Wasitata mantam.",
+  ],
+  [
+    "Las contraseñas no coinciden.",
+    "Pakasqa rimaykunaqa manam kikillanchu.",
+    "Imantata arunakaxa janiwa kikpäkiti.",
+  ],
+  [
+    "No se completó el acceso. Inténtalo de nuevo.",
+    "Yaykuyqa mana huntakunchu. Yapamanta ruway.",
+    "Mantawixa janiwa phuqaskiti. Wasitata yantʼam.",
+  ],
+  [
+    "Usa al menos 12 caracteres.",
+    "12 sanampamanta aswan usay.",
+    "12 chimpu jan ukaxa jukʼampi apnaqam.",
+  ],
+  ["Escribe tu nombre.", "Sutiykita qillqay.", "Sutim qillqtʼam."],
+  ["Revisa este campo.", "Kay willakuyta qaway.", "Aka yatiyawi uñakipam."],
+  [
+    "No pudimos comprobar tu sesión. Recarga para intentarlo de nuevo.",
+    "Yaykusqaykita mana qawayta atirqanikuchu. Yapamanta kichaspa yantay.",
+    "Mantatam janiwa uñakipaña atipkti. Wasitata jistʼarasina yantʼam.",
+  ],
+  [
+    "No pudimos comprobar el enlace. Recarga para intentarlo de nuevo.",
+    "Tinkita mana qawayta atirqanikuchu. Yapamanta kichaspa yantay.",
+    "Chinu janiwa uñakipaña atipkti. Wasitata jistʼarasina yantʼam.",
+  ],
+  [
+    "Selecciona 2.º grado y revisa la extensión de los campos.",
+    "2 ñiqita akllay hinaspa qillqasqakunapa unayninta qaway.",
+    "2 tʼaqa ajllim ukhamaraki qillqatanakana qhawqha jayasa uka uñakipam.",
+  ],
+  [
+    "Perfil docente guardado.",
+    "Yachachiqpa willakuynin waqaychasqañam.",
+    "Yatichirina yatiyawipa imataxiwa.",
+  ],
+  [
+    "Revisa el título (3–120 caracteres), los textos y la duración (1–240 minutos).",
+    "Sutita (3–120 sanampa), qillqakunata hinaspa pachata (1–240 minutu) qaway.",
+    "Suti (3–120 chimpu), qillqatanaka ukhamaraki pacha (1–240 minutu) uñakipam.",
+  ],
+  [
+    "Borrador guardado.",
+    "Ñawpaq qillqasqa waqaychasqañam.",
+    "Nayrïr qillqata imataxiwa.",
+  ],
+  [
+    "Se cargó la versión guardada.",
+    "Waqaychasqa qillqasqaqa kichasqañam.",
+    "Imata qillqataxa jistʼarataxiwa.",
+  ],
+  [
+    "Borrador copiado.",
+    "Ñawpaq qillqasqa kikinchasqañam.",
+    "Nayrïr qillqata qillqaqataxiwa.",
+  ],
+  [
+    "No pudimos copiar. Selecciona el texto del resumen y cópialo manualmente.",
+    "Mana kikinchayta atirqanikuchu. Pisichasqa qillqata akllaspa kikiyki kikinchay.",
+    "Janiwa qillqaqaña atipkti. Jukʼaptayawina qillqatapa ajllisina amparamampi qillqaqam.",
+  ],
+  [
+    "Preferencia guardada.",
+    "Akllasqayki waqaychasqañam.",
+    "Ajllitam imataxiwa.",
+  ],
+  [
+    "Notificaciones activadas.",
+    "Willakuykuna kichasqañam.",
+    "Yatiyawinaka qhantayataxiwa.",
+  ],
+  [
+    "Notificaciones desactivadas. Los avisos pendientes se cancelaron.",
+    "Willakuykuna samachisqañam. Suyachkaq willakuykuna saqisqañam.",
+    "Yatiyawinaka saytʼayataxiwa. Suyaskiri yatiyawinaka jan lurataxiwa.",
+  ],
+  [
+    "Recordatorio programado.",
+    "Yuyachina wakichisqañam.",
+    "Amtayawi wakichataxiwa.",
+  ],
+  [
+    "Mensaje de prueba en cola; consulta su estado en el historial.",
+    "Yantana willakuyqa suyachkanmi; ñawpaq ruraykunapi kayninta qaway.",
+    "Yantʼawi yatiyawixa suytʼaskiwa; nayra lurawinakana kunjamasa uka uñakipam.",
+  ],
+  [
+    "Recordatorio cancelado.",
+    "Yuyachina saqisqañam.",
+    "Amtayawi jan lurataxiwa.",
+  ],
+  [
+    "Número guardado. Tus notificaciones por WhatsApp están activas.",
+    "Yupay waqaychasqañam. WhatsApp willakuyniykikuna kichasqam kachkan.",
+    "Jakhu imataxiwa. WhatsApp yatiyawinakamaxa qhantatawa.",
+  ],
+  [
+    "Escribe un número válido con código de país.",
+    "Suyupa yupayninwan allin yupayta qillqay.",
+    "Marka jakhupampi wali jakhu qillqtʼam.",
+  ],
+  [
+    "Usa entre 3 y 100 caracteres.",
+    "3manta 100kama sanampata usay.",
+    "3 ukata 100 chimpukama apnaqam.",
+  ],
+  ["Máximo 1000 caracteres.", "1000 sanampakaman.", "1000 chimpukamakiwa."],
+  ["Proyecto creado.", "Ruray rurasqañam.", "Amtawi lurataxiwa."],
+  [
+    "Proyecto actualizado.",
+    "Ruray musuqchasqañam.",
+    "Amtawi machaqtʼayataxiwa.",
+  ],
+  ["Proyecto eliminado.", "Ruray pichasqañam.", "Amtawi chhaqhtayataxiwa."],
+  ["Sin descripción.", "Mana willakuyniyuq.", "Jan yatiyawini."],
+  ["Por completar", "Huntanapaq", "Phuqachañataki"],
+  ["No indicado", "Mana willasqa", "Jan yatiyata"],
+  ["No indicada", "Mana willasqa", "Jan yatiyata"],
+  ["No indicados", "Mana willasqakuna", "Jan yatiyatanaka"],
+  [
+    "Borrador de sesión de aprendizaje",
+    "Yachay qutupa ñawpaq qillqasqan",
+    "Yatiqawi tantachawina nayrïr qillqatapa",
+  ],
+  [
+    "Primaria · 2.º grado · Ciclo III · Matemática",
+    "Qallariy yachay · 2 ñiqi · III muyu · Yupay yachay",
+    "Qallta yatiqawi · 2 tʼaqa · III muyu · Jakhu yatiqawi",
+  ],
+  [
+    "Desempeño o precisión aportado por el docente (sin verificar como cita oficial)",
+    "Yachachiqpa qusqan atipana willakuy (mana kamachisqa qillqahina chiqapchasqa)",
+    "Yatichirina churata phuqawi yatiyawi (jan kamachita qillqatjama chiqanchata)",
+  ],
+  [
+    "Enfoques transversales",
+    "Llapanpi qawana yuyaykuna",
+    "Taqpachana uñjañ amuyunaka",
+  ],
+  ["Ubicación o comunidad", "Kiti utaq llaqta", "Chiqa jan ukaxa ayllu"],
+  ["Región geográfica", "Pacha suyu", "Uraqi suyu"],
+  ["Ámbito", "Tiyakusqan", "Jakawi chiqa"],
+  ["Idioma principal", "Aswan rimasqa simi", "Jilpacha aru"],
+  ["Tiempo previsto", "Wakichisqa pacha", "Wakichata pacha"],
+  [
+    "Borrador organizado a partir de los datos del docente. No contiene actividades generadas ni acredita validación curricular.",
+    "Yachachiqpa willakuyninkunamanta allichasqa ñawpaq qillqasqa. Manam musuq rurasqa ruraykuna kanchu, nitaq yachay kamachiypa chiqapchasqanchu.",
+    "Yatichirina yatiyawinakapat wakichata nayrïr qillqata. Janiwa machaq lurata lurawinakani ni yatiqawi kamachimpi chiqanchatäkiti.",
+  ],
+  [
+    "Resuelve problemas de cantidad",
+    "Hayka kasqanmanta sasachakuykunata allichan",
+    "Qhawqhasa uka jiskʼäwinaka askichi",
+  ],
+  [
+    "Traduce cantidades a expresiones numéricas",
+    "Hayka kasqankunata yupay qillqaman tikran",
+    "Qhawqhanaksa jakhu qillqanakaru jaqukipi",
+  ],
+  [
+    "Comunica su comprensión sobre los números y las operaciones",
+    "Yupaykunamanta, yupay ruraykunamanta yachasqanta willakun",
+    "Jakhunakata ukhamaraki jakhu lurawinakata amuyatap yatiyi",
+  ],
+  [
+    "Usa estrategias y procedimientos de estimación y cálculo",
+    "Asuy yupaypaq, yupay ruraypaq ñankunata usan",
+    "Niya jakhtʼañataki ukhamaraki jakhu lurañataki thakhinaka apnaqi",
+  ],
+  [
+    "Argumenta afirmaciones sobre las relaciones numéricas y las operaciones",
+    "Yupaykunapa tinkuyninmanta, rurayninmanta nisqanta sutichan",
+    "Jakhunakana mayachawipata ukhamaraki lurawinakapat arunakap qhanañchi",
+  ],
+  [
+    "Resuelve problemas de regularidad, equivalencia y cambio",
+    "Kutipaymanta, kikin kaymanta, tikraymanta sasachakuykunata allichan",
+    "Kutiniwita, kikpata ukhamaraki mayjtʼawita jiskʼäwinaka askichi",
+  ],
+  [
+    "Traduce datos y condiciones a expresiones algebraicas",
+    "Willakuykunata, kamachiykunata aljibra qillqaman tikran",
+    "Yatiyawinaka ukhamaraki mayiwinaka álgebra qillqanakaru jaqukipi",
+  ],
+  [
+    "Comunica su comprensión sobre las relaciones algebraicas",
+    "Aljibra tinkuykunamanta yachasqanta willakun",
+    "Álgebra mayachawinakata amuyatap yatiyi",
+  ],
+  [
+    "Usa estrategias y procedimientos para encontrar reglas generales",
+    "Llapanpaq kamachiykunata tarinapaq ñankunata usan",
+    "Taqpachataki kamachinaka jikxatañataki thakhinaka apnaqi",
+  ],
+  [
+    "Argumenta afirmaciones sobre relaciones de cambio y equivalencia",
+    "Tikraypa, kikin kaypa tinkuyninmanta nisqanta sutichan",
+    "Mayjtʼawi ukhamaraki kikpa mayachawinakata arunakap qhanañchi",
+  ],
+  [
+    "Resuelve problemas de gestión de datos e incertidumbre",
+    "Willakuy allichaymanta, mana yachasqa kaymanta sasachakuykunata allichan",
+    "Yatiyawi apnaqawita ukhamaraki jan yatita jiskʼäwinaka askichi",
+  ],
+  [
+    "Representa datos con gráficos y medidas estadísticas o probabilísticas",
+    "Willakuykunata siqikunawan, willakuy yupaywan, kanman kay tupuykunawan rikuchin",
+    "Yatiyawinaka jamuqanakampi ukhamaraki jakhu yatxatawi jan ukaxa utjaspawa uka tupuñanakampi uñachtʼayi",
+  ],
+  [
+    "Comunica la comprensión de los conceptos estadísticos y probabilísticos",
+    "Willakuy yupay yachaymanta, kanman kay yuyaymanta yachasqanta willakun",
+    "Jakhu yatxatawi ukhamaraki utjaspawa uka amuyunakata yatiqatap yatiyi",
+  ],
+  [
+    "Usa estrategias y procedimientos para recopilar y procesar datos",
+    "Willakuykunata huñunapaq, allichanapaq ñankunata usan",
+    "Yatiyawinaka apthapiñataki ukhamaraki wakichañataki thakhinaka apnaqi",
+  ],
+  [
+    "Sustenta conclusiones o decisiones con base en información obtenida",
+    "Tarisqa willakuykunawan tukuy yuyayninta utaq akllasqanta sutichan",
+    "Jikxatata yatiyawinakampi tukuya amuyunaka jan ukaxa amtawinaka qhanañchi",
+  ],
+  [
+    "Resuelve problemas de forma, movimiento y localización",
+    "Rikchaymanta, kuyuriymanta, tarikuymanta sasachakuykunata allichan",
+    "Uñnaqawita, sarnaqawita ukhamaraki kawkhankisa uka jiskʼäwinaka askichi",
+  ],
+  [
+    "Modela objetos con formas geométricas y sus transformaciones",
+    "Imakunata siqi rikchaykunawan, tikrayninkunawan rikuchin",
+    "Yänaka geometría uñnaqanakampi ukhamaraki mayjtʼawinakapampi uñachtʼayi",
+  ],
+  [
+    "Comunica su comprensión sobre las formas y relaciones geométricas",
+    "Siqi rikchaykunamanta, tinkuyninkunamanta yachasqanta willakun",
+    "Geometría uñnaqanakata ukhamaraki mayachawinakapata amuyatap yatiyi",
+  ],
+  [
+    "Usa estrategias y procedimientos para orientarse en el espacio",
+    "Kitipi tarikunapaq ñankunata usan",
+    "Chiqawjana kawkharusa saraña yatiñataki thakhinaka apnaqi",
+  ],
+  [
+    "Argumenta afirmaciones sobre relaciones geométricas",
+    "Siqi tinkuykunamanta nisqanta sutichan",
+    "Geometría mayachawinakata arunakap qhanañchi",
+  ],
+  ["Enfoque de derechos", "Hayñikunata qaway", "Derechonaka uñjaña"],
+  [
+    "Enfoque inclusivo o de atención a la diversidad",
+    "Llapan runata, tukuy rikchaq kayta chaskispa qaway",
+    "Taqiniru katuqaña ukhamaraki kunaymana jakawinaka uñjaña",
+  ],
+  [
+    "Enfoque intercultural",
+    "Kawsaykunapa tinkuyninta qaway",
+    "Kunaymana saräwinakana mayachawipa uñjaña",
+  ],
+  [
+    "Enfoque igualdad de género",
+    "Warmiwan qaripa kikin kayninta qaway",
+    "Warmimpina chachampina kikpa jakawipa uñjaña",
+  ],
+  ["Enfoque ambiental", "Pachanchikta waqaychaspa qaway", "Pachasa uñjaña"],
+  [
+    "Enfoque orientación al bien común",
+    "Llapanchikpa allin kayninman pusay",
+    "Taqinina suma jakawiparu irpaña",
+  ],
+  [
+    "Enfoque búsqueda de la excelencia",
+    "Aswan allin ruranapaq maskay",
+    "Jukʼampi suma luraña thaqhaña",
+  ],
+  [
+    "Currículo Nacional de la Educación Básica",
+    "Suyuntinpa qallariy yachay kamachiynin",
+    "Markapachana qallta yatiqawi kamachipa",
+  ],
+  [
+    "Cartilla de planificación curricular para Primaria (documento de trabajo, 2017)",
+    "Qallariy yachay wakichina raphi (llankana qillqa, 2017)",
+    "Qallta yatiqawi wakichaña laphi (irnaqawi qillqata, 2017)",
+  ],
+  ["Navegación", "Purinapaq", "Saraña"],
+  ["Menú de navegación", "Purinapaq akllana", "Sarañ ajlliña"],
+  [
+    "Abrir o cerrar navegación",
+    "Purinata kichay utaq wisqay",
+    "Saraña jistʼaraña jan ukaxa jistʼantaña",
+  ],
+  [
+    "Failed to fetch",
+    "Tinkuy mana kachkanchu. Yapamanta ruway.",
+    "Mayachawixa janiwa utjkiti. Wasitata yantʼam.",
+  ],
+  [
+    "NetworkError when attempting to fetch resource.",
+    "Tinkuy mana kachkanchu. Yapamanta ruway.",
+    "Mayachawixa janiwa utjkiti. Wasitata yantʼam.",
+  ],
+  [
+    "Load failed",
+    "Mana kichayta atirqanikuchu. Yapamanta ruway.",
+    "Janiwa jistʼaraña atipkti. Wasitata yantʼam.",
+  ],
+  [
+    "The operation was aborted.",
+    "Rurayqa saqisqa kachkan. Yapamanta ruway.",
+    "Lurawixa saytʼayatawa. Wasitata yantʼam.",
+  ],
+  [
+    "{{name}} dejará de aparecer en tu espacio.",
+    "{{name}} kitiykipi manañam rikurinqachu.",
+    "{{name}} chiqawjamana janiw uñstxaniti.",
+  ],
+  ["Editar {{name}}", "{{name}} allichay", "{{name}} askichaña"],
+  ["Eliminar {{name}}", "{{name}} pichay", "{{name}} chhaqhtayaña"],
+]

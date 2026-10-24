@@ -4,14 +4,27 @@ import type { RoomPresetStore } from "../application/preset-service.ts"
 import { RoomPresetError, presetSummary } from "../domain/preset.ts"
 import type { PresetSubject } from "../domain/preset.ts"
 
-// Atomic Memory HTTP API (https://docs.atomicstrata.ai/api-reference/http/):
-// verbatim quick ingest stamped with metadata.externalId, reverse lookup by
-// that id, and delete, all scoped by user_id.
+// Atomic Memory Core and Hosted Cloud: quick ingest with metadata.externalId,
+// scoped list (supported by both), and verified deletion.
 const sourceSite = "amautai-room-defaults"
-const externalId = "amautai-room-preset-v1"
+// Cloud deduplicates external IDs at project scope, so every teacher needs a
+// stable distinct ID even when both teachers choose identical options.
+async function externalIdFor(subject: PresetSubject) {
+  const digest = await crypto.subtle.digest(
+    "SHA-256",
+    new TextEncoder().encode(subject)
+  )
+  return (
+    "amautai-room-preset-v1-" +
+    Array.from(new Uint8Array(digest), (byte) =>
+      byte.toString(16).padStart(2, "0")
+    ).join("")
+  )
+}
 const memorySchema = z.object({
   id: z.string().min(1),
   user_id: z.string(),
+  session_id: z.string().nullable().optional(),
   source_site: z.string(),
   created_at: z.string(),
   metadata: z.object({ externalId: z.string(), preset: roomPresetInput }),
@@ -21,7 +34,14 @@ const ingestSchema = z.object({
   updated_memory_ids: z.array(z.string().min(1)),
   memories_skipped: z.number(),
 })
-const deleteSchema = z.object({ success: z.literal(true) })
+const listSchema = z.object({
+  memories: z.array(memorySchema).max(1),
+  count: z.number().int().min(0).max(1),
+})
+const deleteSchema = z.union([
+  z.object({ success: z.literal(true) }),
+  z.object({ deleted: z.literal(true), id: z.string().min(1) }),
+])
 
 /** Returns null unless the feature is explicitly enabled and fully configured. */
 export function atomicRoomPresets(config: {
@@ -56,8 +76,7 @@ export function atomicRoomPresets(config: {
   async function call(
     operation: string,
     path: string,
-    init: { method: "GET" | "POST" | "DELETE"; body?: unknown },
-    absent = false
+    init: { method: "GET" | "POST" | "DELETE"; body?: unknown }
   ) {
     let response: Response
     const remaining = deadline - Date.now()
@@ -84,7 +103,6 @@ export function atomicRoomPresets(config: {
       )
       throw new RoomPresetError("room_preset_unavailable")
     }
-    if (absent && response.status === 404) return undefined
     if (!response.ok) {
       console.info(
         "amautai_room_preset_http_error",
@@ -109,19 +127,36 @@ export function atomicRoomPresets(config: {
     "?" + new URLSearchParams({ user_id: subject })
   return {
     async read(subject) {
-      const value = await call(
+      const externalId = await externalIdFor(subject)
+      // This source is reserved for one preset per subject. Fetching two rows
+      // detects duplicates without scanning unrelated memories or pagination.
+      const page = parse(
+        listSchema,
         "read",
-        "/v1/memories/by-external-id/" +
-          encodeURIComponent(externalId) +
-          scoped(subject),
-        { method: "GET" },
-        true
+        await call(
+          "read",
+          "/v1/memories/list?" +
+            new URLSearchParams({
+              user_id: subject,
+              source_site: sourceSite,
+              limit: "2",
+              offset: "0",
+            }),
+          { method: "GET" }
+        )
       )
-      if (value === undefined) return null
-      const memory = parse(memorySchema, "read", value)
-      // Never trust a record outside this subject, source and external id.
+      if (page.count !== page.memories.length) invalid("read")
+      const memory = page.memories[0]
+      if (!memory) return null
+      // Core returns user_id directly. Hosted Cloud fixes user_id to its
+      // authenticated project and projects the requested subject to session_id.
+      const owned =
+        memory.user_id === subject ||
+        (memory.user_id.startsWith("project:") &&
+          memory.user_id.length > "project:".length &&
+          memory.session_id === subject)
       if (
-        memory.user_id !== subject ||
+        !owned ||
         memory.source_site !== sourceSite ||
         memory.metadata.externalId !== externalId
       )
@@ -133,6 +168,7 @@ export function atomicRoomPresets(config: {
       }
     },
     async write(subject, preset) {
+      const externalId = await externalIdFor(subject)
       const receipt = parse(
         ingestSchema,
         "ingest",
@@ -155,8 +191,8 @@ export function atomicRoomPresets(config: {
       }
     },
     async remove(subject, id) {
-      // A 2xx without the documented { success: true } is not a deletion.
-      parse(
+      // Both providers require an explicit receipt, plus service readback.
+      const receipt = parse(
         deleteSchema,
         "delete",
         await call(
@@ -165,6 +201,7 @@ export function atomicRoomPresets(config: {
           { method: "DELETE" }
         )
       )
+      if ("id" in receipt && receipt.id !== id) invalid("delete")
     },
   }
 }

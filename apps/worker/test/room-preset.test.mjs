@@ -12,7 +12,7 @@ import { presetSubject } from "../src/modules/rooms/domain/preset.ts"
 
 // LOCAL TEST FIXTURE: an in-process HTTP server on 127.0.0.1 that implements
 // the documented Atomic Memory routes Amautai uses for room defaults
-// (ingest/quick, by-external-id, DELETE). It is not the live service; it lets
+// (ingest/quick, scoped list, DELETE). It is not the live service; it lets
 // the real adapter run over real HTTP. `faults` can be changed mid-test.
 async function atomicMemoryFixture() {
   const memories = []
@@ -26,8 +26,7 @@ async function atomicMemoryFixture() {
     const operation =
       req.method === "POST" && url.pathname === "/v1/memories/ingest/quick"
         ? "ingest"
-        : req.method === "GET" &&
-            url.pathname.startsWith("/v1/memories/by-external-id/")
+        : req.method === "GET" && url.pathname === "/v1/memories/list"
           ? "read"
           : req.method === "DELETE"
             ? "delete"
@@ -49,7 +48,7 @@ async function atomicMemoryFixture() {
     if (operation === "ingest") {
       let row = memories.find(
         (m) =>
-          m.user_id === userId &&
+          (faults.cloud || m.user_id === userId) &&
           m.metadata?.externalId === body.metadata.externalId
       )
       const updated = !!row
@@ -84,20 +83,27 @@ async function atomicMemoryFixture() {
       )
     }
     if (operation === "read") {
-      const externalId = decodeURIComponent(url.pathname.split("/").pop())
-      const memory = memories.find(
-        (m) => m.user_id === userId && m.metadata?.externalId === externalId
+      const rows = memories
+        .filter(
+          (m) =>
+            m.user_id === userId &&
+            m.source_site === url.searchParams.get("source_site")
+        )
+        .map((m) => ({
+          ...m,
+          ...(faults.cloud
+            ? { user_id: "project:fixture", session_id: m.user_id }
+            : {}),
+          ...(faults.tamperRead ?? {}),
+          embedding: [],
+          memory_type: "semantic",
+          importance: 0.5,
+          status: "active",
+        }))
+      return send(
+        200,
+        faults.listBody ?? { memories: rows, count: rows.length }
       )
-      if (!memory) return send(404, { error: "not found" })
-      // Extra provider fields, as documented for the full memory row.
-      return send(200, {
-        ...memory,
-        ...(faults.tamperRead ?? {}),
-        embedding: [],
-        memory_type: "semantic",
-        importance: 0.5,
-        status: "active",
-      })
     }
     if (operation === "delete") {
       const id = decodeURIComponent(url.pathname.split("/").pop())
@@ -105,9 +111,15 @@ async function atomicMemoryFixture() {
         (m) => m.id === id && m.user_id === userId
       )
       if (index < 0) return send(404, { error: "not found" })
-      const receipt = faults.deleteBody ?? { success: true }
+      const receipt =
+        faults.deleteBody ??
+        (faults.cloud ? { deleted: true, id } : { success: true })
       // A malformed receipt, or a stale provider, leaves the record in place.
-      if (receipt.success === true && !faults.staleDelete)
+      if (
+        (receipt.success === true ||
+          (receipt.deleted === true && receipt.id === id)) &&
+        !faults.staleDelete
+      )
         memories.splice(index, 1)
       return send(200, receipt)
     }
@@ -277,7 +289,12 @@ test("a teacher remembers, recalls and reuses typed options without room or stud
     assert.equal(ingest.body.content_class, "summary")
     assert.equal(ingest.body.skip_extraction, true)
     assert.deepEqual(ingest.body.metadata, {
-      externalId: "amautai-room-preset-v1",
+      externalId:
+        "amautai-room-preset-v1-" +
+        crypto
+          .createHash("sha256")
+          .update("amautai:user:alice:teacher:alice")
+          .digest("hex"),
       preset: market,
     })
     const sent = JSON.stringify(fixture.calls)
@@ -498,6 +515,102 @@ test("all provider calls in one operation share a single deadline", async () => 
     await assert.rejects(store.write(subject, market), {
       code: "room_preset_unavailable",
     })
+  } finally {
+    await fixture.close()
+  }
+})
+
+test("Hosted Cloud scope projection, list lookup, and deletion receipt work together", async () => {
+  const fixture = await atomicMemoryFixture()
+  fixture.faults.cloud = true
+  try {
+    const request = setup(enabled(fixture))
+    assert.equal((await remember(request, market)).status, 200)
+    const id = fixture.memories[0].id
+    assert.deepEqual((await request("/preset")).body.remembered.preset, market)
+    assert.equal(
+      (await request("/preset", { user: "bob" })).body.remembered,
+      null
+    )
+    // Cloud deduplicates by externalId across the project, not subject.
+    assert.equal((await remember(request, market, "bob")).status, 200)
+    assert.equal(fixture.memories.length, 2)
+    assert.notEqual(
+      fixture.memories[0].metadata.externalId,
+      fixture.memories[1].metadata.externalId
+    )
+    assert.deepEqual((await request("/preset")).body.remembered.preset, market)
+    assert.equal(
+      (await request("/preset", { method: "DELETE", user: "bob" })).status,
+      200
+    )
+    assert.deepEqual((await request("/preset")).body.remembered.preset, market)
+    assert.equal((await remember(request, builder)).status, 200)
+    assert.equal(fixture.memories[0].id, id)
+    assert.deepEqual((await request("/preset")).body.remembered.preset, builder)
+    const reads = fixture.calls.filter((c) => c.operation === "read")
+    for (const call of reads) {
+      const url = new URL(call.url, fixture.url)
+      assert.equal(url.pathname, "/v1/memories/list")
+      assert.equal(url.searchParams.get("source_site"), "amautai-room-defaults")
+      assert.equal(url.searchParams.get("limit"), "2")
+    }
+    assert.deepEqual(await request("/preset", { method: "DELETE" }), {
+      status: 200,
+      body: { forgotten: true },
+    })
+    assert.equal((await request("/preset")).body.remembered, null)
+  } finally {
+    await fixture.close()
+  }
+})
+
+test("list responses reject foreign subjects, wrong source/id, duplicates and malformed pages", async () => {
+  const fixture = await atomicMemoryFixture()
+  try {
+    const request = setup(enabled(fixture))
+    await remember(request, market)
+    const unavailable = {
+      status: 503,
+      body: { error: "room_preset_unavailable" },
+    }
+    for (const tamperRead of [
+      { user_id: "another-teacher" },
+      { user_id: "project:fixture", session_id: "another-teacher" },
+      { user_id: "project:", session_id: "amautai:user:alice:teacher:alice" },
+      { source_site: "another-source" },
+      {
+        metadata: { ...fixture.memories[0].metadata, externalId: "another-id" },
+      },
+    ]) {
+      fixture.faults.tamperRead = tamperRead
+      assert.deepEqual(await request("/preset"), unavailable)
+    }
+    delete fixture.faults.tamperRead
+    const row = fixture.memories[0]
+    for (const listBody of [
+      {},
+      { memories: [], count: 1 },
+      { memories: [row], count: 0 },
+      { memories: [row, row], count: 2 },
+      { memories: [], count: -1 },
+    ]) {
+      fixture.faults.listBody = listBody
+      assert.deepEqual(await request("/preset"), unavailable)
+    }
+    delete fixture.faults.listBody
+    for (const deleteBody of [
+      { deleted: false, id: row.id },
+      { deleted: true, id: "another-id" },
+      { deleted: true },
+    ]) {
+      fixture.faults.deleteBody = deleteBody
+      assert.deepEqual(
+        await request("/preset", { method: "DELETE" }),
+        unavailable
+      )
+      assert.equal(fixture.memories.length, 1)
+    }
   } finally {
     await fixture.close()
   }
